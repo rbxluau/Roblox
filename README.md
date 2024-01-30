@@ -1,4 +1,4 @@
 # Example
 ```lua
-loadstring(game:HttpGet("https://pastebin.com/raw/De4aYHDY"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/ScriptHub.lua"))()
 ```
