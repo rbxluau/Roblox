@@ -105,14 +105,11 @@ _G.Language = {
     }
 }
 
-if game.GameId == 3476371299 then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/RaceClicker.lua"))()
-elseif game.GameId == 4777817887 then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/BladeBall.lua"))()
-elseif game.GameId == 3085257211 then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/RainbowFriends.lua"))()
-elseif game.GameId == 73885730 then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/PrisonLife.lua"))()
-else
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Universal.lua"))()
-end
+Game = {
+    [3476371299] = "RaceClicker",
+    [4777817887] = "BladeBall",
+    [3085257211] = "RainbowFriends",
+    [73885730] = "PrisonLife"
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/"..(Game[game.GameId] or "Universal")..".lua"))()
