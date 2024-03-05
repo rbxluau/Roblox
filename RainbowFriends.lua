@@ -1,6 +1,6 @@
 LP = game.Players.LocalPlayer
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
-Box = game.ReplicatedStorage.communication.boxes.cl.BoxUpdated
+RS = game.ReplicatedStorage
 
 Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Library.lua"))()
 
@@ -22,7 +22,7 @@ end)
 Player:Toggle(Locale.Invisible, false, function(Value)
     Invisible = Value
     if not Invisible then
-        Box:FireServer("Unequip")
+        RS.communication.boxes.cl.BoxUpdated:FireServer("Unequip")
     end
 end)
 
@@ -117,7 +117,7 @@ game.RunService.Stepped:Connect(function()
         end
     end
     if Invisible then
-        Box:FireServer("Equip")
+        RS.communication.boxes.cl.BoxUpdated:FireServer("Equip")
     end
 end)
 
