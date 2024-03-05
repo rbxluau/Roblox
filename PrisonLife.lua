@@ -1,5 +1,6 @@
 LP = game.Players.LocalPlayer
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
+RS = game.ReplicatedStorage
 
 Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Library.lua"))()
 
@@ -204,7 +205,7 @@ game.RunService.Heartbeat:Connect(function()
                 TP(v)
             end
             if Aura or All then
-                game.ReplicatedStorage.meleeEvent:FireServer(v)
+                RS.meleeEvent:FireServer(v)
             end
         end
         if string.find(v[Type], Name) then
@@ -212,7 +213,7 @@ game.RunService.Heartbeat:Connect(function()
                 TP(v)
             end
             if LK then
-                game.ReplicatedStorage.meleeEvent:FireServer(v)
+                RS.meleeEvent:FireServer(v)
             end
         end
         if not v.Character:FindFirstChild("Highlight") then
