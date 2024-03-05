@@ -1,5 +1,6 @@
 LP = game.Players.LocalPlayer
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
+RS = game.ReplicatedStorage
 Time = LP.PlayerGui.TimerUI.RaceTimer
 Tween = game.TweenService:Create(LP.Character.HumanoidRootPart, TweenInfo.new(), {
     CFrame = workspace.LoadedWorld.Track:GetChildren()[#workspace.LoadedWorld.Track:GetChildren()].Sign.CFrame-Vector3.new(0, 20, 0)
@@ -122,7 +123,7 @@ end)
 
 LP.leaderstats["🏁Wins"].Changed:Connect(function()
     if Rebirth then
-        game.ReplicatedStorage.Packages.Knit.Services.RebirthService.RF.Rebirth:InvokeServer()
+        RS.Packages.Knit.Services.RebirthService.RF.Rebirth:InvokeServer()
     end
 end)
 
@@ -142,7 +143,7 @@ game.RunService.Heartbeat:Connect(function()
         end
     end
     if Click and LP.PlayerGui.ClicksUI.ClickHelper.Visible then
-        game.ReplicatedStorage.Packages.Knit.Services.ClickService.RF.Click:InvokeServer()
+        RS.Packages.Knit.Services.ClickService.RF.Click:InvokeServer()
     end
 end)
 
