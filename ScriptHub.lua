@@ -5,6 +5,9 @@ _G.Language = {
         RF = "Rainbow Friends",
         RC = "Race Clicker",
         BB = "Blade Ball",
+        Door = "Door",
+        UD = "Unlock Door 51",
+        Monster = "Monster",
         Remove = "Remove",
         Player = "Player",
         WS = "Walk Speed",
@@ -59,6 +62,9 @@ _G.Language = {
         RF = "彩虹朋友",
         RC = "点击赛跑",
         BB = "刀刃球",
+        Door = "门",
+        UD = "解锁51号门",
+        Monster = "怪物",
         Remove = "移除",
         Player = "玩家",
         WS = "移动速度",
@@ -110,6 +116,7 @@ _G.Language = {
 }
 
 Game = {
+    [2440500124] = "Doors",
     [3476371299] = "RaceClicker",
     [4777817887] = "BladeBall",
     [3085257211] = "RainbowFriends",
