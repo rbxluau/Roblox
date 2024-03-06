@@ -6,9 +6,12 @@ Path = game.PathfindingService:CreatePath({
 })
 Prompt = {
     "ActivateEventPrompt",
+    "AwesomePrompt",
     "ModulePrompt",
+    "UnlockPrompt",
     "LootPrompt"
 }
+List = {}
 
 function Warn(v)
     game.StarterGui:SetCore("SendNotification", {
@@ -185,9 +188,9 @@ game.RunService.Heartbeat:Connect(function()
 end)
 
 game.ProximityPromptService.PromptShown:Connect(function(v)
-    if table.find(Prompt, v.Name) then
+    if AI and table.find(Prompt, v.Name) and not table.find(List, v) then
         v:InputHoldBegin()
-        v:Destroy()
+        table.insert(List, v)
     end
 end)
 
