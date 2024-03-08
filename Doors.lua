@@ -192,7 +192,7 @@ end)
 RS.GameData.LatestRoom.Changed:Connect(function(r)
     Room = workspace.CurrentRooms[r]
     if Door then
-        Instance.new("Highlight", Room.Door.Door)
+        Instance.new("Highlight", Room.Door)
     end
     for i, v in pairs(Room.Assets:GetDescendants()) do
         if EO and v:IsA("ProximityPrompt") then
