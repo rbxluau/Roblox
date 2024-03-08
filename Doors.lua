@@ -1,9 +1,6 @@
 LP = game.Players.LocalPlayer
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
 RS = game.ReplicatedStorage
-Path = game.PathfindingService:CreatePath({
-    AgentCanJump = false
-})
 Prompt = {
     "ActivateEventPrompt",
     "AwesomePrompt",
@@ -58,10 +55,6 @@ Fly:Toggle(Locale.Toggle, false, function(Value)
 end)
 
 Auto = Window:Tab(Locale.Auto)
-
-Auto:Toggle(Locale.Find, false, function(Value)
-    Find = Value
-end)
 
 Auto:Toggle(Locale.Interact, false, function(Value)
     AI = Value
@@ -165,10 +158,6 @@ game.RunService.Heartbeat:Connect(function()
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
         LP.Character.HumanoidRootPart.Velocity = Vector3.zero
     end
-    if Find then
-        Path:ComputeAsync(LP.Character.Collision.Position, workspace.CurrentRooms:GetChildren()[#workspace.CurrentRooms:GetChildren()].Door.Collision.Position)
-        LP.Character.Humanoid:MoveTo(Path:GetWaypoints()[2].Position)
-    end
     for i, v in pairs(game.Players:GetPlayers()) do
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
@@ -180,7 +169,7 @@ game.RunService.Heartbeat:Connect(function()
             TL.BackgroundTransparency = 1
             TL.Size = UDim2.new(0, 100, 0, 50)
         end
-        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round((v.Character.HumanoidRootPart.Position-LP.Character.HumanoidRootPart.Position).Magnitude)
+        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LP:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
         v.Character.BillboardGui.Enabled = EP
         v.Character.Highlight.Enabled = EP
@@ -195,15 +184,15 @@ game.ProximityPromptService.PromptShown:Connect(function(v)
 end)
 
 workspace.ChildAdded:Connect(function(v)
-    if Monster and string.find(v.Name, "Moving") then
+    if Monster and v:IsA("Model") and task.wait() and LP:DistanceFromCharacter(v:GetPivot().Position) < 1000 then
         Warn(v.Name)
     end
 end)
 
 RS.GameData.LatestRoom.Changed:Connect(function(r)
-    Room = workspace.CurrentRooms[tostring(r)]
+    Room = workspace.CurrentRooms[r]
     if Door then
-        Instance.new("Highlight", Room.Door)
+        Instance.new("Highlight", Room.Door.Door)
     end
     for i, v in pairs(Room.Assets:GetDescendants()) do
         if EO and v:IsA("ProximityPrompt") then
