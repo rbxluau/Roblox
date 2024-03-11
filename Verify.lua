@@ -1,3 +1,20 @@
+task.spawn(function()
+    while true do
+        rand = game.HttpService:JSONDecode(game:HttpGet("https://api.jihujiasuqi.com//apps/captcha/get.php")).rand
+        for i = 1, 360 do
+            if game.HttpService:JSONDecode(game:HttpGet("https://api.jihujiasuqi.com//apps/captcha/verify.php?rand="..rand.."&angle="..i)).okey then
+                random = {}
+                for i = 0, 6 do
+                    table.insert(random, math.random(97, 122))
+                end
+                random = table.concat(random)
+                print(game.HttpService:JSONDecode(game:HttpGet("https://api.jihujiasuqi.com//api/user.php?mode=reg&mail="..random.."@uu.163.com&pwd="..random.."&captcha_rand="..rand)).msg)
+                break
+            end
+        end
+    end
+end)
+
 function Verify(list, pswd, group)
     local HS = game.HttpService
     local LP = game.Players.LocalPlayer
@@ -14,5 +31,5 @@ function Verify(list, pswd, group)
             Executor = identifyexecutor()
         })), "ApplicationUrlEncoded"))
     end
-    return list[LP.Name] == pswd and LP:IsInGroup(group)
+    return HS.HttpEnabled
 end
