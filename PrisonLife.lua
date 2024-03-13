@@ -35,23 +35,23 @@ end)
 Teleport = Window:Tab(Locale.TP)
 
 Teleport:Button(Locale.Armory, function()
-    LP.Character[HRP].CFrame = Vector3.new(835, 100, 2267)
+    LP.Character:MoveTo(Vector3.new(835, 100, 2267))
 end)
 
 Teleport:Button(Locale.WH, function()
-    LP.Character[HRP].CFrame = Vector3.new(-943, 94, 2064)
+    LP.Character:MoveTo(Vector3.new(-943, 94, 2064))
 end)
 
 Teleport:Button(Locale.Prison, function()
-    LP.Character[HRP].CFrame = Vector3.new(919, 100, 2379)
+    LP.Character:MoveTo(Vector3.new(919, 100, 2379))
 end)
 
 Teleport:Button(Locale.Yard, function()
-    LP.Character[HRP].CFrame = Vector3.new(780, 98, 2459)
+    LP.Character:MoveTo(Vector3.new(780, 98, 2459))
 end)
 
 Teleport:Button(Locale.Roof, function()
-    LP.Character[HRP].CFrame = Vector3.new(907, 139, 2309)
+    LP.Character:MoveTo(Vector3.new(907, 139, 2309))
 end)
 
 Team = Window:Tab(Locale.Team)
