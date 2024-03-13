@@ -34,23 +34,23 @@ end)
 Teleport = Window:Tab(Locale.TP)
 
 Teleport:Button(Locale.Armory, function()
-    LP.Character.HumanoidRootPart.CFrame = CFrame.new(835.2199096679688, 99.99000549316406, 2267.0546875)
+    LP.Character:MoveTo(Vector3.new(835, 100, 2267))
 end)
 
 Teleport:Button(Locale.WH, function()
-    LP.Character.HumanoidRootPart.CFrame = CFrame.new(-943.4600219726562, 94.1287612915039, 2063.6298828125)
+    LP.Character:MoveTo(Vector3.new(-943, 94, 2064))
 end)
 
 Teleport:Button(Locale.Prison, function()
-    LP.Character.HumanoidRootPart.CFrame = CFrame.new(918.77001953125, 99.98998260498047, 2379.070068359375)
+    LP.Character:MoveTo(Vector3.new(919, 100, 2379))
 end)
 
 Teleport:Button(Locale.Yard, function()
-    LP.Character.HumanoidRootPart.CFrame = CFrame.new(779.8699951171875, 97.99992370605469, 2458.929931640625)
+    LP.Character:MoveTo(Vector3.new(780, 98, 2459))
 end)
 
 Teleport:Button(Locale.Roof, function()
-    LP.Character.HumanoidRootPart.CFrame = CFrame.new(907.4030151367188, 138.5979766845703, 2309.357666015625)
+    LP.Character:MoveTo(Vector3.new(907, 139, 2309))
 end)
 
 Team = Window:Tab(Locale.Team)
@@ -130,7 +130,7 @@ Other:Button(Locale.CT, function()
     Tool = Instance.new("Tool", LP.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LP.Character.HumanoidRootPart.CFrame = LP:GetMouse().Hit+Vector3.new(0, 2.5, 0)
+        LP.Character:MoveTo(LP:GetMouse().Hit+Vector3.new(0, 2.5, 0))
     end)
 end)
 
@@ -147,6 +147,10 @@ Other:Toggle(Locale.FB, false, function(Value)
     end
 end)
 
+Other:Toggle(Locale.AFK, false, function(Value)
+    AFK = Value
+end)
+
 About = Window:Tab(Locale.About)
 
 About:Label(Locale.By)
@@ -154,11 +158,6 @@ About:Label(Locale.By)
 About:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
-
-function TP(v)
-    LP.Character.Humanoid.Sit = false
-    LP.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
-end
 
 game.UserInputService.JumpRequest:Connect(function()
     if Jump then
@@ -179,14 +178,14 @@ end)
 LP.CharacterAppearanceLoaded:Connect(function(v)
     v.Humanoid.Died:Wait()
     if Rebirth then
-        Position = LP.Character.HumanoidRootPart.CFrame
+        Position = LP.Character:GetPivot().Position
         if LP.Team.Name == "Criminals" then
             workspace.Remote.TeamEvent:FireServer("Bright orange")
         else
             workspace.Remote.TeamEvent:FireServer(LP.TeamColor.Name)
         end
         LP.CharacterAppearanceLoaded:Wait()
-        LP.Character.HumanoidRootPart.CFrame = Position
+        LP.Character:MoveTo(Position)
     end
 end)
 
@@ -197,12 +196,13 @@ game.RunService.Heartbeat:Connect(function()
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character.HumanoidRootPart.Velocity = Vector3.zero
+        LP.Character.PrimaryPart.Velocity = Vector3.zero
     end
     for i, v in pairs(game.Players:GetPlayers()) do
         if v ~= LP and v.Character.Humanoid.Health ~= 0 and not v.Character:FindFirstChild("ForceField") then
             if All then
-                TP(v)
+                LP.Character.Humanoid.Sit = false
+                LP.Character:MoveTo(v.Character:GetPivot().Position)
             end
             if Aura or All then
                 RS.meleeEvent:FireServer(v)
@@ -210,7 +210,8 @@ game.RunService.Heartbeat:Connect(function()
         end
         if string.find(v[Type], Name) then
             if LT or LK then
-                TP(v)
+                LP.Character.Humanoid.Sit = false
+                LP.Character:MoveTo(v.Character:GetPivot().Position)
             end
             if LK then
                 RS.meleeEvent:FireServer(v)
@@ -226,7 +227,7 @@ game.RunService.Heartbeat:Connect(function()
             TL.BackgroundTransparency = 1
             TL.Size = UDim2.new(0, 100, 0, 50)
         end
-        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round((v.Character.HumanoidRootPart.Position-LP.Character.HumanoidRootPart.Position).Magnitude)
+        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LP:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
         v.Character.BillboardGui.Enabled = EP
         v.Character.Highlight.Enabled = EP
@@ -236,5 +237,11 @@ end)
 game.Lighting.LightingChanged:Connect(function()
     if Light then
         game.Lighting.Ambient = Color3.new(1, 1, 1)
+    end
+end)
+
+LP.Idled:Connect(function()
+    if AFK then
+        game.VirtualUser:MoveMouse(Vector2.new())
     end
 end)
