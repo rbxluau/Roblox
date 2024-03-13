@@ -96,7 +96,7 @@ Other:Button(Locale.UD, function()
     if Paper then
         for h = 1, 5 do
             for i, v in pairs(LP.PlayerGui.PermUI.Hints:GetChildren()) do
-                if v:IsA("ImageLabel") and v.ImageRectOffset == Paper.UI[tostring(h)].ImageRectOffset then
+                if v:IsA("ImageLabel") and v.ImageRectOffset == Paper.UI[h].ImageRectOffset then
                     Hint[h] = v.TextLabel.Text
                 end
             end
@@ -128,6 +128,10 @@ Other:Toggle(Locale.FB, false, function(Value)
     end
 end)
 
+Other:Toggle(Locale.AFK, false, function(Value)
+    AFK = Value
+end)
+
 About = Window:Tab(Locale.About)
 
 About:Label(Locale.By)
@@ -156,7 +160,7 @@ game.RunService.Heartbeat:Connect(function()
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character.HumanoidRootPart.Velocity = Vector3.zero
+        LP.Character.PrimaryPart.Velocity = Vector3.zero
     end
     for i, v in pairs(game.Players:GetPlayers()) do
         if not v.Character:FindFirstChild("Highlight") then
@@ -179,7 +183,9 @@ end)
 game.ProximityPromptService.PromptShown:Connect(function(v)
     if AI and table.find(Prompt, v.Name) and not table.find(List, v) then
         v:InputHoldBegin()
-        table.insert(List, v)
+        if v.Name == Prompt[1] then
+            table.insert(List, v)
+        end
     end
 end)
 
@@ -207,5 +213,11 @@ end)
 game.Lighting.LightingChanged:Connect(function()
     if Light then
         game.Lighting.Ambient = Color3.new(1, 1, 1)
+    end
+end)
+
+LP.Idled:Connect(function()
+    if AFK then
+        game.VirtualUser:MoveMouse(Vector2.new())
     end
 end)
