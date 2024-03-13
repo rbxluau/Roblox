@@ -4,7 +4,7 @@ HRP = "HumanoidRootPart"
 RS = game.ReplicatedStorage
 Time = LP.PlayerGui.TimerUI.RaceTimer
 Tween = game.TweenService:Create(LP.Character[HRP], TweenInfo.new(), {
-    CFrame = workspace.LoadedWorld.Track:GetChildren()[-1].Sign.CFrame-Vector3.new(0, 20, 0)
+    CFrame = workspace.LoadedWorld.Track:GetChildren()[#workspace.LoadedWorld.Track:GetChildren()].Sign.CFrame-Vector3.new(0, 20, 0)
 })
 
 Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Library.lua"))()
