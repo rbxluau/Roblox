@@ -149,13 +149,13 @@ game.RunService.Heartbeat:Connect(function()
         }
         for i, v in pairs(workspace:GetChildren()) do
             if table.find(Model, v.Name) then
-                v.TouchTrigger.CFrame = v.Character[HRP].CFrame
+                v.TouchTrigger.CFrame = LP.Character[HRP].CFrame
             end
         end
     end
     if Put then
         for i, v in pairs(workspace.GroupBuildStructures:GetChildren()) do
-            v.Trigger.CFrame = v.Character[HRP].CFrame
+            v.Trigger.CFrame = LP.Character[HRP].CFrame
         end
     end
     for i, v in pairs(game.Players:GetPlayers()) do
