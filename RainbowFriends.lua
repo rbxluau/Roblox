@@ -1,5 +1,6 @@
 LP = game.Players.LocalPlayer
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
+HRP = "HumanoidRootPart"
 RS = game.ReplicatedStorage
 
 Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Library.lua"))()
@@ -83,7 +84,7 @@ Other:Button(Locale.CT, function()
     Tool = Instance.new("Tool", LP.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LP.Character:MoveTo(LP:GetMouse().Hit+Vector3.new(0, 2.5, 0))
+        LP.Character[HRP].CFrame = LP:GetMouse().Hit+Vector3.new(0, 2.5, 0)
     end)
 end)
 
@@ -132,7 +133,7 @@ game.RunService.Heartbeat:Connect(function()
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character.PrimaryPart.Velocity = Vector3.zero
+        LP.Character[HRP].Velocity = Vector3.zero
     end
     if Get then
         Model = {
@@ -148,19 +149,19 @@ game.RunService.Heartbeat:Connect(function()
         }
         for i, v in pairs(workspace:GetChildren()) do
             if table.find(Model, v.Name) then
-                v.TouchTrigger.CFrame = v.Character:GetPivot()
+                v.TouchTrigger.CFrame = v.Character[HRP].CFrame
             end
         end
     end
     if Put then
         for i, v in pairs(workspace.GroupBuildStructures:GetChildren()) do
-            v.Trigger.CFrame = v.Character:GetPivot()
+            v.Trigger.CFrame = v.Character[HRP].CFrame
         end
     end
     for i, v in pairs(game.Players:GetPlayers()) do
         if LT and string.find(v[Type], Name) then
             LP.Character.Humanoid.Sit = false
-            LP.Character:MoveTo(v.Character:GetPivot().Position)
+            LP.Character[HRP].CFrame = v.Character[HRP].CFrame
         end
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
