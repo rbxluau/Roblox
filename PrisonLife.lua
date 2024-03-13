@@ -1,5 +1,6 @@
 LP = game.Players.LocalPlayer
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
+HRP = "HumanoidRootPart"
 RS = game.ReplicatedStorage
 
 Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Library.lua"))()
@@ -34,23 +35,23 @@ end)
 Teleport = Window:Tab(Locale.TP)
 
 Teleport:Button(Locale.Armory, function()
-    LP.Character:MoveTo(Vector3.new(835, 100, 2267))
+    LP.Character[HRP].CFrame = Vector3.new(835, 100, 2267)
 end)
 
 Teleport:Button(Locale.WH, function()
-    LP.Character:MoveTo(Vector3.new(-943, 94, 2064))
+    LP.Character[HRP].CFrame = Vector3.new(-943, 94, 2064)
 end)
 
 Teleport:Button(Locale.Prison, function()
-    LP.Character:MoveTo(Vector3.new(919, 100, 2379))
+    LP.Character[HRP].CFrame = Vector3.new(919, 100, 2379)
 end)
 
 Teleport:Button(Locale.Yard, function()
-    LP.Character:MoveTo(Vector3.new(780, 98, 2459))
+    LP.Character[HRP].CFrame = Vector3.new(780, 98, 2459)
 end)
 
 Teleport:Button(Locale.Roof, function()
-    LP.Character:MoveTo(Vector3.new(907, 139, 2309))
+    LP.Character[HRP].CFrame = Vector3.new(907, 139, 2309)
 end)
 
 Team = Window:Tab(Locale.Team)
@@ -130,7 +131,7 @@ Other:Button(Locale.CT, function()
     Tool = Instance.new("Tool", LP.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LP.Character:MoveTo(LP:GetMouse().Hit+Vector3.new(0, 2.5, 0))
+        LP.Character[HRP].CFrame = LP:GetMouse().Hit+Vector3.new(0, 2.5, 0)
     end)
 end)
 
@@ -178,14 +179,14 @@ end)
 LP.CharacterAppearanceLoaded:Connect(function(v)
     v.Humanoid.Died:Wait()
     if Rebirth then
-        Position = LP.Character:GetPivot().Position
+        Position = LP.Character[HRP].CFrame
         if LP.Team.Name == "Criminals" then
             workspace.Remote.TeamEvent:FireServer("Bright orange")
         else
             workspace.Remote.TeamEvent:FireServer(LP.TeamColor.Name)
         end
         LP.CharacterAppearanceLoaded:Wait()
-        LP.Character:MoveTo(Position)
+        LP.Character[HRP].CFrame = Position
     end
 end)
 
@@ -196,13 +197,13 @@ game.RunService.Heartbeat:Connect(function()
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character.PrimaryPart.Velocity = Vector3.zero
+        LP.Character[HRP].Velocity = Vector3.zero
     end
     for i, v in pairs(game.Players:GetPlayers()) do
         if v ~= LP and v.Character.Humanoid.Health ~= 0 and not v.Character:FindFirstChild("ForceField") then
             if All then
                 LP.Character.Humanoid.Sit = false
-                LP.Character:MoveTo(v.Character:GetPivot().Position)
+                LP.Character[HRP].CFrame = v.Character[HRP].CFrame
             end
             if Aura or All then
                 RS.meleeEvent:FireServer(v)
@@ -211,7 +212,7 @@ game.RunService.Heartbeat:Connect(function()
         if string.find(v[Type], Name) then
             if LT or LK then
                 LP.Character.Humanoid.Sit = false
-                LP.Character:MoveTo(v.Character:GetPivot().Position)
+                LP.Character[HRP].CFrame = v.Character[HRP].CFrame
             end
             if LK then
                 RS.meleeEvent:FireServer(v)
