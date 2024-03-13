@@ -1,5 +1,6 @@
 LP = game.Players.LocalPlayer
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
+HRP = "HumanoidRootPart"
 
 Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Library.lua"))()
 
@@ -79,7 +80,7 @@ Other:Button(Locale.CT, function()
     Tool = Instance.new("Tool", LP.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LP.Character:MoveTo(LP:GetMouse().Hit+Vector3.new(0, 2.5, 0))
+        LP.Character[HRP].CFrame = LP:GetMouse().Hit+Vector3.new(0, 2.5, 0)
     end)
 end)
 
@@ -124,19 +125,19 @@ game.RunService.Heartbeat:Connect(function()
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character.PrimaryPart.Velocity = Vector3.zero
+        LP.Character[HRP].Velocity = Vector3.zero
     end
     for i, v in pairs(game.Players:GetPlayers()) do
         if LT and string.find(v[Type], Name) then
             LP.Character.Humanoid.Sit = false
-            LP.Character:MoveTo(v.Character:GetPivot().Position)
+            LP.Character[HRP].CFrame = v.Character[HRP].CFrame
         end
     end
     for i, v in pairs(workspace.Balls:GetChildren()) do
         if Parry and v:GetAttribute("realBall") and LP.Character:FindFirstChild("Highlight") then
-            Velocity = (v.Velocity-LP.Character.PrimaryPart.Velocity).Magnitude
+            Velocity = (v.Velocity-LP.Character[HRP].Velocity).Magnitude
             if Teleport and Velocity ~= 0 then
-                LP.Character:MoveTo(v.Position)
+                LP.Character[HRP].CFrame = v.CFrame
             end
             if LP:DistanceFromCharacter(v.Position)/Velocity < 0.5 then
                 game.ReplicatedStorage.Remotes.ParryButtonPress:Fire()
