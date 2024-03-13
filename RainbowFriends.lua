@@ -83,7 +83,7 @@ Other:Button(Locale.CT, function()
     Tool = Instance.new("Tool", LP.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LP.Character.HumanoidRootPart.CFrame = LP:GetMouse().Hit+Vector3.new(0, 2.5, 0)
+        LP.Character:MoveTo(LP:GetMouse().Hit+Vector3.new(0, 2.5, 0))
     end)
 end)
 
@@ -98,6 +98,10 @@ Other:Toggle(Locale.FB, false, function(Value)
     else
         game.Lighting.Ambient = Color3.new(0, 0, 0)
     end
+end)
+
+Other:Toggle(Locale.AFK, false, function(Value)
+    AFK = Value
 end)
 
 About = Window:Tab(Locale.About)
@@ -128,7 +132,7 @@ game.RunService.Heartbeat:Connect(function()
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character.HumanoidRootPart.Velocity = Vector3.zero
+        LP.Character.PrimaryPart.Velocity = Vector3.zero
     end
     if Get then
         Model = {
@@ -144,19 +148,19 @@ game.RunService.Heartbeat:Connect(function()
         }
         for i, v in pairs(workspace:GetChildren()) do
             if table.find(Model, v.Name) then
-                v.TouchTrigger.CFrame = LP.Character.HumanoidRootPart.CFrame
+                v.TouchTrigger.CFrame = v.Character:GetPivot()
             end
         end
     end
     if Put then
         for i, v in pairs(workspace.GroupBuildStructures:GetChildren()) do
-            v.Trigger.CFrame = LP.Character.HumanoidRootPart.CFrame
+            v.Trigger.CFrame = v.Character:GetPivot()
         end
     end
     for i, v in pairs(game.Players:GetPlayers()) do
         if LT and string.find(v[Type], Name) then
             LP.Character.Humanoid.Sit = false
-            LP.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+            LP.Character:MoveTo(v.Character:GetPivot().Position)
         end
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
@@ -168,7 +172,7 @@ game.RunService.Heartbeat:Connect(function()
             TL.BackgroundTransparency = 1
             TL.Size = UDim2.new(0, 100, 0, 50)
         end
-        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round((v.Character.HumanoidRootPart.Position-LP.Character.HumanoidRootPart.Position).Magnitude)
+        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LP:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
         v.Character.BillboardGui.Enabled = EP
         v.Character.Highlight.Enabled = EP
@@ -183,5 +187,11 @@ end)
 game.Lighting.LightingChanged:Connect(function()
     if Light then
         game.Lighting.Ambient = Color3.new(1, 1, 1)
+    end
+end)
+
+LP.Idled:Connect(function()
+    if AFK then
+        game.VirtualUser:MoveMouse(Vector2.new())
     end
 end)
