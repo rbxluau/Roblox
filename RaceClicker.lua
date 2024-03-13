@@ -2,8 +2,8 @@ LP = game.Players.LocalPlayer
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
 RS = game.ReplicatedStorage
 Time = LP.PlayerGui.TimerUI.RaceTimer
-Tween = game.TweenService:Create(LP.Character.HumanoidRootPart, TweenInfo.new(), {
-    CFrame = workspace.LoadedWorld.Track:GetChildren()[#workspace.LoadedWorld.Track:GetChildren()].Sign.CFrame-Vector3.new(0, 20, 0)
+Tween = game.TweenService:Create(LP.Character.PrimaryPart, TweenInfo.new(), {
+    CFrame = workspace.LoadedWorld.Track:GetChildren()[-1].Sign.CFrame-Vector3.new(0, 20, 0)
 })
 
 Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Library.lua"))()
@@ -83,7 +83,7 @@ Other:Button(Locale.CT, function()
     Tool = Instance.new("Tool", LP.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LP.Character.HumanoidRootPart.CFrame = LP:GetMouse().Hit+Vector3.new(0, 2.5, 0)
+        LP.Character:MoveTo(LP:GetMouse().Hit+Vector3.new(0, 2.5, 0))
     end)
 end)
 
@@ -134,12 +134,12 @@ game.RunService.Heartbeat:Connect(function()
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character.HumanoidRootPart.Velocity = Vector3.zero
+        LP.Character.PrimaryPart.Velocity = Vector3.zero
     end
     for i, v in pairs(game.Players:GetPlayers()) do
         if LT and string.find(v[Type], Name) then
             LP.Character.Humanoid.Sit = false
-            LP.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+            LP.Character:MoveTo(v.Character:GetPivot().Position)
         end
     end
     if Click and LP.PlayerGui.ClicksUI.ClickHelper.Visible then
