@@ -1,5 +1,6 @@
 LP = game.Players.LocalPlayer
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
+HRP = "HumanoidRootPart"
 RS = game.ReplicatedStorage
 Prompt = {
     "ActivateEventPrompt",
@@ -160,7 +161,7 @@ game.RunService.Heartbeat:Connect(function()
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character.PrimaryPart.Velocity = Vector3.zero
+        LP.Character[HRP].Velocity = Vector3.zero
     end
     for i, v in pairs(game.Players:GetPlayers()) do
         if not v.Character:FindFirstChild("Highlight") then
