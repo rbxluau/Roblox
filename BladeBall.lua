@@ -79,7 +79,7 @@ Other:Button(Locale.CT, function()
     Tool = Instance.new("Tool", LP.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LP.Character.HumanoidRootPart.CFrame = LP:GetMouse().Hit+Vector3.new(0, 2.5, 0)
+        LP.Character:MoveTo(LP:GetMouse().Hit+Vector3.new(0, 2.5, 0))
     end)
 end)
 
@@ -124,21 +124,21 @@ game.RunService.Heartbeat:Connect(function()
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character.HumanoidRootPart.Velocity = Vector3.zero
+        LP.Character.PrimaryPart.Velocity = Vector3.zero
     end
     for i, v in pairs(game.Players:GetPlayers()) do
         if LT and string.find(v[Type], Name) then
             LP.Character.Humanoid.Sit = false
-            LP.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+            LP.Character:MoveTo(v.Character:GetPivot().Position)
         end
     end
     for i, v in pairs(workspace.Balls:GetChildren()) do
         if Parry and v:GetAttribute("realBall") and LP.Character:FindFirstChild("Highlight") then
-            Velocity = (v.Velocity-LP.Character.HumanoidRootPart.Velocity).Magnitude
+            Velocity = (v.Velocity-LP.Character.PrimaryPart.Velocity).Magnitude
             if Teleport and Velocity ~= 0 then
-                LP.Character.HumanoidRootPart.CFrame = v.CFrame
+                LP.Character:MoveTo(v.Position)
             end
-            if (v.Position-LP.Character.HumanoidRootPart.Position).Magnitude/Velocity < 0.5 then
+            if LP:DistanceFromCharacter(v.Position)/Velocity < 0.5 then
                 game.ReplicatedStorage.Remotes.ParryButtonPress:Fire()
             end
         end
