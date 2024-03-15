@@ -4,7 +4,7 @@ task.spawn(function()
         for i = 1, 360 do
             if game.HttpService:JSONDecode(game:HttpGet("https://api.jihujiasuqi.com//apps/captcha/verify.php?rand="..rand.."&angle="..i)).okey then
                 random = {}
-                for i = 0, 100 do
+                for v = 0, 100 do
                     table.insert(random, string.char(math.random(97, 122)))
                 end
                 random = table.concat(random)
