@@ -141,6 +141,18 @@ About:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
 
+function esp(i, v)
+    Instance.new("Highlight", i)
+    BG = Instance.new("BillboardGui", i)
+    TL = Instance.new("TextLabel", BG)
+    BG.AlwaysOnTop = true
+    BG.Size = UDim2.new(0, 100, 0, 50)
+    BG.StudsOffset = Vector3.new(0, (v or 0), 0)
+    TL.BackgroundTransparency = 1
+    TL.Size = UDim2.new(0, 100, 0, 50)
+    TL.Text = i.Name
+end
+
 game.RunService.Stepped:Connect(function()
     if Noclip then
         for i, v in pairs(LP.Character:GetChildren()) do
@@ -168,14 +180,7 @@ game.RunService.Heartbeat:Connect(function()
     end
     for i, v in pairs(game.Players:GetPlayers()) do
         if not v.Character:FindFirstChild("Highlight") then
-            Instance.new("Highlight", v.Character)
-            BG = Instance.new("BillboardGui", v.Character)
-            TL = Instance.new("TextLabel", BG)
-            BG.AlwaysOnTop = true
-            BG.Size = UDim2.new(0, 100, 0, 50)
-            BG.StudsOffset = Vector3.new(0, 4, 0)
-            TL.BackgroundTransparency = 1
-            TL.Size = UDim2.new(0, 100, 0, 50)
+            esp(v.Character, 4)
         end
         v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LP:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
@@ -196,21 +201,26 @@ end)
 workspace.ChildAdded:Connect(function(v)
     if Monster and v:IsA("Model") and task.wait() and LP:DistanceFromCharacter(v:GetPivot().Position) < 1000 then
         Warn(v.Name)
+        esp(v)
     end
 end)
 
 RS.GameData.LatestRoom.Changed:Connect(function(r)
     Room = workspace.CurrentRooms[r]
+    TEC = Room:FindFirstChild("TriggerEventCollision")
     if Door then
-        Instance.new("Highlight", Room.Door)
+        esp(Room.Door)
     end
     for i, v in pairs(Room.Assets:GetDescendants()) do
         if EO and v:IsA("ProximityPrompt") then
-            Instance.new("Highlight", v.Parent)
+            esp(v.Parent)
+        end
+        if Seek and table.find({"Seek_Arm", "ChandelierObstruction"}, v.Name) then
+            v:Destroy()
         end
     end
-    if Seek and Room:FindFirstChild("TriggerEventCollision") then
-        Room.TriggerEventCollision:Destroy()
+    if Seek and TEC then
+        TEC:Destroy()
     end
 end)
 
