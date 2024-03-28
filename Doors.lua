@@ -82,7 +82,7 @@ end)
 Remove = Window:Tab(Locale.Remove)
 
 Remove:Button("Screech", function()
-    RS.EntityInfo.Screech:Destroy()
+    LP.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules.Screech:Destroy()
 end)
 
 Remove:Toggle("Seek", false, function(Value)
