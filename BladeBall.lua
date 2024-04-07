@@ -12,7 +12,7 @@ Player:Slider(Locale.WS, 0, 200, LP.Character.Humanoid.WalkSpeed, function(Value
     LP.Character.Humanoid.WalkSpeed = Value
 end)
 
-Player:Slider(Locale.Gravity, 0, 200, math.round(workspace.Gravity), function(Value)
+Player:Slider(Locale.Gravity, 0, 200, workspace.Gravity, function(Value)
     workspace.Gravity = Value
 end)
 
@@ -41,6 +41,9 @@ end)
 
 Fly:Toggle(Locale.Toggle, false, function(Value)
     Toggle = Value
+    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+        LP.Character.Humanoid:SetStateEnabled(v, not Toggle)
+    end
 end)
 
 Loop = Window:Tab(Locale.Loop)
@@ -119,9 +122,6 @@ game.ProximityPromptService.PromptButtonHoldBegan:Connect(function(v)
 end)
 
 game.RunService.Heartbeat:Connect(function()
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LP.Character.Humanoid:SetStateEnabled(v, not Toggle)
-    end
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
