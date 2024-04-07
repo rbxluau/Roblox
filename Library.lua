@@ -10,7 +10,6 @@ local Mouse = game.Players.LocalPlayer:GetMouse()
 local MouseMovement = Enum.UserInputType.MouseMovement
 local MouseButton1 = Enum.UserInputType.MouseButton1
 local Touch = Enum.UserInputType.Touch
-local LP = game.Players.LocalPlayer
 
 local UI = Instance.new("ScreenGui")
 UI.Name = "UI"
