@@ -35,6 +35,9 @@ end)
 
 Fly:Toggle(Locale.Toggle, false, function(Value)
     Toggle = Value
+    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+        LP.Character.Humanoid:SetStateEnabled(v, not Toggle)
+    end
 end)
 
 Auto = Window:Tab(Locale.Auto)
@@ -127,9 +130,6 @@ game.RunService.Stepped:Connect(function()
 end)
 
 game.RunService.Heartbeat:Connect(function()
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LP.Character.Humanoid:SetStateEnabled(v, not Toggle)
-    end
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
