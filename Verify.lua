@@ -1,6 +1,6 @@
+LP = game.Players.LocalPlayer
 HS = game.HttpService
 HS.HttpEnabled = true
-LP = game.Players.LocalPlayer
 function GetJson(v)
     return HS:JSONDecode(HS:GetAsync(v))
 end
