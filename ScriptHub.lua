@@ -55,7 +55,7 @@ _G.Language = {
         About = "About",
         By = "By: rbxluau",
         Copy = "Copy Discord Link",
-        Link = "https://discord.com/invite/ze9NXkwGcT"
+        Link = "https://discord.com/invite/8Uk2SQWaKG"
     },
     ["zh-cn"] = {
         US = "通用脚本",
