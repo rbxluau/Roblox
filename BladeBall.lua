@@ -140,7 +140,7 @@ game.RunService.Heartbeat:Connect(function()
                 LP.Character[HRP].CFrame = v.CFrame
             end
             if LP:DistanceFromCharacter(v.Position)/Velocity < 0.5 then
-                game.ReplicatedStorage.Remotes.ParryButtonPress:Fire()
+                game.VirtualInputManager:SendKeyEvent(true, "F", false, game)
             end
         end
     end
