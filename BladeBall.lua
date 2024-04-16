@@ -134,12 +134,12 @@ game.RunService.Heartbeat:Connect(function()
         end
     end
     for i, v in pairs(workspace.Balls:GetChildren()) do
-        if Parry and v:GetAttribute("realBall") and LP.Character:FindFirstChild("Highlight") then
+        if v:GetAttribute("realBall") and LP.Character:FindFirstChild("Highlight") then
             Velocity = (v.Velocity-LP.Character[HRP].Velocity).Magnitude
             if Teleport and Velocity ~= 0 then
                 LP.Character[HRP].CFrame = v.CFrame
             end
-            if LP:DistanceFromCharacter(v.Position)/Velocity < 0.5 then
+            if Parry and LP:DistanceFromCharacter(v.Position)/Velocity < 0.5 then
                 game.VirtualInputManager:SendKeyEvent(true, "F", false, game)
             end
         end
