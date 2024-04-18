@@ -7,7 +7,7 @@ Head = {}
 
 Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Library.lua"))()
 
-Window = Library:Window("SH", Locale.US)
+Window = Library:Window("SH", Locale.Arsenal)
 
 Player = Window:Tab(Locale.Player)
 
