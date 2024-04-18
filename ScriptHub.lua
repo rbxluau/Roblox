@@ -1,6 +1,7 @@
 _G.Language = {
     ["en-us"] = {
         US = "Universal",
+        Arsenal = "Arsenal",
         PL = "Prison Life",
         RF = "Rainbow Friends",
         RC = "Race Clicker",
@@ -60,6 +61,7 @@ _G.Language = {
     },
     ["zh-cn"] = {
         US = "通用脚本",
+        Arsenal = "兵工厂",
         PL = "监狱人生",
         RF = "彩虹朋友",
         RC = "点击赛跑",
