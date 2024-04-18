@@ -31,6 +31,7 @@ _G.Language = {
         Aura = "Aura",
         All = "All",
         Auto = "Auto",
+        Aimbot = "Aimbot",
         AFK = "AFK",
         RB = "Rebirth",
         Click = "Click",
@@ -89,6 +90,7 @@ _G.Language = {
         Aura = "光环",
         All = "所有",
         Auto = "自动",
+        Aimbot = "自瞄",
         AFK = "挂机",
         RB = "重生",
         Click = "点击",
@@ -118,6 +120,7 @@ _G.Language = {
 }
 
 Game = {
+    [111958650] = "Arsenal",
     [2440500124] = "Doors",
     [3476371299] = "RaceClicker",
     [4777817887] = "BladeBall",
