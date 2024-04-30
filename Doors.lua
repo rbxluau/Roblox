@@ -1,4 +1,5 @@
 LP = game.Players.LocalPlayer
+RunService = game:GetService("RunService")
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
 HRP = "HumanoidRootPart"
 RS = game.ReplicatedStorage
@@ -156,7 +157,7 @@ function esp(i, v)
     TL.Text = i.Name
 end
 
-game.RunService.Stepped:Connect(function()
+RunService.Stepped:Connect(function()
     if Noclip then
         for i, v in pairs(LP.Character:GetChildren()) do
             if v:IsA("BasePart") then
@@ -172,7 +173,7 @@ game.ProximityPromptService.PromptButtonHoldBegan:Connect(function(v)
     end
 end)
 
-game.RunService.Heartbeat:Connect(function()
+RunService.Heartbeat:Connect(function()
     if Boost then
         LP.Character.Humanoid.WalkSpeed = 21
     end
