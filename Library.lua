@@ -1,7 +1,7 @@
 local Library = {RainbowColorValue = 0, HueSelectionPosition = 0}
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("Run Service")
+local RunService = game:GetService("RunService")
 local HS = game:GetService("HttpService")
 local LP = game.Players.LocalPlayer
 local Mouse = LP:GetMouse()
