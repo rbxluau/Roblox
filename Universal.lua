@@ -1,4 +1,5 @@
 LP = game.Players.LocalPlayer
+RunService = game:GetService("RunService")
 Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
 HRP = "HumanoidRootPart"
 
@@ -118,7 +119,7 @@ game.UserInputService.JumpRequest:Connect(function()
     end
 end)
 
-game.RunService.Stepped:Connect(function()
+RunService.Stepped:Connect(function()
     if Noclip then
         for i, v in pairs(LP.Character:GetChildren()) do
             if v:IsA("BasePart") then
@@ -134,7 +135,7 @@ game.ProximityPromptService.PromptButtonHoldBegan:Connect(function(v)
     end
 end)
 
-game.RunService.Heartbeat:Connect(function()
+RunService.Heartbeat:Connect(function()
     if Toggle then
         LP.Character.Humanoid:ChangeState("Swimming")
         LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
