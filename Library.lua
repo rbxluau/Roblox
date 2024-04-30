@@ -1,13 +1,13 @@
 local Library = {RainbowColorValue = 0, HueSelectionPosition = 0}
-local UserInputService = game.UserInputService
-local TweenService = game.TweenService
-local RunService = game.RunService
-local Mouse = game.Players.LocalPlayer:GetMouse()
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local HS = game:GetService("HttpService")
+local LP = game.Players.LocalPlayer
+local Mouse = LP:GetMouse()
 local MouseMovement = Enum.UserInputType.MouseMovement
 local MouseButton1 = Enum.UserInputType.MouseButton1
 local Touch = Enum.UserInputType.Touch
-local LP = game.Players.LocalPlayer
-local HS = game.HttpService
 HS.HttpEnabled = true
 function GetJson(v)
     return HS:JSONDecode(HS:GetAsync(v))
