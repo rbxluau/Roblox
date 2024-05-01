@@ -141,7 +141,7 @@ RunService.Heartbeat:Connect(function()
                 LP.Character[HRP].CFrame = v.CFrame
             end
             if Parry and LP:DistanceFromCharacter(v.Position)/Velocity < 0.5 then
-                game.VirtualInputManager:SendKeyEvent(true, "F", false, game)
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, "F", false, game)
             end
         end
     end
