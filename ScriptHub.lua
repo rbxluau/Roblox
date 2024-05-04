@@ -130,6 +130,4 @@ Game = {
     [73885730] = "PrisonLife"
 }
 
-msg = Instance.new("Message")
-msg.Parent = game.Workspace
-msg.Text = "纳西妲我🌿尼🐴的这就是背刺我的下场，纳西妲就是伪君子代码全缝老外的真死🐴了，都买龙脚本：168798816😂"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/"..(Game[game.GameId] or "Universal")..".lua"))()
