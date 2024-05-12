@@ -1,5 +1,4 @@
 ProximityPromptService = game:GetService("ProximityPromptService")
-VirtualInputManager = game:GetService("VirtualInputManager")
 UserInputService = game:GetService("UserInputService")
 RunService = game:GetService("RunService")
 Players = game:GetService("Players")
@@ -145,7 +144,7 @@ RunService.Heartbeat:Connect(function()
                 LocalPlayer.Character[HRP].CFrame = v.CFrame
             end
             if Parry and LocalPlayer:DistanceFromCharacter(v.Position)/Velocity < 0.5 then
-                VirtualInputManager:SendKeyEvent(true, "F", false, game)
+                keypress(0x46)
             end
         end
     end
