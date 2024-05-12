@@ -1,8 +1,12 @@
-LP = game.Players.LocalPlayer
+ProximityPromptService = game:GetService("ProximityPromptService")
+ReplicatedStorage = game:GetService("ReplicatedStorage")
+VirtualUser = game:GetService("VirtualUser")
 RunService = game:GetService("RunService")
-Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
+Lighting = game:GetService("Lighting")
+Players = game:GetService("Players")
+LocalPlayer = Players.LocalPlayer
+Locale = _G.Language[LocalPlayer.LocaleId] or _G.Language["en-us"]
 HRP = "HumanoidRootPart"
-RS = game.ReplicatedStorage
 Prompt = {
     "ActivateEventPrompt",
     "AwesomePrompt",
@@ -36,7 +40,7 @@ end)
 Player:Toggle(Locale.Noclip, false, function(Value)
     Noclip = Value
     if not Noclip then
-        LP.Character.Humanoid:ChangeState("Jumping")
+        LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
 
@@ -55,7 +59,7 @@ end)
 Fly:Toggle(Locale.Toggle, false, function(Value)
     Toggle = Value
     for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LP.Character.Humanoid:SetStateEnabled(v, not Toggle)
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Toggle)
     end
 end)
 
@@ -86,7 +90,7 @@ end)
 Remove = Window:Tab(Locale.Remove)
 
 Remove:Button("Screech", function()
-    LP.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules.Screech:Destroy()
+    LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules.Screech:Destroy()
 end)
 
 Remove:Toggle("Seek", false, function(Value)
@@ -97,16 +101,16 @@ Other = Window:Tab(Locale.Other)
 
 Other:Button(Locale.UD, function()
     Hint = {"x", "x", "x", "x", "x"}
-    Paper = LP.Backpack:FindFirstChild("LibraryHintPaper") or LP.Character:FindFirstChild("LibraryHintPaper")
+    Paper = LocalPlayer.Backpack:FindFirstChild("LibraryHintPaper") or LocalPlayer.Character:FindFirstChild("LibraryHintPaper")
     if Paper then
         for h = 1, 5 do
-            for i, v in pairs(LP.PlayerGui.PermUI.Hints:GetChildren()) do
+            for i, v in pairs(LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
                 if v:IsA("ImageLabel") and v.ImageRectOffset == Paper.UI[h].ImageRectOffset then
                     Hint[h] = v.TextLabel.Text
                 end
             end
         end
-        RS.EntityInfo.PL:FireServer(table.concat(Hint))
+        ReplicatedStorage.EntityInfo.PL:FireServer(table.concat(Hint))
         Warn(table.concat(Hint))
     else
         Warn("Hint Paper Not Find")
@@ -115,21 +119,21 @@ end)
 
 Other:Button(Locale.BT, function()
     for i = 3, 4 do
-        HB = Instance.new("HopperBin", LP.Backpack)
+        HB = Instance.new("HopperBin", LocalPlayer.Backpack)
         HB.BinType = i
     end
 end)
 
-Other:Dropdown(Locale.Camera, LP.CameraMode.Name, {"Classic", "LockFirstPerson"}, function(Value)
-    LP.CameraMode = Value
+Other:Dropdown(Locale.Camera, LocalPlayer.CameraMode.Name, {"Classic", "LockFirstPerson"}, function(Value)
+    LocalPlayer.CameraMode = Value
 end)
 
 Other:Toggle(Locale.FB, false, function(Value)
     Light = Value
     if Light then
-        game.Lighting.Ambient = Color3.new(1, 1, 1)
+        Lighting.Ambient = Color3.new(1, 1, 1)
     else
-        game.Lighting.Ambient = Color3.new(0, 0, 0)
+        Lighting.Ambient = Color3.new(0, 0, 0)
     end
 end)
 
@@ -159,7 +163,7 @@ end
 
 RunService.Stepped:Connect(function()
     if Noclip then
-        for i, v in pairs(LP.Character:GetChildren()) do
+        for i, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -167,7 +171,7 @@ RunService.Stepped:Connect(function()
     end
 end)
 
-game.ProximityPromptService.PromptButtonHoldBegan:Connect(function(v)
+ProximityPromptService.PromptButtonHoldBegan:Connect(function(v)
     if Fast then
         v.HoldDuration = 0
     end
@@ -175,25 +179,25 @@ end)
 
 RunService.Heartbeat:Connect(function()
     if Boost then
-        LP.Character.Humanoid.WalkSpeed = 21
+        LocalPlayer.Character.Humanoid.WalkSpeed = 21
     end
     if Toggle then
-        LP.Character.Humanoid:ChangeState("Swimming")
-        LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character[HRP].Velocity = Vector3.zero
+        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Speed)
+        LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
-    for i, v in pairs(game.Players:GetPlayers()) do
+    for i, v in pairs(Players:GetPlayers()) do
         if not v.Character:FindFirstChild("Highlight") then
             esp(v.Character, 4)
         end
-        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LP:DistanceFromCharacter(v.Character.Head.Position))
+        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
         v.Character.BillboardGui.Enabled = EP
         v.Character.Highlight.Enabled = EP
     end
 end)
 
-game.ProximityPromptService.PromptShown:Connect(function(v)
+ProximityPromptService.PromptShown:Connect(function(v)
     if AI and table.find(Prompt, v.Name) and not table.find(List, v) then
         v:InputHoldBegin()
         if v.Name == Prompt[1] then
@@ -203,13 +207,13 @@ game.ProximityPromptService.PromptShown:Connect(function(v)
 end)
 
 workspace.ChildAdded:Connect(function(v)
-    if Monster and v:IsA("Model") and task.wait() and LP:DistanceFromCharacter(v:GetPivot().Position) < 1000 then
+    if Monster and v:IsA("Model") and task.wait() and LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 1000 then
         Warn(v.Name)
         esp(v)
     end
 end)
 
-RS.GameData.LatestRoom.Changed:Connect(function(r)
+ReplicatedStorage.GameData.LatestRoom.Changed:Connect(function(r)
     Room = workspace.CurrentRooms[r]
     TEC = Room:FindFirstChild("TriggerEventCollision")
     if Door then
@@ -228,14 +232,14 @@ RS.GameData.LatestRoom.Changed:Connect(function(r)
     end
 end)
 
-game.Lighting.LightingChanged:Connect(function()
+Lighting.LightingChanged:Connect(function()
     if Light then
-        game.Lighting.Ambient = Color3.new(1, 1, 1)
+        Lighting.Ambient = Color3.new(1, 1, 1)
     end
 end)
 
-LP.Idled:Connect(function()
+LocalPlayer.Idled:Connect(function()
     if AFK then
-        game.VirtualUser:MoveMouse(Vector2.new())
+        VirtualUser:MoveMouse(Vector2.new())
     end
 end)
