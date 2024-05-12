@@ -1,11 +1,15 @@
-LP = game.Players.LocalPlayer
+ReplicatedStorage = game:GetService("ReplicatedStorage")
+UserInputService = game:GetService("UserInputService")
+TweenService = game:GetService("TweenService")
 RunService = game:GetService("RunService")
-Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
+Players = game:GetService("Players")
+LocalPlayer = Players.LocalPlayer
+Locale = _G.Language[LocalPlayer.LocaleId] or _G.Language["en-us"]
 HRP = "HumanoidRootPart"
-RS = game.ReplicatedStorage
-Time = LP.PlayerGui.TimerUI.RaceTimer
-Tween = game.TweenService:Create(LP.Character[HRP], TweenInfo.new(), {
-    CFrame = workspace.LoadedWorld.Track:GetChildren()[#workspace.LoadedWorld.Track:GetChildren()].Sign.CFrame-Vector3.new(0, 20, 0)
+Track = workspace.LoadedWorld.Track
+Time = LocalPlayer.PlayerGui.TimerUI.RaceTimer
+Tween = TweenService:Create(LocalPlayer.Character[HRP], TweenInfo.new(), {
+    CFrame = Track:GetChildren()[#Track:GetChildren()].Sign.CFrame-Vector3.yAxis*20
 })
 
 Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Library.lua"))()
@@ -14,8 +18,8 @@ Window = Library:Window("SH", Locale.RC)
 
 Player = Window:Tab(Locale.Player)
 
-Player:Slider(Locale.WS, 0, 200, LP.Character.Humanoid.WalkSpeed, function(Value)
-    LP.Character.Humanoid.WalkSpeed = Value
+Player:Slider(Locale.WS, 0, 200, LocalPlayer.Character.Humanoid.WalkSpeed, function(Value)
+    LocalPlayer.Character.Humanoid.WalkSpeed = Value
 end)
 
 Player:Slider(Locale.Gravity, 0, 200, workspace.Gravity, function(Value)
@@ -29,7 +33,7 @@ end)
 Player:Toggle(Locale.Noclip, false, function(Value)
     Noclip = Value
     if not Noclip then
-        LP.Character.Humanoid:ChangeState("Jumping")
+        LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
 
@@ -42,7 +46,7 @@ end)
 Fly:Toggle(Locale.Toggle, false, function(Value)
     Toggle = Value
     for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LP.Character.Humanoid:SetStateEnabled(v, not Toggle)
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Toggle)
     end
 end)
 
@@ -79,21 +83,21 @@ Other = Window:Tab(Locale.Other)
 
 Other:Button(Locale.BT, function()
     for i = 3, 4 do
-        HB = Instance.new("HopperBin", LP.Backpack)
+        HB = Instance.new("HopperBin", LocalPlayer.Backpack)
         HB.BinType = i
     end
 end)
 
 Other:Button(Locale.CT, function()
-    Tool = Instance.new("Tool", LP.Backpack)
+    Tool = Instance.new("Tool", LocalPlayer.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LP.Character[HRP].CFrame = LP:GetMouse().Hit+Vector3.new(0, 2.5, 0)
+        LocalPlayer.Character[HRP].CFrame = LocalPlayer:GetMouse().Hit+Vector3.new(0, 2.5, 0)
     end)
 end)
 
-Other:Dropdown(Locale.Camera, LP.CameraMode.Name, {"Classic", "LockFirstPerson"}, function(Value)
-    LP.CameraMode = Value
+Other:Dropdown(Locale.Camera, LocalPlayer.CameraMode.Name, {"Classic", "LockFirstPerson"}, function(Value)
+    LocalPlayer.CameraMode = Value
 end)
 
 About = Window:Tab(Locale.About)
@@ -110,15 +114,15 @@ function Play()
     end
 end
 
-game.UserInputService.JumpRequest:Connect(function()
+UserInputService.JumpRequest:Connect(function()
     if Jump then
-        LP.Character.Humanoid:ChangeState("Jumping")
+        LocalPlayer.Character.Humanoid:ChangeState("Jumping")
     end
 end)
 
 RunService.Stepped:Connect(function()
     if Noclip then
-        for i, v in pairs(LP.Character:GetChildren()) do
+        for i, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -126,26 +130,26 @@ RunService.Stepped:Connect(function()
     end
 end)
 
-LP.leaderstats["🏁Wins"].Changed:Connect(function()
+LocalPlayer.leaderstats["🏁Wins"].Changed:Connect(function()
     if Rebirth then
-        RS.Packages.Knit.Services.RebirthService.RF.Rebirth:InvokeServer()
+        ReplicatedStorage.Packages.Knit.Services.RebirthService.RF.Rebirth:InvokeServer()
     end
 end)
 
 RunService.Heartbeat:Connect(function()
     if Toggle then
-        LP.Character.Humanoid:ChangeState("Swimming")
-        LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character[HRP].Velocity = Vector3.zero
+        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Speed)
+        LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
-    for i, v in pairs(game.Players:GetPlayers()) do
+    for i, v in pairs(Players:GetPlayers()) do
         if LT and string.find(v[Type], Name) then
-            LP.Character.Humanoid.Sit = false
-            LP.Character[HRP].CFrame = v.Character[HRP].CFrame
+            LocalPlayer.Character.Humanoid.Sit = false
+            LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
         end
     end
-    if Click and LP.PlayerGui.ClicksUI.ClickHelper.Visible then
-        RS.Packages.Knit.Services.ClickService.RF.Click:InvokeServer()
+    if Click and LocalPlayer.PlayerGui.ClicksUI.ClickHelper.Visible then
+        ReplicatedStorage.Packages.Knit.Services.ClickService.RF.Click:InvokeServer()
     end
 end)
 
