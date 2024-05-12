@@ -1,6 +1,7 @@
-LP = game.Players.LocalPlayer
 RunService = game:GetService("RunService")
-Locale = _G.Language[LP.LocaleId] or _G.Language["en-us"]
+Players = game:GetService("Players")
+LocalPlayer = Players.LocalPlayer
+Locale = _G.Language[LocalPlayer.LocaleId] or _G.Language["en-us"]
 HRP = "HumanoidRootPart"
 Camera = workspace.CurrentCamera
 Sort = {}
@@ -15,7 +16,7 @@ Player = Window:Tab(Locale.Player)
 Player:Toggle(Locale.Noclip, false, function(Value)
     Noclip = Value
     if not Noclip then
-        LP.Character.Humanoid:ChangeState("Jumping")
+        LP.Character.Humanoid:ChangeState("Flying")
     end
 end)
 
