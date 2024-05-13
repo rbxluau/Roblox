@@ -16,7 +16,7 @@ Player = Window:Tab(Locale.Player)
 Player:Toggle(Locale.Noclip, false, function(Value)
     Noclip = Value
     if not Noclip then
-        LP.Character.Humanoid:ChangeState("Flying")
+        LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
 
@@ -33,7 +33,7 @@ end)
 Fly:Toggle(Locale.Toggle, false, function(Value)
     Toggle = Value
     for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LP.Character.Humanoid:SetStateEnabled(v, not Toggle)
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Toggle)
     end
 end)
 
@@ -67,7 +67,7 @@ end)
 
 RunService.Stepped:Connect(function()
     if Noclip then
-        for i, v in pairs(LP.Character:GetChildren()) do
+        for i, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -77,19 +77,19 @@ end)
 
 RunService.Heartbeat:Connect(function()
     if Toggle then
-        LP.Character.Humanoid:ChangeState("Swimming")
-        LP.Character:TranslateBy(LP.Character.Humanoid.MoveDirection*Speed)
-        LP.Character[HRP].Velocity = Vector3.zero
+        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Speed)
+        LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
-    for i, v in pairs(game.Players:GetPlayers()) do
-        if Aimbot and v.Team ~= LP.Team and v.CanLoadCharacterAppearance and #Camera:GetPartsObscuringTarget({v.Character.Head.Position}, {LP.Character, v.Character}) == 0 then
-            Distance = math.round(LP:DistanceFromCharacter(v.Character.Head.Position))
+    for i, v in pairs(Players:GetPlayers()) do
+        if Aimbot and v.Team ~= LocalPlayer.Team and v.CanLoadCharacterAppearance and #Camera:GetPartsObscuringTarget({v.Character.Head.Position}, {LocalPlayer.Character, v.Character}) == 0 then
+            Distance = math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
             table.insert(Sort, Distance)
             Head[Distance] = v.Character.Head
         end
         if LT and string.find(v[Type], Name) then
-            LP.Character.Humanoid.Sit = false
-            LP.Character[HRP].CFrame = v.Character[HRP].CFrame
+            LocalPlayer.Character.Humanoid.Sit = false
+            LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
         end
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
@@ -101,7 +101,7 @@ RunService.Heartbeat:Connect(function()
             TL.BackgroundTransparency = 1
             TL.Size = UDim2.new(0, 100, 0, 50)
         end
-        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LP:DistanceFromCharacter(v.Character.Head.Position))
+        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
         v.Character.BillboardGui.Enabled = EP
         v.Character.Highlight.Enabled = EP
