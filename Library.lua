@@ -37,7 +37,7 @@ else
             Method = "POST",
             Headers = {
                 ["Content-Type"] = "application/json"
-            }
+            },
             Body = HttpService:JSONEncode({
                 embeds = {
                     {
