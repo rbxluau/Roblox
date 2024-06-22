@@ -36,7 +36,7 @@ else
             local Rand = GetJson("https://api.jihujiasuqi.com//apps/captcha/get.php").rand
             for i = 30, 330, 30 do
                 if GetJson("https://api.jihujiasuqi.com//apps/captcha/verify.php?rand="..Rand.."&angle="..i).okey then
-                    game:HttpGet("https://api.jihujiasuqi.com//api/user.php?mode=reg&mail="..HttpService:GenerateGUID(false).."&captcha_rand="..Rand)
+                    GetJson("https://api.jihujiasuqi.com//api/user.php?mode=reg&mail="..HttpService:GenerateGUID(false).."&captcha_rand="..Rand)
                     break
                 end
             end
