@@ -1,13 +1,12 @@
 RunService = game:GetService("RunService")
 Players = game:GetService("Players")
 LocalPlayer = Players.LocalPlayer
-Locale = _G.Language[LocalPlayer.LocaleId] or _G.Language["en-us"]
 HRP = "HumanoidRootPart"
 Camera = workspace.CurrentCamera
 Sort = {}
 Head = {}
 
-Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/Library.lua"))()
+Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
 Window = Library:Window("SH", Locale.Arsenal)
 
