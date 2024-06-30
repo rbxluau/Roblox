@@ -173,7 +173,7 @@ end)
 
 ProximityPromptService.PromptButtonHoldBegan:Connect(function(v)
     if Fast then
-        v.HoldDuration = 0
+        fireproximityprompt(v)
     end
 end)
 
@@ -199,7 +199,7 @@ end)
 
 ProximityPromptService.PromptShown:Connect(function(v)
     if AI and table.find(Prompt, v.Name) and not table.find(List, v) then
-        v:InputHoldBegin()
+        fireproximityprompt(v)
         if v.Name == Prompt[1] then
             table.insert(List, v)
         end
