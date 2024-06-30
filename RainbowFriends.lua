@@ -139,19 +139,54 @@ RunService.Heartbeat:Connect(function()
         LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
     if Get then
-        Model = {
-            "Block"..math.random(1, 24),
-            "FoodOrange",
-            "FoodPink",
-            "FoodGreen",
-            "Fuse"..math.random(1, 14),
-            "Battery",
-            "LightBulb",
-            "GasCanister",
-            "CakeMix"
-        }
         for i, v in pairs(workspace:GetChildren()) do
-            if table.find(Model, v.Name) then
+            if table.find({
+                "Fuse1",
+                "Fuse2",
+                "Fuse3",
+                "Fuse4",
+                "Fuse5",
+                "Fuse6",
+                "Fuse7",
+                "Fuse8",
+                "Fuse9",
+                "Fuse10",
+                "Fuse11",
+                "Fuse12",
+                "Fuse13",
+                "Fuse14",
+                "Block1",
+                "Block2",
+                "Block3",
+                "Block4",
+                "Block5",
+                "Block6",
+                "Block7",
+                "Block8",
+                "Block9",
+                "Block10",
+                "Block11",
+                "Block12",
+                "Block13",
+                "Block14",
+                "Block15",
+                "Block16",
+                "Block17",
+                "Block18",
+                "Block19",
+                "Block20",
+                "Block21",
+                "Block22",
+                "Block23",
+                "Block24",
+                "Battery",
+                "FoodPink",
+                "FoodGreen",
+                "FoodOrange",
+                "CakeMix",
+                "LightBulb",
+                "GasCanister"
+            }, v.Name) then
                 v.TouchTrigger.CFrame = LocalPlayer.Character[HRP].CFrame
             end
         end
