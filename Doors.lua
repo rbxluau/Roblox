@@ -2,7 +2,6 @@ ProximityPromptService = game:GetService("ProximityPromptService")
 ReplicatedStorage = game:GetService("ReplicatedStorage")
 VirtualUser = game:GetService("VirtualUser")
 RunService = game:GetService("RunService")
-StarterGui = game:GetService("StarterGui")
 Lighting = game:GetService("Lighting")
 Players = game:GetService("Players")
 LocalPlayer = Players.LocalPlayer
@@ -17,7 +16,7 @@ Prompt = {
 List = {}
 
 function Warn(v)
-    StarterGui:SetCore("SendNotification", {
+    game.StarterGui:SetCore("SendNotification", {
     Title = "Warning",
     Text = v
     })
@@ -42,12 +41,6 @@ Player:Toggle(Locale.Noclip, false, function(Value)
     if not Noclip then
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
-end)
-
-Interact = Window:Tab(Locale.Interact)
-
-Interact:Toggle(Locale.Fast, false, function(Value)
-    Fast = Value
 end)
 
 Fly = Window:Tab(Locale.Fly)
@@ -168,12 +161,6 @@ RunService.Stepped:Connect(function()
                 v.CanCollide = false
             end
         end
-    end
-end)
-
-ProximityPromptService.PromptButtonHoldBegan:Connect(function(v)
-    if Fast then
-        fireproximityprompt(v)
     end
 end)
 
