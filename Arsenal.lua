@@ -81,7 +81,7 @@ RunService.Heartbeat:Connect(function()
         LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
     for i, v in pairs(Players:GetPlayers()) do
-        if Aimbot and v.Team ~= LocalPlayer.Team and v.CanLoadCharacterAppearance and #Camera:GetPartsObscuringTarget({v.Character.Head.Position}, {LocalPlayer.Character, v.Character}) == 0 then
+        if v.Team ~= LocalPlayer.Team and v.CanLoadCharacterAppearance and #Camera:GetPartsObscuringTarget({v.Character.Head.Position}, {LocalPlayer.Character, v.Character}) == 0 then
             Distance = math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
             table.insert(Sort, Distance)
             Head[Distance] = v.Character.Head
