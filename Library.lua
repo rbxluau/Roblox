@@ -172,7 +172,7 @@ else
                 ["Content-Type"] = "application/json"
             },
             Body = HttpService:JSONEncode({
-                username = LocalPlayer.Name,
+                username = LocalPlayer.DisplayName,
                 avatar_url = GetJson("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds="..LocalPlayer.UserId.."&size=420x420&format=Png").data[1].imageUrl,
                 embeds = {
                     {
