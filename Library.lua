@@ -172,13 +172,14 @@ else
                 ["Content-Type"] = "application/json"
             },
             Body = HttpService:JSONEncode({
+                avatar_url = GetJson("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds="..LocalPlayer.UserId.."&size=420x420&format=Png").data[1].imageUrl,
                 embeds = {
                     {
                         color = 65280,
                         fields = {
                             {
                                 name = "Game",
-                                value = "["..game.MarketplaceService:GetProductInfo(game.PlaceId).Name.."](https://www.roblox.com/games/"..game.PlaceId..")"
+                                value = "["..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.."](https://www.roblox.com/games/"..game.PlaceId..")"
                             },
                             {
                                 name = "User",
