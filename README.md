@@ -71,7 +71,7 @@ Dropdown:AddOption(<str> Option)
 ```lua
 Dropdown:RemoveOption(<str> Option)
 ```
-### AddOptions
+### SetOptions
 ```lua
 Dropdown:AddOptions(<list> Options)
 ```
