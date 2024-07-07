@@ -1,5 +1,4 @@
-# Example
-## SupportedGames
+# SupportedGames
 * Arsenal
 * Doors
 * RaceClicker
@@ -7,5 +6,5 @@
 * RainbowFriends
 * PrisonLife
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/nahida-cn/Roblox/main/ScriptHub.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/ScriptHub.lua"))()
 ```
