@@ -2,23 +2,23 @@
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/ScriptHub.lua"))()
 ```
-## SupportedGames
-* Arsenal
-* Doors
-* RaceClicker
-* BladeBall
-* RainbowFriends
-* PrisonLife
+* SupportedGames
+    > Arsenal  
+    Doors  
+    RaceClicker  
+    BladeBall  
+    RainbowFriends  
+    PrisonLife
 # Library
 ```lua
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 ```
 ## Window
 ```lua
-local Window = Library:Window(<str>Name, <str?>Theme)
+local Window = Library:Window(<str> Name, <str?> Theme)
 ```
 * Theme
-    >dark
+    > dark
 ## Tab
 ```lua
 local Tab = Window:Tab(<str> Name, <int?> Icon)
@@ -37,7 +37,7 @@ Section:Label(<str> Name)
 ```
 ## Toggle
 ```lua
-local Toggle = Section:Toggle(<str> Name, <str> Flag, <bool?> Enabled, <func?> Callback)
+local Toggle = Section:Toggle(<str> Name, <str> Flag, <bool?> Enabled, <func?<bool>> Callback)
 ```
 ### SetState
 ```lua
@@ -45,15 +45,15 @@ Toggle:SetState(<bool?> State)
 ```
 ## Keybind
 ```lua
-Section:Keybind(<str> Name, <str> Default, <func?> Callback)
+Section:Keybind(<str> Name, <str> Default, <func?<str>> Callback)
 ```
 ## Textbox
 ```lua
-Section:Textbox(<str> Name, <str> Flag, <str> Default, <func?> Callback)
+Section:Textbox(<str> Name, <str> Flag, <str> Default, <func?<str>> Callback)
 ```
 ## Slider
 ```lua
-local Slider = Section:Slider(<str> Name, <str> Flag, <num?> Default, <num?> Min, <num?> Max, <bool?> Precise, <func?> Callback)
+local Slider = Section:Slider(<str> Name, <str> Flag, <num?> Default, <num?> Min, <num?> Max, <bool?> Precise, <func?<num>> Callback)
 ```
 ### SetValue
 ```lua
@@ -74,4 +74,10 @@ Dropdown:RemoveOption(<str> Option)
 ### AddOptions
 ```lua
 Dropdown:AddOptions(<list> Options)
+```
+## FAQ
+### How flags work?
+The flags feature in the ui may be confusing for some people. It serves the purpose of being the ID of an element in the config file, and makes accessing the value of an element anywhere in the code possible. Below in an example of using flags.
+```lua
+Library.flags["name"]
 ```
