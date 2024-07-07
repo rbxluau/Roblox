@@ -61,7 +61,7 @@ Slider:SetValue(<num?> Value)
 ```
 ## Dropdown
 ```lua
-local Dropdown = Section:Dropdown(<str> Name, <str> Flag, <list?> Options, <func?> Callback)
+local Dropdown = Section:Dropdown(<str> Name, <str> Flag, <list?<str>> Options, <func?<str>> Callback)
 ```
 ### AddOption
 ```lua
@@ -73,7 +73,7 @@ Dropdown:RemoveOption(<str> Option)
 ```
 ### SetOptions
 ```lua
-Dropdown:AddOptions(<list> Options)
+Dropdown:SetOptions(<list<str>> Options)
 ```
 ## FAQ
 ### How flags work?
