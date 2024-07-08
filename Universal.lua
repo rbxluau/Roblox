@@ -17,11 +17,11 @@ end
 
 Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window(Locale.US)
+Window = Library:Window(Locale.Universal)
 
 Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Section:Slider(Locale.JP, "JumpPower", LocalPlayer.Character.Humanoid.JumpPower, 0, 200, false, function(Value)
+Section:Slider(Locale.Jump, "Jump", LocalPlayer.Character.Humanoid.JumpPower, 0, 200, false, function(Value)
     LocalPlayer.Character.Humanoid.JumpPower = Value
 end)
 
@@ -37,7 +37,7 @@ Section:Toggle(Locale.Fly, "Fly", false, function(Value)
     end
 end)
 
-Section:Toggle(Locale.IJ, "InfJump")
+Section:Toggle(Locale.InfJump, "InfJump")
 
 Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
     if not Value then
@@ -53,7 +53,7 @@ Section = Window:Tab(Locale.Loop):Section("Main", true)
 
 Player = Section:Dropdown(Locale.Player, "Player", GetPlayers())
 
-Section:Toggle(Locale.TP, "Teleport")
+Section:Toggle(Locale.Teleport, "Teleport")
 
 Section = Window:Tab(Locale.ESP):Section("Main", true)
 
@@ -61,14 +61,14 @@ Section:Toggle(Locale.Player, "ESP")
 
 Section = Window:Tab(Locale.Other):Section("Main", true)
 
-Section:Button(Locale.BT, function()
+Section:Button(Locale.BTool, function()
     for i = 3, 4 do
         HB = Instance.new("HopperBin", LocalPlayer.Backpack)
         HB.BinType = i
     end
 end)
 
-Section:Button(Locale.CT, function()
+Section:Button(Locale.ClickTP, function()
     Tool = Instance.new("Tool", LocalPlayer.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
@@ -80,7 +80,7 @@ Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, functi
     LocalPlayer.CameraMode = Value
 end)
 
-Section:Toggle(Locale.FB, "Light", false, function(Value)
+Section:Toggle(Locale.FullBright, "Light", false, function(Value)
     if Value then
         Lighting.Ambient = Color3.new(1, 1, 1)
     else
