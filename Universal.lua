@@ -134,7 +134,7 @@ RunService.Heartbeat:Connect(function()
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
         LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
-    if Teleport then
+    if Library.flags.Teleport then
         LocalPlayer.Character.Humanoid.Sit = false
         LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
     end
