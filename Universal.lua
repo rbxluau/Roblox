@@ -25,7 +25,7 @@ Section:Slider(Locale.JP, "JumpPower", LocalPlayer.Character.Humanoid.JumpPower,
     LocalPlayer.Character.Humanoid.JumpPower = Value
 end)
 
-Section:Slider(Locale.Gravity, "Gravity", workspace.Gravity, 0, 200, false, function(Value)
+Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(Value)
     workspace.Gravity = Value
 end)
 
