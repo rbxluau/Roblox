@@ -11,83 +11,64 @@ Tween = TweenService:Create(LocalPlayer.Character[HRP], TweenInfo.new(), {
     CFrame = Track:GetChildren()[#Track:GetChildren()].Sign.CFrame-Vector3.yAxis*20
 })
 
+function GetPlayers()
+    local Players = Players:GetPlayers()
+    for i, v in pairs(Players) do
+        Players[i] = v.Name
+    end
+    return Players
+end
+
 Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window("SH", Locale.RC)
+Window = Library:Window(Locale.RaceClicker)
 
-Player = Window:Tab(Locale.Player)
+Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Player:Slider(Locale.WS, 0, 200, LocalPlayer.Character.Humanoid.WalkSpeed, function(Value)
-    LocalPlayer.Character.Humanoid.WalkSpeed = Value
-end)
-
-Player:Slider(Locale.Gravity, 0, 200, workspace.Gravity, function(Value)
+Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(Value)
     workspace.Gravity = Value
 end)
 
-Player:Toggle(Locale.IJ, false, function(Value)
-    Jump = Value
+Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
+
+Section:Toggle(Locale.Fly, "Fly", false, function(Value)
+    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Value)
+    end
 end)
 
-Player:Toggle(Locale.Noclip, false, function(Value)
-    Noclip = Value
-    if not Noclip then
+Section:Toggle(Locale.InfJump, "InfJump")
+
+Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
+    if not Value then
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
 
-Fly = Window:Tab(Locale.Fly)
+Section = Window:Tab(Locale.Loop):Section("Main", true)
 
-Fly:Slider(Locale.Speed, 0, 200, 1, function(Value)
-    Speed = Value
-end)
+Player = Section:Dropdown(Locale.Player, "Player", GetPlayers())
 
-Fly:Toggle(Locale.Toggle, false, function(Value)
-    Toggle = Value
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Toggle)
-    end
-end)
+Section:Toggle(Locale.Teleport, "Teleport")
 
-Loop = Window:Tab(Locale.Loop)
+Section = Window:Tab(Locale.Auto):Section("Main", true)
 
-Loop:Dropdown(Locale.Type, "DisplayName", {"DisplayName", "Name"}, function(Value)
-    Type = Value
-end)
+Section:Toggle(Locale.Rebirth, "Rebirth")
 
-Loop:Textbox(Locale.Name, "", true, function(Value)
-    Name = Value
-end)
+Section:Toggle(Locale.Click, "Click")
 
-Loop:Toggle(Locale.TP, false, function(Value)
-    LT = Value
-end)
+Section:Toggle(Locale.Race, "Race", false, Play)
 
-Auto = Window:Tab(Locale.Auto)
+Section = Window:Tab(Locale.Other):Section("Main", true)
 
-Auto:Toggle(Locale.RB, false, function(Value)
-    Rebirth = Value
-end)
-
-Auto:Toggle(Locale.Click, false, function(Value)
-    Click = Value
-end)
-
-Auto:Toggle(Locale.Race, false, function(Value)
-    Race = Value
-    Play()
-end)
-
-Other = Window:Tab(Locale.Other)
-
-Other:Button(Locale.BT, function()
+Section:Button(Locale.BTool, function()
     for i = 3, 4 do
         HB = Instance.new("HopperBin", LocalPlayer.Backpack)
         HB.BinType = i
     end
 end)
 
-Other:Button(Locale.CT, function()
+Section:Button(Locale.ClickTP, function()
     Tool = Instance.new("Tool", LocalPlayer.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
@@ -95,32 +76,32 @@ Other:Button(Locale.CT, function()
     end)
 end)
 
-Other:Dropdown(Locale.Camera, LocalPlayer.CameraMode.Name, {"Classic", "LockFirstPerson"}, function(Value)
+Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, function(Value)
     LocalPlayer.CameraMode = Value
 end)
 
-About = Window:Tab(Locale.About)
+Section = Window:Tab(Locale.About):Section("Main", true)
 
-About:Label(Locale.By)
+Section:Label(Locale.By)
 
-About:Button(Locale.Copy, function()
+Section:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
 
 function Play()
-    if Race and Time.Visible then
+    if Library.flags.Race and Time.Visible then
         Tween:Play()
     end
 end
 
 UserInputService.JumpRequest:Connect(function()
-    if Jump then
+    if Library.flags.InfJump then
         LocalPlayer.Character.Humanoid:ChangeState("Jumping")
     end
 end)
 
 RunService.Stepped:Connect(function()
-    if Noclip then
+    if Library.flags.Noclip then
         for i, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
@@ -130,24 +111,22 @@ RunService.Stepped:Connect(function()
 end)
 
 LocalPlayer.leaderstats["🏁Wins"].Changed:Connect(function()
-    if Rebirth then
+    if Library.flags.Rebirth then
         ReplicatedStorage.Packages.Knit.Services.RebirthService.RF.Rebirth:InvokeServer()
     end
 end)
 
 RunService.Heartbeat:Connect(function()
-    if Toggle then
+    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+    if Library.flags.Fly then
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Speed)
         LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
-    for i, v in pairs(Players:GetPlayers()) do
-        if LT and string.find(v[Type], Name) then
-            LocalPlayer.Character.Humanoid.Sit = false
-            LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
-        end
+    if Library.flags.Teleport then
+        LocalPlayer.Character.Humanoid.Sit = false
+        LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
     end
-    if Click and LocalPlayer.PlayerGui.ClicksUI.ClickHelper.Visible then
+    if Library.flags.Click and LocalPlayer.PlayerGui.ClicksUI.ClickHelper.Visible then
         ReplicatedStorage.Packages.Knit.Services.ClickService.RF.Click:InvokeServer()
     end
 end)
