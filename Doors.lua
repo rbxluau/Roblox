@@ -71,15 +71,15 @@ Section:Toggle(Locale.Other, "Other")
 
 Section = Window:Tab(Locale.Remove):Section("Main", true)
 
-Remove:Button("Screech", function()
+Section:Button("Screech", function()
     LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules.Screech:Destroy()
 end)
 
-Remove:Toggle("Seek", "Seek")
+Section:Toggle("Seek", "Seek")
 
 Section = Window:Tab(Locale.Other):Section("Main", true)
 
-Other:Button(Locale.Unlock, function()
+Section:Button(Locale.Unlock, function()
     Hint = {"x", "x", "x", "x", "x"}
     Paper = LocalPlayer.Backpack:FindFirstChild("LibraryHintPaper") or LocalPlayer.Character:FindFirstChild("LibraryHintPaper")
     if Paper then
