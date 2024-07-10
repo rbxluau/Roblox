@@ -116,6 +116,14 @@ LocalPlayer.leaderstats["🏁Wins"].Changed:Connect(function()
     end
 end)
 
+Players.PlayerAdded:Connect(function(v)
+    Player:AddOption(v.Name)
+end)
+
+Players.PlayerRemoving:Connect(function(v)
+    Player:RemoveOption(v.Name)
+end)
+
 RunService.Heartbeat:Connect(function()
     LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
     if Library.flags.Fly then
