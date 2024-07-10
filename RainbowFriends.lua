@@ -6,87 +6,68 @@ Players = game:GetService("Players")
 LocalPlayer = Players.LocalPlayer
 HRP = "HumanoidRootPart"
 
+function GetPlayers()
+    local Players = Players:GetPlayers()
+    for i, v in pairs(Players) do
+        Players[i] = v.Name
+    end
+    return Players
+end
+
 Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window("SH", Locale.RF)
+Window = Library:Window(Locale.RainbowFriends)
 
-Player = Window:Tab(Locale.Player)
+Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Player:Slider(Locale.WS, 0, 200, LocalPlayer.Character.Humanoid.WalkSpeed, function(Value)
-    LocalPlayer.Character.Humanoid.WalkSpeed = Value
+Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
+
+Section:Toggle(Locale.Fly, "Fly", false, function(Value)
+    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Value)
+    end
 end)
 
-Player:Toggle(Locale.Noclip, false, function(Value)
-    Noclip = Value
-    if not Noclip then
+Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
+    if not Value then
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
 
-Player:Toggle(Locale.Invisible, false, function(Value)
-    Invisible = Value
-    if not Invisible then
+Section:Toggle(Locale.Invisible, "Invisible", false, function(Value)
+    if not Value then
         ReplicatedStorage.communication.boxes.cl.BoxUpdated:FireServer("Unequip")
     end
 end)
 
-Fly = Window:Tab(Locale.Fly)
+Section = Window:Tab(Locale.Auto):Section("Main", true)
 
-Fly:Slider(Locale.Speed, 0, 200, 1, function(Value)
-    Speed = Value
-end)
+Section:Toggle(Locale.Get, "Get")
 
-Fly:Toggle(Locale.Toggle, false, function(Value)
-    Toggle = Value
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Toggle)
-    end
-end)
+Section:Toggle(Locale.Put, "Put")
 
-Auto = Window:Tab(Locale.Auto)
+Section = Window:Tab(Locale.Loop):Section("Main", true)
 
-Auto:Toggle(Locale.Get, false, function(Value)
-    Get = Value
-end)
+Player = Section:Dropdown(Locale.Player, "Player", GetPlayers())
 
-Auto:Toggle(Locale.Put, false, function(Value)
-    Put = Value
-end)
+Section:Toggle(Locale.Teleport, "Teleport")
 
-Loop = Window:Tab(Locale.Loop)
+Section = Window:Tab(Locale.ESP):Section("Main", true)
 
-Loop:Dropdown(Locale.Type, "DisplayName", {"DisplayName", "Name"}, function(Value)
-    Type = Value
-end)
+Section:Toggle(Locale.Player, "ESP")
 
-Loop:Textbox(Locale.Name, "", true, function(Value)
-    Name = Value
-end)
+Section:Toggle(Locale.Other, "Other")
 
-Loop:Toggle(Locale.TP, false, function(Value)
-    LT = Value
-end)
+Section = Window:Tab(Locale.Other):Section("Main", true)
 
-ESP = Window:Tab(Locale.ESP)
-
-ESP:Toggle(Locale.Player, false, function(Value)
-    EP = Value
-end)
-
-ESP:Toggle(Locale.Other, false, function(Value)
-    EO = Value
-end)
-
-Other = Window:Tab(Locale.Other)
-
-Other:Button(Locale.BT, function()
+Section:Button(Locale.BTool, function()
     for i = 3, 4 do
         HB = Instance.new("HopperBin", LocalPlayer.Backpack)
         HB.BinType = i
     end
 end)
 
-Other:Button(Locale.CT, function()
+Section:Button(Locale.ClickTP, function()
     Tool = Instance.new("Tool", LocalPlayer.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
@@ -94,51 +75,51 @@ Other:Button(Locale.CT, function()
     end)
 end)
 
-Other:Dropdown(Locale.Camera, LocalPlayer.CameraMode.Name, {"Classic", "LockFirstPerson"}, function(Value)
+Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, function(Value)
     LocalPlayer.CameraMode = Value
 end)
 
-Other:Toggle(Locale.FB, false, function(Value)
-    Light = Value
-    if Light then
+Section:Toggle(Locale.FullBright, "Light", false, function(Value)
+    if Value then
         Lighting.Ambient = Color3.new(1, 1, 1)
     else
         Lighting.Ambient = Color3.new(0, 0, 0)
     end
 end)
 
-Other:Toggle(Locale.AFK, false, function(Value)
-    AFK = Value
-end)
+Section:Toggle(Locale.AFK, "AFK")
 
-About = Window:Tab(Locale.About)
+Section = Window:Tab(Locale.About):Section("Main", true)
 
-About:Label(Locale.By)
+Section:Label(Locale.By)
 
-About:Button(Locale.Copy, function()
+Section:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
 
 RunService.Stepped:Connect(function()
-    if Noclip then
+    if Library.flags.Noclip then
         for i, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
         end
     end
-    if Invisible then
+    if Library.flags.Invisible then
         ReplicatedStorage.communication.boxes.cl.BoxUpdated:FireServer("Equip")
     end
 end)
 
+Players.PlayerAdded:Connect(function(v)
+    Player:AddOption(v.Name)
+end)
+
+Players.PlayerRemoving:Connect(function(v)
+    Player:RemoveOption(v.Name)
+end)
+
 RunService.Heartbeat:Connect(function()
-    if Toggle then
-        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Speed)
-        LocalPlayer.Character[HRP].Velocity = Vector3.zero
-    end
-    if Get then
+    if Library.flags.Get then
         for i, v in pairs(workspace:GetChildren()) do
             if table.find({
                 "Fuse1",
@@ -191,16 +172,21 @@ RunService.Heartbeat:Connect(function()
             end
         end
     end
-    if Put then
+    if Library.flags.Put then
         for i, v in pairs(workspace.GroupBuildStructures:GetChildren()) do
             v.Trigger.CFrame = LocalPlayer.Character[HRP].CFrame
         end
     end
+    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+    if Library.flags.Fly then
+        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
+        LocalPlayer.Character[HRP].Velocity = Vector3.zero
+    end
+    if Library.flags.Teleport then
+        LocalPlayer.Character.Humanoid.Sit = false
+        LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
+    end
     for i, v in pairs(Players:GetPlayers()) do
-        if LT and string.find(v[Type], Name) then
-            LocalPlayer.Character.Humanoid.Sit = false
-            LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
-        end
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
             BG = Instance.new("BillboardGui", v.Character)
@@ -213,24 +199,25 @@ RunService.Heartbeat:Connect(function()
         end
         v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        v.Character.BillboardGui.Enabled = EP
-        v.Character.Highlight.Enabled = EP
+        v.Character.Highlight.FillColor = v.TeamColor.Color
+        v.Character.BillboardGui.Enabled = Library.flags.ESP
+        v.Character.Highlight.Enabled = Library.flags.ESP
     end
     for i, v in pairs(workspace.ignore:GetChildren()) do
         if v.Name == "Looky" then
-            v.Highlight.Enabled = EO
+            v.Highlight.Enabled = Library.flags.Other
         end
     end
 end)
 
 Lighting.LightingChanged:Connect(function()
-    if Light then
+    if Library.flags.Light then
         Lighting.Ambient = Color3.new(1, 1, 1)
     end
 end)
 
 LocalPlayer.Idled:Connect(function()
-    if AFK then
+    if Library.flags.AFK then
         VirtualUser:MoveMouse(Vector2.new())
     end
 end)
