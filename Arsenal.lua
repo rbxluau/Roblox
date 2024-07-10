@@ -6,66 +6,60 @@ Camera = workspace.CurrentCamera
 Sort = {}
 Head = {}
 
+function GetPlayers()
+    local Players = Players:GetPlayers()
+    for i, v in pairs(Players) do
+        Players[i] = v.Name
+    end
+    return Players
+end
+
 Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window("SH", Locale.Arsenal)
+Window = Library:Window(Locale.Arsenal)
 
-Player = Window:Tab(Locale.Player)
+Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Player:Toggle(Locale.Noclip, false, function(Value)
-    Noclip = Value
-    if not Noclip then
+Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
+
+Section:Toggle(Locale.Fly, "Fly", false, function(Value)
+    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Value)
+    end
+end)
+
+Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
+    if not Value then
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
 
-Player:Toggle(Locale.Aimbot, false, function(Value)
-    Aimbot = Value
-end)
+Section = Window:Tab(Locale.Aimbot):Section("Main", true)
 
-Fly = Window:Tab(Locale.Fly)
+Section:Toggle(Locale.Team, "Team")
 
-Fly:Slider(Locale.Speed, 0, 200, 1, function(Value)
-    Speed = Value
-end)
+Section:Toggle(Locale.Toggle, "Aimbot")
 
-Fly:Toggle(Locale.Toggle, false, function(Value)
-    Toggle = Value
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Toggle)
-    end
-end)
+Section = Window:Tab(Locale.Loop):Section("Main", true)
 
-Loop = Window:Tab(Locale.Loop)
+Player = Section:Dropdown(Locale.Player, "Player", GetPlayers())
 
-Loop:Dropdown(Locale.Type, "DisplayName", {"DisplayName", "Name"}, function(Value)
-    Type = Value
-end)
+Section:Toggle(Locale.Teleport, "Teleport")
 
-Loop:Textbox(Locale.Name, "", true, function(Value)
-    Name = Value
-end)
+Section = Window:Tab(Locale.ESP):Section("Main", true)
 
-Loop:Toggle(Locale.TP, false, function(Value)
-    LT = Value
-end)
+Section:Toggle(Locale.Player, "ESP")
 
-ESP = Window:Tab(Locale.ESP)
+Section = Window:Tab(Locale.About):Section("Main", true)
 
-ESP:Toggle(Locale.Player, false, function(Value)
-    EP = Value
-end)
+Section:Label(Locale.By)
 
-About = Window:Tab(Locale.About)
-
-About:Label(Locale.By)
-
-About:Button(Locale.Copy, function()
+Section:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
 
 RunService.Stepped:Connect(function()
-    if Noclip then
+    if Library.flags.Noclip then
         for i, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
@@ -74,21 +68,29 @@ RunService.Stepped:Connect(function()
     end
 end)
 
+Players.PlayerAdded:Connect(function(v)
+    Player:AddOption(v.Name)
+end)
+
+Players.PlayerRemoving:Connect(function(v)
+    Player:RemoveOption(v.Name)
+end)
+
 RunService.Heartbeat:Connect(function()
-    if Toggle then
+    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+    if Library.flags.Fly then
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Speed)
         LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
+    if Library.flags.Teleport then
+        LocalPlayer.Character.Humanoid.Sit = false
+        LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
+    end
     for i, v in pairs(Players:GetPlayers()) do
-        if v.Team ~= LocalPlayer.Team and v.CanLoadCharacterAppearance and #Camera:GetPartsObscuringTarget({v.Character.Head.Position}, {LocalPlayer.Character, v.Character}) == 0 then
+        if (Library.flags.Team or v.Team ~= LocalPlayer.Team) and v.CanLoadCharacterAppearance and #Camera:GetPartsObscuringTarget({v.Character.Head.Position}, {LocalPlayer.Character, v.Character}) == 0 then
             Distance = math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
             table.insert(Sort, Distance)
             Head[Distance] = v.Character.Head
-        end
-        if LT and string.find(v[Type], Name) then
-            LocalPlayer.Character.Humanoid.Sit = false
-            LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
         end
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
@@ -102,10 +104,11 @@ RunService.Heartbeat:Connect(function()
         end
         v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        v.Character.BillboardGui.Enabled = EP
-        v.Character.Highlight.Enabled = EP
+        v.Character.Highlight.FillColor = v.TeamColor.Color
+        v.Character.BillboardGui.Enabled = Library.flags.ESP
+        v.Character.Highlight.Enabled = Library.flags.ESP
     end
-    if Aimbot and Sort[1] then
+    if Library.flags.Aimbot and Sort[1] then
         table.sort(Sort)
         Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head[Sort[1]].Position)
         Sort = {}
