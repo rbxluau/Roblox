@@ -675,6 +675,7 @@ function Cloudlib.Window(Cloudlib, name, theme)
     )
     Open.Name = "Open"
     Open.Parent = dogent
+    Open.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     Open.BackgroundTransparency = 0.5
     Open.Image = "rbxassetid://7733771982"
     Open.Position = UDim2.new(0.8, 0, 0, 0)
