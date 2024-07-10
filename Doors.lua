@@ -2,6 +2,7 @@ ProximityPromptService = game:GetService("ProximityPromptService")
 ReplicatedStorage = game:GetService("ReplicatedStorage")
 VirtualUser = game:GetService("VirtualUser")
 RunService = game:GetService("RunService")
+StarterGui = game:GetService("StarterGui")
 Lighting = game:GetService("Lighting")
 Players = game:GetService("Players")
 LocalPlayer = Players.LocalPlayer
@@ -16,83 +17,69 @@ Prompt = {
 List = {}
 
 function Warn(v)
-    game.StarterGui:SetCore("SendNotification", {
+    StarterGui:SetCore("SendNotification", {
     Title = "Warning",
     Text = v
     })
 end
 
+function GetPlayers()
+    local Players = Players:GetPlayers()
+    for i, v in pairs(Players) do
+        Players[i] = v.Name
+    end
+    return Players
+end
+
 Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window("SH", "Doors")
+Window = Library:Window("Doors")
 
-Player = Window:Tab(Locale.Player)
+Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Player:Slider(Locale.Gravity, 0, 200, workspace.Gravity, function(Value)
+Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(Value)
     workspace.Gravity = Value
 end)
 
-Player:Toggle(Locale.Boost, false, function(Value)
-    Boost = Value
+Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
+
+Section:Toggle(Locale.Fly, "Fly", false, function(Value)
+    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Value)
+    end
 end)
 
-Player:Toggle(Locale.Noclip, false, function(Value)
-    Noclip = Value
-    if not Noclip then
+Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
+    if not Value then
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
 
-Fly = Window:Tab(Locale.Fly)
+Section = Window:Tab(Locale.Auto):Section("Main", true)
 
-Fly:Slider(Locale.Speed, 0, 200, 1, function(Value)
-    Speed = Value
-end)
+Section:Toggle(Locale.Interact, "Interact")
 
-Fly:Toggle(Locale.Toggle, false, function(Value)
-    Toggle = Value
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Toggle)
-    end
-end)
+Section = Window:Tab(Locale.ESP):Section("Main", true)
 
-Auto = Window:Tab(Locale.Auto)
+Section:Toggle(Locale.Player, "ESP")
 
-Auto:Toggle(Locale.Interact, false, function(Value)
-    AI = Value
-end)
+Section:Toggle(Locale.Monster, "Monster")
 
-ESP = Window:Tab(Locale.ESP)
+Section:Toggle(Locale.Door, "Door")
 
-ESP:Toggle(Locale.Player, false, function(Value)
-    EP = Value
-end)
+Section:Toggle(Locale.Other, "Other")
 
-ESP:Toggle(Locale.Monster, false, function(Value)
-    Monster = Value
-end)
-
-ESP:Toggle(Locale.Door, false, function(Value)
-    Door = Value
-end)
-
-ESP:Toggle(Locale.Other, false, function(Value)
-    EO = Value
-end)
-
-Remove = Window:Tab(Locale.Remove)
+Section = Window:Tab(Locale.Remove):Section("Main", true)
 
 Remove:Button("Screech", function()
     LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules.Screech:Destroy()
 end)
 
-Remove:Toggle("Seek", false, function(Value)
-    Seek = Value
-end)
+Remove:Toggle("Seek", "Seek")
 
-Other = Window:Tab(Locale.Other)
+Section = Window:Tab(Locale.Other):Section("Main", true)
 
-Other:Button(Locale.UD, function()
+Other:Button(Locale.Unlock, function()
     Hint = {"x", "x", "x", "x", "x"}
     Paper = LocalPlayer.Backpack:FindFirstChild("LibraryHintPaper") or LocalPlayer.Character:FindFirstChild("LibraryHintPaper")
     if Paper then
@@ -110,35 +97,32 @@ Other:Button(Locale.UD, function()
     end
 end)
 
-Other:Button(Locale.BT, function()
+Section:Button(Locale.BTool, function()
     for i = 3, 4 do
         HB = Instance.new("HopperBin", LocalPlayer.Backpack)
         HB.BinType = i
     end
 end)
 
-Other:Dropdown(Locale.Camera, LocalPlayer.CameraMode.Name, {"Classic", "LockFirstPerson"}, function(Value)
+Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, function(Value)
     LocalPlayer.CameraMode = Value
 end)
 
-Other:Toggle(Locale.FB, false, function(Value)
-    Light = Value
-    if Light then
+Section:Toggle(Locale.FullBright, "Light", false, function(Value)
+    if Value then
         Lighting.Ambient = Color3.new(1, 1, 1)
     else
         Lighting.Ambient = Color3.new(0, 0, 0)
     end
 end)
 
-Other:Toggle(Locale.AFK, false, function(Value)
-    AFK = Value
-end)
+Section:Toggle(Locale.AFK, "AFK")
 
-About = Window:Tab(Locale.About)
+Section = Window:Tab(Locale.About):Section("Main", true)
 
-About:Label(Locale.By)
+Section:Label(Locale.By)
 
-About:Button(Locale.Copy, function()
+Section:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
 
@@ -155,7 +139,7 @@ function esp(i, v)
 end
 
 RunService.Stepped:Connect(function()
-    if Noclip then
+    if Library.flags.Noclip then
         for i, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
@@ -165,12 +149,9 @@ RunService.Stepped:Connect(function()
 end)
 
 RunService.Heartbeat:Connect(function()
-    if Boost then
-        LocalPlayer.Character.Humanoid.WalkSpeed = 21
-    end
-    if Toggle then
+    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+    if Library.flags.Fly then
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Speed)
         LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
     for i, v in pairs(Players:GetPlayers()) do
@@ -179,13 +160,14 @@ RunService.Heartbeat:Connect(function()
         end
         v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        v.Character.BillboardGui.Enabled = EP
-        v.Character.Highlight.Enabled = EP
+        v.Character.Highlight.FillColor = v.TeamColor.Color
+        v.Character.BillboardGui.Enabled = Library.flags.ESP
+        v.Character.Highlight.Enabled = Library.flags.ESP
     end
 end)
 
 ProximityPromptService.PromptShown:Connect(function(v)
-    if AI and table.find(Prompt, v.Name) and not table.find(List, v) then
+    if Library.flags.Interact and table.find(Prompt, v.Name) and not table.find(List, v) then
         fireproximityprompt(v)
         if v.Name == Prompt[1] then
             table.insert(List, v)
@@ -194,7 +176,7 @@ ProximityPromptService.PromptShown:Connect(function(v)
 end)
 
 workspace.ChildAdded:Connect(function(v)
-    if Monster and v:IsA("Model") and task.wait() and LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 1000 then
+    if Library.flags.Monster and v:IsA("Model") and task.wait() and LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 1000 then
         Warn(v.Name)
         esp(v)
     end
@@ -203,30 +185,30 @@ end)
 ReplicatedStorage.GameData.LatestRoom.Changed:Connect(function(r)
     Room = workspace.CurrentRooms[r]
     TEC = Room:FindFirstChild("TriggerEventCollision")
-    if Door then
+    if Library.flags.Door then
         esp(Room.Door)
     end
     for i, v in pairs(Room.Assets:GetDescendants()) do
-        if EO and v:IsA("ProximityPrompt") then
+        if Library.flags.Other and v:IsA("ProximityPrompt") then
             esp(v.Parent)
         end
-        if Seek and table.find({"Seek_Arm", "ChandelierObstruction"}, v.Name) then
+        if Library.flags.Seek and table.find({"Seek_Arm", "ChandelierObstruction"}, v.Name) then
             v:Destroy()
         end
     end
-    if Seek and TEC then
+    if Library.flags.Seek and TEC then
         TEC:Destroy()
     end
 end)
 
 Lighting.LightingChanged:Connect(function()
-    if Light then
+    if Library.flags.Light then
         Lighting.Ambient = Color3.new(1, 1, 1)
     end
 end)
 
 LocalPlayer.Idled:Connect(function()
-    if AFK then
+    if Library.flags.AFK then
         VirtualUser:MoveMouse(Vector2.new())
     end
 end)
