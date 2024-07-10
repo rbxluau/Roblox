@@ -43,6 +43,7 @@ local Language = {
         Boost = "Boost",
         Loop = "Loop",
         Teleport = "Teleport",
+        Toggle = "Toggle",
         Parry = "Parry",
         ESP = "ESP",
         Other = "Other",
@@ -95,6 +96,7 @@ local Language = {
         Boost = "加速",
         Loop = "循环",
         Teleport = "传送",
+        Toggle = "切换",
         Parry = "格挡",
         ESP = "透视",
         Other = "其他",
@@ -364,7 +366,8 @@ function Cloudlib.Window(Cloudlib, name, theme)
     local TabBtnsL = Instance.new("UIListLayout")
     local ScriptTitle = Instance.new("TextLabel")
     local SBG = Instance.new("UIGradient")
-    local Open = Instance.new("TextButton")
+    local Open = Instance.new("ImageButton")
+    local Corner = Instance.new("UICorner", Open)
     local UIG = Instance.new("UIGradient")
     local DropShadowHolder = Instance.new("Frame")
     local DropShadow = Instance.new("ImageLabel")
@@ -673,15 +676,13 @@ function Cloudlib.Window(Cloudlib, name, theme)
     )
     Open.Name = "Open"
     Open.Parent = dogent
-    Open.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    Open.Position = UDim2.new(0.00829315186, 0, 0.31107837, 0)
-    Open.Size = UDim2.new(0, 61, 0, 32)
-    Open.Font = Enum.Font.SourceSans
-    Open.Text = "隐藏/打开"
-    Open.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Open.TextSize = 14.000
+    Open.BackgroundTransparency = 0.5
+    Open.Image = "rbxassetid://7733771982"
+    Open.Position = UDim2.new(0.8, 0, 0, 0)
+    Open.Size = UDim2.new(0, 50, 0, 50)
     Open.Active = true
     Open.Draggable = true
+    Corner.CornerRadius = UDim.new(0.5, 0)
     Open.MouseButton1Click:Connect(
         function()
             Main.Visible = not Main.Visible
