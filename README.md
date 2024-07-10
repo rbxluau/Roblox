@@ -23,6 +23,7 @@ local Window = Library:Window(<str> Name, <str?> Theme)
 ```lua
 local Tab = Window:Tab(<str> Name, <int?> Icon)
 ```
+[Lucide Icons](https://github.com/frappedevs/lucideblox)
 ## Section
 ```lua
 local Section = Tab:Section(<str> Name, <bool?> Enabled)
