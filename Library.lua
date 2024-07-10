@@ -367,7 +367,6 @@ function Cloudlib.Window(Cloudlib, name, theme)
     local ScriptTitle = Instance.new("TextLabel")
     local SBG = Instance.new("UIGradient")
     local Open = Instance.new("ImageButton")
-    local Corner = Instance.new("UICorner", Open)
     local UIG = Instance.new("UIGradient")
     local DropShadowHolder = Instance.new("Frame")
     local DropShadow = Instance.new("ImageLabel")
@@ -682,7 +681,6 @@ function Cloudlib.Window(Cloudlib, name, theme)
     Open.Size = UDim2.new(0, 50, 0, 50)
     Open.Active = true
     Open.Draggable = true
-    Corner.CornerRadius = UDim.new(0.5, 0)
     Open.MouseButton1Click:Connect(
         function()
             Main.Visible = not Main.Visible
