@@ -19,6 +19,14 @@ local Window = Library:Window(<str> Name, <str?> Theme)
 ```
 * Theme
     > dark
+### Destroy
+```lua
+Window:Destroy()
+```
+### Toggle
+```lua
+Window:Toggle()
+```
 ## Tab
 ```lua
 local Tab = Window:Tab(<str> Name, <int?> Icon)
