@@ -114,11 +114,11 @@ local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-function GetJson(v)
+local function GetJson(v)
     return HttpService:JSONDecode(game:HttpGet(v))
 end
 
-function GetIP()
+local function GetIP()
     local IP = GetJson("https://searchplugin.csdn.net/api/v1/ip/get").data.ip
     local Url = "https://cz88.net/api/cz88/ip/accurate?ip="..IP
     local Json = GetJson(Url).data.locations
@@ -191,8 +191,6 @@ if not _G.Load then
 end
 
 local Cloudlib = {}
-local ToggleUI = false
-Cloudlib.currentTab = nil
 Cloudlib.flags = {}
 
 local services =
@@ -207,14 +205,7 @@ local services =
 
 local mouse = services.Players.LocalPlayer:GetMouse()
 
-function Tween(obj, t, data)
-    services.TweenService:Create(obj, TweenInfo.new(t[1], Enum.EasingStyle[t[2]], Enum.EasingDirection[t[3]]), data):Play(
-
-    )
-    return true
-end
-
-function Ripple(obj)
+local function Ripple(obj)
     spawn(
         function()
             if obj.ClipsDescendants ~= true then
@@ -254,7 +245,7 @@ local toggled = false
 
 -- # Switch Tabs # --
 local switchingTabs = false
-function switchTab(new)
+local function switchTab(new)
     if switchingTabs then
         return
     end
@@ -287,7 +278,7 @@ function switchTab(new)
 end
 
 -- # Drag, Stolen from Kiriot or Wally # --
-function drag(frame, hold)
+local function drag(frame, hold)
     if not hold then
         hold = frame
     end
@@ -381,19 +372,14 @@ function Cloudlib.Window(Cloudlib, name, theme)
     dogent.Name = "frosty"
     dogent.Parent = services.CoreGui
 
-    function UiDestroy()
-        dogent:Destroy()
-    end
-
-    function ToggleUILib()
-        if not ToggleUI then
-            dogent.Enabled = false
-            ToggleUI = true
-        else
-            ToggleUI = false
-            dogent.Enabled = true
+    local funcs = {
+        Destroy = function(self)
+            dogent:Destroy()
+        end,
+        Toggle = function(self)
+            Main.Visible = not Main.Visible
         end
-    end
+    }
 
     Main.Name = "Main"
     Main.Parent = dogent
@@ -405,17 +391,11 @@ function Cloudlib.Window(Cloudlib, name, theme)
     Main.ZIndex = 1
     Main.Active = true
     Main.Draggable = true
-    services.UserInputService.InputEnded:Connect(
-        function(input)
-            if input.KeyCode == Enum.KeyCode.LeftControl then
-                if Main.Visible == true then
-                    Main.Visible = false
-                else
-                    Main.Visible = true
-                end
-            end
+    services.UserInputService.InputEnded:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.LeftControl then
+            funcs:Toggle()
         end
-    )
+    end)
     drag(Main)
 
     UICornerMain.Parent = Main
@@ -443,8 +423,7 @@ function Cloudlib.Window(Cloudlib, name, theme)
     DropShadow.ScaleType = Enum.ScaleType.Slice
     DropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
 
-    UIGradient.Color =
-        ColorSequence.new {
+    UIGradient.Color = ColorSequence.new {
         ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)),
         ColorSequenceKeypoint.new(0.10, Color3.fromRGB(255, 127, 0)),
         ColorSequenceKeypoint.new(0.20, Color3.fromRGB(255, 255, 0)),
@@ -463,24 +442,6 @@ function Cloudlib.Window(Cloudlib, name, theme)
     local tweeninfo = TweenInfo.new(7, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1)
     local tween = TweenService:Create(UIGradient, tweeninfo, {Rotation = 360})
     tween:Play()
-
-    function toggleui()
-        toggled = not toggled
-        spawn(
-            function()
-                if toggled then
-                    wait(0.3)
-                end
-            end
-        )
-        Tween(
-            Main,
-            {0.3, "Sine", "InOut"},
-            {
-                Size = UDim2.new(0, 609, 0, (toggled and 505 or 0))
-            }
-        )
-    end
 
     TabMain.Name = "TabMain"
     TabMain.Parent = Main
@@ -646,14 +607,11 @@ function Cloudlib.Window(Cloudlib, name, theme)
                 counter = 2
                 status = "down"
             elseif counter <= #list - 2 and status == "up" then
-                gradient.Color =
-                    s(
-                    {
-                        kpt(0, list[counter + 2]),
-                        kpt(0.5, list[counter + 1]),
-                        kpt(1, gradient.Color.Keypoints[3].Value)
-                    }
-                )
+                gradient.Color = s({
+                    kpt(0, list[counter + 2]),
+                    kpt(0.5, list[counter + 1]),
+                    kpt(1, gradient.Color.Keypoints[3].Value)
+                })
                 counter = counter + 2
                 status = "down"
             end
@@ -668,11 +626,9 @@ function Cloudlib.Window(Cloudlib, name, theme)
     SBG.Name = "SBG"
     SBG.Parent = SB
 
-    TabBtnsL:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(
-        function()
-            TabBtns.CanvasSize = UDim2.new(0, 0, 0, TabBtnsL.AbsoluteContentSize.Y + 18)
-        end
-    )
+    TabBtnsL:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        TabBtns.CanvasSize = UDim2.new(0, 0, 0, TabBtnsL.AbsoluteContentSize.Y + 18)
+    end)
     Open.Name = "Open"
     Open.Parent = dogent
     Open.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -682,12 +638,7 @@ function Cloudlib.Window(Cloudlib, name, theme)
     Open.Size = UDim2.new(0, 50, 0, 50)
     Open.Active = true
     Open.Draggable = true
-    Open.MouseButton1Click:Connect(
-        function()
-            Main.Visible = not Main.Visible
-        end
-    )
-    UIG.Parent = Open
+    Open.MouseButton1Click:Connect(funcs.Toggle)
     local window = {}
     function window.Tab(window, name, icon)
         local Tab = Instance.new("ScrollingFrame")
