@@ -117,7 +117,7 @@ RunService.Heartbeat:Connect(function()
     for i, v in pairs(workspace.Balls:GetChildren()) do
         if v:GetAttribute("realBall") and LocalPlayer.Character:FindFirstChild("Highlight") then
             Velocity = (v.Velocity-LocalPlayer.Character[HRP].Velocity).Magnitude
-            if Library.flags.AutoTP and Velocity ~= 0 then
+            if Library.flags.AutoTP and Velocity > 1 then
                 LocalPlayer.Character[HRP].CFrame = v.CFrame
             end
             if Library.flags.Parry and LocalPlayer:DistanceFromCharacter(v.Position)/Velocity < 0.5 then
