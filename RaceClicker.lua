@@ -11,6 +11,12 @@ Tween = TweenService:Create(LocalPlayer.Character[HRP], TweenInfo.new(), {
     CFrame = Track:GetChildren()[#Track:GetChildren()].Sign.CFrame-Vector3.yAxis*20
 })
 
+function Play()
+    if Library.flags.Race and Time.Visible then
+        Tween:Play()
+    end
+end
+
 function GetPlayers()
     local Players = Players:GetPlayers()
     for i, v in pairs(Players) do
@@ -87,12 +93,6 @@ Section:Label(Locale.By)
 Section:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
-
-function Play()
-    if Library.flags.Race and Time.Visible then
-        Tween:Play()
-    end
-end
 
 UserInputService.JumpRequest:Connect(function()
     if Library.flags.InfJump then
