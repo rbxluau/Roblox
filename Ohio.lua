@@ -4,7 +4,6 @@ VirtualUser = game:GetService("VirtualUser")
 RunService = game:GetService("RunService")
 Lighting = game:GetService("Lighting")
 Players = game:GetService("Players")
-Teams = game:GetService("Teams")
 LocalPlayer = Players.LocalPlayer
 HRP = "HumanoidRootPart"
 
@@ -112,7 +111,7 @@ RunService.Stepped:Connect(function()
 end)
 
 LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-    if Library.flags.Leave and LocalPlayer.Character.Humanoid.Health < 5 then
+    if Library.flags.Leave and LocalPlayer.Character.Humanoid.Health < 50 then
         LocalPlayer.Character[HRP].CFrame = CFrame.new(0, 0, 0)
     end
 end)
