@@ -191,12 +191,12 @@ RunService.Heartbeat:Connect(function()
         ReplicatedStorage.meleeEvent:FireServer(Players[Library.flags.Player])
     end
     for i, v in pairs(Players:GetPlayers()) do
-        if v ~= LocalPlayer and LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 15 and v.Character.Humanoid.Health ~= 0 and not v.Character:FindFirstChild("ForceField") then
+        if v ~= LocalPlayer and v.Character.Humanoid.Health ~= 0 and not v.Character:FindFirstChild("ForceField") then
             if Library.flags.All then
                 LocalPlayer.Character.Humanoid.Sit = false
                 LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
             end
-            if Library.flags.Aura or Library.flags.All then
+            if (Library.flags.Aura and LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 15) or Library.flags.All then
                 ReplicatedStorage.meleeEvent:FireServer(v)
             end
         end
