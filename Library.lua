@@ -1616,7 +1616,7 @@ function Cloudlib.Window(Cloudlib, name, theme)
                     Option.Size = UDim2.new(0, 428, 0, 26)
                     Option.AutoButtonColor = false
                     Option.Font = Enum.Font.Gotham
-                    Option.Text = tostring(option)
+                    Option.Text = option
                     Option.TextColor3 = Color3.fromRGB(255, 255, 255)
                     Option.TextSize = 14.000
 
