@@ -18,7 +18,7 @@ end
 
 Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window(Locale.PrisonLife)
+Window = Library:Window(Locale.Ohio)
 
 Section = Window:Tab(Locale.Player):Section("Main", true)
 
@@ -62,7 +62,7 @@ Section:Toggle(Locale.Kill, "Kill")
 
 Section = Window:Tab(Locale.Auto):Section("Main", true)
 
-Section:Toggle("Leave", "Leave")
+Section:Toggle(Locale.Teleport, "Leave")
 
 Section = Window:Tab(Locale.ESP):Section("Main", true)
 
@@ -112,7 +112,7 @@ RunService.Stepped:Connect(function()
 end)
 
 LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-    if Library.flags.Leave and LocalPlayer.Character.Humanoid.Health == 1 then
+    if Library.flags.Leave and LocalPlayer.Character.Humanoid.Health < 5 then
         LocalPlayer.Character[HRP].CFrame = CFrame.new(0, 0, 0)
     end
 end)
