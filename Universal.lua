@@ -21,7 +21,7 @@ Window = Library:Window(Locale.Universal)
 
 Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Section:Slider(Locale.Jump, "Jump", LocalPlayer.Character.Humanoid.JumpPower, 0, 200, false, function(Value)
+Section:Slider(Locale.Jump, "Jump", math.round(LocalPlayer.Character.Humanoid.JumpPower), 0, 200, false, function(Value)
     LocalPlayer.Character.Humanoid.JumpPower = Value
 end)
 
