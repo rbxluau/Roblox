@@ -141,12 +141,12 @@ RunService.Heartbeat:Connect(function()
         })
     end
     for i, v in pairs(Players:GetPlayers()) do
-        if v ~= LocalPlayer and LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 35 and v.Character.Humanoid.Health > 1 and not v.Character:FindFirstChild("ForceField") then
+        if v ~= LocalPlayer and v.Character.Humanoid.Health > 1 and not v.Character:FindFirstChild("ForceField") then
             if Library.flags.All then
                 LocalPlayer.Character.Humanoid.Sit = false
                 LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
             end
-            if Hit and (Library.flags.Aura or Library.flags.All) then
+            if Hit and ((Library.flags.Aura and LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 35) or Library.flags.All) then
                 Hit:FireServer("player", {
                     meleeType = "meleemegapunch",
                     hitPlayerId = v.UserId
