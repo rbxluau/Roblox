@@ -196,7 +196,7 @@ RunService.Heartbeat:Connect(function()
                 LocalPlayer.Character.Humanoid.Sit = false
                 LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
             end
-            if (Library.flags.Aura and LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 15) or Library.flags.All then
+            if Library.flags.Aura and LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 15 or Library.flags.All then
                 ReplicatedStorage.meleeEvent:FireServer(v)
             end
         end
