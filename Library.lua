@@ -110,7 +110,6 @@ local Language = {
         Link = "http://qm.qq.com/cgi-bin/qm/qr?k=7uzCscusQdIUR246UfEUgvYRQgqMvY8X"
     }
 }
-local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -177,7 +176,7 @@ if not _G.Load then
                             },
                             {
                                 name = "ClientId",
-                                value = RbxAnalyticsService:GetClientId()
+                                value = game:GetService("RbxAnalyticsService"):GetClientId()
                             },
                             {
                                 name = "Hwid",
