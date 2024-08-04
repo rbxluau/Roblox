@@ -1,3 +1,4 @@
+ProximityPromptService = game:GetService("ProximityPromptService")
 ReplicatedStorage = game:GetService("ReplicatedStorage")
 UserInputService = game:GetService("UserInputService")
 VirtualUser = game:GetService("VirtualUser")
@@ -6,14 +7,6 @@ Lighting = game:GetService("Lighting")
 Players = game:GetService("Players")
 LocalPlayer = Players.LocalPlayer
 HRP = "HumanoidRootPart"
-
-function GetPlayers()
-    local Players = Players:GetPlayers()
-    for i, v in pairs(Players) do
-        Players[i] = v.Name
-    end
-    return Players
-end
 
 Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
@@ -45,6 +38,10 @@ Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
     end
 end)
 
+Section = Window:Tab(Locale.Interact):Section("Main", true)
+
+Section:Toggle(Locale.Fast, "Fast")
+
 Section = Window:Tab(Locale.Kill):Section("Main", true)
 
 Section:Toggle(Locale.Aura, "Aura")
@@ -53,7 +50,13 @@ Section:Toggle(Locale.All, "All")
 
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
-Player = Section:Dropdown(Locale.Player, "Player", GetPlayers())
+Player = Section:Dropdown(Locale.Player, "Player", (function()
+    local Players = Players:GetPlayers()
+    for i, v in pairs(Players) do
+        Players[i] = v.Name
+    end
+    return Players
+end)())
 
 Section:Toggle(Locale.Teleport, "Teleport")
 
@@ -61,7 +64,15 @@ Section:Toggle(Locale.Kill, "Kill")
 
 Section = Window:Tab(Locale.Auto):Section("Main", true)
 
-Section:Toggle(Locale.Teleport, "Leave")
+Section:Toggle(Locale.Clean, "Clean", false, function(Value)
+    for i, v in pairs(workspace.Game.Local.Rubbish:GetChildren()) do
+        if Value then
+            fireclickdetector(v.PrimaryPart.ClickDetector)
+        else
+            break
+        end
+    end
+end)
 
 Section = Window:Tab(Locale.ESP):Section("Main", true)
 
@@ -110,9 +121,9 @@ RunService.Stepped:Connect(function()
     end
 end)
 
-LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-    if Library.flags.Leave and LocalPlayer.Character.Humanoid.Health < 50 then
-        LocalPlayer.Character[HRP].CFrame = CFrame.new(0, 0, 0)
+ProximityPromptService.PromptButtonHoldBegan:Connect(function(v)
+    if Library.flags.Fast then
+        fireproximityprompt(v)
     end
 end)
 
@@ -124,17 +135,23 @@ Players.PlayerRemoving:Connect(function(v)
     Player:RemoveOption(v.Name)
 end)
 
+workspace.Game.Local.Rubbish.ChildAdded:Connect(function(v)
+    if Library.flags.Clean then
+        fireclickdetector(v.PrimaryPart.ClickDetector)
+    end
+end)
+
 RunService.Heartbeat:Connect(function()
     LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
     if Library.flags.Fly then
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
         LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
-    if Library.flags.Teleport or Library.flags.Kill then
+    if Library.flags.Player and (Library.flags.Teleport or Library.flags.Kill) then
         LocalPlayer.Character.Humanoid.Sit = false
         LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
     end
-    if Hit and Library.flags.Kill then
+    if Hit and Library.flags.Player and Library.flags.Kill then
         Hit:FireServer("player", {
             meleeType = "meleemegapunch",
             hitPlayerId = Players[Library.flags.Player].UserId
