@@ -1624,19 +1624,21 @@ function Cloudlib.Window(Cloudlib, name, theme)
                     OptionC.Name = "OptionC"
                     OptionC.Parent = Option
 
-                    Option.MouseButton1Click:Connect(
-                        function()
-                            ToggleDropVis()
-                            callback(Option.Text)
-                            DropdownText.Text = Option.Text
-                            Cloudlib.flags[flag] = Option.Text
-                        end
-                    )
+                    Option.MouseButton1Click:Connect(function()
+                        ToggleDropVis()
+                        callback(Option.Text)
+                        DropdownText.Text = Option.Text
+                        Cloudlib.flags[flag] = Option.Text
+                    end)
                 end
 
                 funcs.RemoveOption = function(self, option)
                     local option = DropdownModule:FindFirstChild("Option_" .. option)
                     if option then
+                        if option.Text == DropdownText.Text then
+                            DropdownText.Text = ""
+                            Cloudlib.flags[flag] = nil
+                        end
                         option:Destroy()
                     end
                 end
@@ -1644,7 +1646,7 @@ function Cloudlib.Window(Cloudlib, name, theme)
                 funcs.SetOptions = function(self, options)
                     for _, v in next, DropdownModule:GetChildren() do
                         if v.Name:match("Option_") then
-                            v:Destroy()
+                            funcs:RemoveOption(v.Text)
                         end
                     end
                     for _, v in next, options do
