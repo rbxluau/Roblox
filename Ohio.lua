@@ -137,6 +137,7 @@ end)
 
 workspace.Game.Local.Rubbish.ChildAdded:Connect(function(v)
     if Library.flags.Clean then
+        task.wait()
         fireclickdetector(v.PrimaryPart.ClickDetector)
     end
 end)
