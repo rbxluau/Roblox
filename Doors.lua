@@ -2,7 +2,6 @@ ProximityPromptService = game:GetService("ProximityPromptService")
 ReplicatedStorage = game:GetService("ReplicatedStorage")
 VirtualUser = game:GetService("VirtualUser")
 RunService = game:GetService("RunService")
-StarterGui = game:GetService("StarterGui")
 Lighting = game:GetService("Lighting")
 Players = game:GetService("Players")
 LocalPlayer = Players.LocalPlayer
@@ -17,18 +16,10 @@ Prompt = {
 List = {}
 
 function Warn(v)
-    StarterGui:SetCore("SendNotification", {
+    game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "Warning",
     Text = v
     })
-end
-
-function GetPlayers()
-    local Players = Players:GetPlayers()
-    for i, v in pairs(Players) do
-        Players[i] = v.Name
-    end
-    return Players
 end
 
 Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
