@@ -17,14 +17,6 @@ function Play()
     end
 end
 
-function GetPlayers()
-    local Players = Players:GetPlayers()
-    for i, v in pairs(Players) do
-        Players[i] = v.Name
-    end
-    return Players
-end
-
 Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
 Window = Library:Window(Locale.RaceClicker)
@@ -53,7 +45,13 @@ end)
 
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
-Player = Section:Dropdown(Locale.Player, "Player", GetPlayers())
+Player = Section:Dropdown(Locale.Player, "Player", (function()
+    local Players = Players:GetPlayers()
+    for i, v in pairs(Players) do
+        Players[i] = v.Name
+    end
+    return Players
+end)())
 
 Section:Toggle(Locale.Teleport, "Teleport")
 
@@ -130,7 +128,7 @@ RunService.Heartbeat:Connect(function()
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
         LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
-    if Library.flags.Teleport then
+    if Library.flags.Player and Library.flags.Teleport then
         LocalPlayer.Character.Humanoid.Sit = false
         LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
     end
