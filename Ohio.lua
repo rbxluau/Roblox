@@ -42,11 +42,17 @@ Section = Window:Tab(Locale.Interact):Section("Main", true)
 
 Section:Toggle(Locale.Fast, "Fast")
 
-Section = Window:Tab(Locale.Kill):Section("Main", true)
+Section = Window:Tab(Locale.Hit):Section("Main", true)
 
 Section:Toggle(Locale.Aura, "Aura")
 
 Section:Toggle(Locale.All, "All")
+
+Section = Window:Tab(Locale.Kill):Section("Main", true)
+
+Section:Toggle(Locale.Aura, "KillAura")
+
+Section:Toggle(Locale.All, "KillAll")
 
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
@@ -59,6 +65,8 @@ Player = Section:Dropdown(Locale.Player, "Player", (function()
 end)())
 
 Section:Toggle(Locale.Teleport, "Teleport")
+
+Section:Toggle(Locale.Hit, "Hit")
 
 Section:Toggle(Locale.Kill, "Kill")
 
@@ -99,8 +107,13 @@ Section:Button(Locale.Copy, function()
 end)
 
 Call = hookmetamethod(game, "__namecall", function(self, ...)
-    if self.Parent == ReplicatedStorage.devv.remoteStorage and ... == "player" then
-        Hit = self
+    if self.Parent == ReplicatedStorage.devv.remoteStorage then
+        if ... == "player" then
+            Hit = self
+        end
+        if typeof(...) == "Instance" and (...).ClassName == "Player" then
+            Kill = self
+        end
     end
     return Call(self, ...)
 end)
@@ -148,27 +161,39 @@ RunService.Heartbeat:Connect(function()
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
         LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
-    if Library.flags.Player and (Library.flags.Teleport or Library.flags.Kill) then
-        LocalPlayer.Character.Humanoid.Sit = false
-        LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
-    end
-    if Hit and Library.flags.Player and Library.flags.Kill then
-        Hit:FireServer("player", {
-            meleeType = "meleemegapunch",
-            hitPlayerId = Players[Library.flags.Player].UserId
-        })
+    if Library.flags.Player then
+        if Library.flags.Teleport or Library.flags.Hit or Library.flags.Kill then
+            LocalPlayer.Character.Humanoid.Sit = false
+            LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
+        end
+        if not Players[Library.flags.Player].Character:FindFirstChild("ForceField") then
+            if Hit and Library.flags.Hit and Players[Library.flags.Player].Character.Humanoid.Health > 1 then
+                Hit:FireServer("player", {
+                    meleeType = "meleemegapunch",
+                    hitPlayerId = Players[Library.flags.Player].UserId
+                })
+            end
+            if Kill and Library.flags.Kill and Players[Library.flags.Player].Character.Humanoid.Health == 1 then
+                Kill:FireServer(Players[Library.flags.Player])
+            end
+        end
     end
     for i, v in pairs(Players:GetPlayers()) do
-        if v ~= LocalPlayer and v.Character.Humanoid.Health > 1 and not v.Character:FindFirstChild("ForceField") then
+        if v ~= LocalPlayer and not v.Character:FindFirstChild("ForceField") then
             if Library.flags.All then
                 LocalPlayer.Character.Humanoid.Sit = false
                 LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
             end
-            if Hit and (Library.flags.Aura and LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 35 or Library.flags.All) then
-                Hit:FireServer("player", {
-                    meleeType = "meleemegapunch",
-                    hitPlayerId = v.UserId
-                })
+            if LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 35 then
+                if Hit and v.Character.Humanoid.Health > 1 then
+                    Hit:FireServer("player", {
+                        meleeType = "meleemegapunch",
+                        hitPlayerId = v.UserId
+                    })
+                end
+                if Kill and v.Character.Humanoid.Health == 1 then
+                    Kill:FireServer(v)
+                end
             end
         end
         if not v.Character:FindFirstChild("Highlight") then
