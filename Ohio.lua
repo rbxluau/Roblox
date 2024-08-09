@@ -42,6 +42,30 @@ Section = Window:Tab(Locale.Interact):Section("Main", true)
 
 Section:Toggle(Locale.Fast, "Fast")
 
+Section = Window:Tab(Locale.Pickup):Section("Main", true)
+
+Section:Dropdown(Locale.Item, "Item", (function()
+    local Items = workspace.ItemSpawns.items:GetChildren()
+    for i, v in pairs(Items) do
+        Items[i] = v.Name
+    end
+    return Items
+end)())
+
+Section:Toggle(Locale.Teleport, "ItemTP", false, function(Value)
+    for i, v in pairs(workspace.Game.Entities.ItemPickup:GetChildren()) do
+        if Value then
+            if v.PrimaryPart:FindFirstChildOfClass("ProximityPrompt").ObjectText == Library.flags.Item then
+                LocalPlayer.Character[HRP].CFrame = v.PrimaryPart.CFrame
+            end
+        else
+            break
+        end
+    end
+end)
+
+Section:Toggle(Locale.Get, "Get")
+
 Section = Window:Tab(Locale.Hit):Section("Main", true)
 
 Section:Toggle(Locale.Aura, "Aura")
@@ -141,12 +165,24 @@ ProximityPromptService.PromptButtonHoldBegan:Connect(function(v)
     end
 end)
 
+ProximityPromptService.PromptShown:Connect(function(v)
+    if Library.flags.Get and v.ObjectText == Library.flags.Item then
+        fireproximityprompt(v)
+    end
+end)
+
 Players.PlayerAdded:Connect(function(v)
     Player:AddOption(v.Name)
 end)
 
 Players.PlayerRemoving:Connect(function(v)
     Player:RemoveOption(v.Name)
+end)
+
+workspace.Game.Entities.ItemPickup.ChildAdded:Connect(function(v)
+    if Library.flags.ItemTP and task.wait() and v.PrimaryPart:FindFirstChildOfClass("ProximityPrompt").ObjectText == Library.flags.Item then
+        LocalPlayer.Character[HRP].CFrame = v.PrimaryPart.CFrame
+    end
 end)
 
 workspace.Game.Local.Rubbish.ChildAdded:Connect(function(v)
