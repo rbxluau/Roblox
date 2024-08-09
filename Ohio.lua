@@ -109,7 +109,7 @@ end)
 Call = hookmetamethod(game, "__namecall", function(self, ...)
     local args = {...}
     if self.Parent == ReplicatedStorage.devv.remoteStorage and #args ~= 0 then
-        if args[1] == "player" then
+        if table.find({"prop", "player"}, args[1]) then
             Hit = self
         end
         if typeof(args[1]) == "Instance" and args[1].ClassName == "Player" then
