@@ -38,28 +38,6 @@ Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
     end
 end)
 
-Section = Window:Tab(Locale.Teleport):Section("Main", true)
-
-Section:Button(Locale.Armory, function()
-    LocalPlayer.Character:MoveTo(Vector3.new(835, 100, 2267))
-end)
-
-Section:Button(Locale.Warehouse, function()
-    LocalPlayer.Character:MoveTo(Vector3.new(-943, 94, 2064))
-end)
-
-Section:Button(Locale.Prison, function()
-    LocalPlayer.Character:MoveTo(Vector3.new(919, 100, 2379))
-end)
-
-Section:Button(Locale.Yard, function()
-    LocalPlayer.Character:MoveTo(Vector3.new(780, 98, 2459))
-end)
-
-Section:Button(Locale.Roof, function()
-    LocalPlayer.Character:MoveTo(Vector3.new(907, 139, 2309))
-end)
-
 Section = Window:Tab(Locale.Team):Section("Main", true)
 
 for i, v in pairs(Teams:GetTeams()) do
@@ -181,12 +159,14 @@ RunService.Heartbeat:Connect(function()
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
         LocalPlayer.Character[HRP].Velocity = Vector3.zero
     end
-    if Library.flags.Player and (Library.flags.Teleport or Library.flags.Kill) then
-        LocalPlayer.Character.Humanoid.Sit = false
-        LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
-    end
-    if Library.flags.Player and Library.flags.Kill then
-        ReplicatedStorage.meleeEvent:FireServer(Players[Library.flags.Player])
+    if Library.flags.Player then
+        if Library.flags.Teleport or Library.flags.Kill then
+            LocalPlayer.Character.Humanoid.Sit = false
+            LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
+        end
+        if Library.flags.Kill and Players[Library.flags.Player].Character.Humanoid.Health ~= 0 and not Players[Library.flags.Player].Character:FindFirstChild("ForceField") then
+            ReplicatedStorage.meleeEvent:FireServer(Players[Library.flags.Player])
+        end
     end
     for i, v in pairs(Players:GetPlayers()) do
         if v ~= LocalPlayer and v.Character.Humanoid.Health ~= 0 and not v.Character:FindFirstChild("ForceField") then
