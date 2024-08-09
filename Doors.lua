@@ -139,6 +139,15 @@ RunService.Stepped:Connect(function()
     end
 end)
 
+ProximityPromptService.PromptShown:Connect(function(v)
+    if Library.flags.Interact and table.find(Prompt, v.Name) and not table.find(List, v) then
+        fireproximityprompt(v)
+        if v.Name == Prompt[1] then
+            table.insert(List, v)
+        end
+    end
+end)
+
 RunService.Heartbeat:Connect(function()
     LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
     if Library.flags.Fly then
@@ -154,15 +163,6 @@ RunService.Heartbeat:Connect(function()
         v.Character.Highlight.FillColor = v.TeamColor.Color
         v.Character.BillboardGui.Enabled = Library.flags.ESP
         v.Character.Highlight.Enabled = Library.flags.ESP
-    end
-end)
-
-ProximityPromptService.PromptShown:Connect(function(v)
-    if Library.flags.Interact and table.find(Prompt, v.Name) and not table.find(List, v) then
-        fireproximityprompt(v)
-        if v.Name == Prompt[1] then
-            table.insert(List, v)
-        end
     end
 end)
 
