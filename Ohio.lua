@@ -107,11 +107,12 @@ Section:Button(Locale.Copy, function()
 end)
 
 Call = hookmetamethod(game, "__namecall", function(self, ...)
-    if self.Parent == ReplicatedStorage.devv.remoteStorage then
-        if ... == "player" then
+    local args = {...}
+    if self.Parent == ReplicatedStorage.devv.remoteStorage and #args ~= 0 then
+        if args[1] == "player" then
             Hit = self
         end
-        if typeof(...) == "Instance" and (...).ClassName == "Player" then
+        if typeof(args[1]) == "Instance" and args[1].ClassName == "Player" then
             Kill = self
         end
     end
