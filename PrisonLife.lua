@@ -1,18 +1,17 @@
-ReplicatedStorage = game:GetService("ReplicatedStorage")
-UserInputService = game:GetService("UserInputService")
-VirtualUser = game:GetService("VirtualUser")
-RunService = game:GetService("RunService")
-Lighting = game:GetService("Lighting")
-Players = game:GetService("Players")
-Teams = game:GetService("Teams")
-LocalPlayer = Players.LocalPlayer
-HRP = "HumanoidRootPart"
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+local VirtualUser = game:GetService("VirtualUser")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
+local Teams = game:GetService("Teams")
+local LocalPlayer = Players.LocalPlayer
 
-Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
+local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window(Locale.PrisonLife)
+local Window = Library:Window(Locale.PrisonLife)
 
-Section = Window:Tab(Locale.Player):Section("Main", true)
+local Section = Window:Tab(Locale.Player):Section("Main", true)
 
 Section:Slider(Locale.Jump, "Jump", math.round(LocalPlayer.Character.Humanoid.JumpPower), 0, 200, false, function(Value)
     LocalPlayer.Character.Humanoid.JumpPower = Value
@@ -56,7 +55,7 @@ Section:Toggle(Locale.All, "All")
 
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
-Player = Section:Dropdown(Locale.Player, "Player", (function()
+local Player = Section:Dropdown(Locale.Player, "Player", (function()
     local Players = Players:GetPlayers()
     for i, v in pairs(Players) do
         Players[i] = v.Name
@@ -80,16 +79,16 @@ Section = Window:Tab(Locale.Other):Section("Main", true)
 
 Section:Button(Locale.BTool, function()
     for i = 3, 4 do
-        HB = Instance.new("HopperBin", LocalPlayer.Backpack)
-        HB.BinType = i
+        local HopperBin = Instance.new("HopperBin", LocalPlayer.Backpack)
+        HopperBin.BinType = i
     end
 end)
 
 Section:Button(Locale.ClickTP, function()
-    Tool = Instance.new("Tool", LocalPlayer.Backpack)
+    local Tool = Instance.new("Tool", LocalPlayer.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LocalPlayer.Character[HRP].CFrame = LocalPlayer:GetMouse().Hit+Vector3.new(0, 2.5, 0)
+        LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer:GetMouse().Hit+Vector3.new(0, 2.5, 0)
     end)
 end)
 
@@ -134,14 +133,14 @@ end)
 LocalPlayer.CharacterAppearanceLoaded:Connect(function(v)
     v.Humanoid.Died:Wait()
     if Library.flags.Rebirth then
-        Position = LocalPlayer.Character[HRP].CFrame
+        local Position = LocalPlayer.Character.HumanoidRootPart.CFrame
         if LocalPlayer.Team == Teams.Criminals then
             workspace.Remote.TeamEvent:FireServer("Bright orange")
         else
             workspace.Remote.TeamEvent:FireServer(LocalPlayer.TeamColor.Name)
         end
         LocalPlayer.CharacterAppearanceLoaded:Wait()
-        LocalPlayer.Character[HRP].CFrame = Position
+        LocalPlayer.Character.HumanoidRootPart.CFrame = Position
     end
 end)
 
@@ -157,12 +156,12 @@ RunService.Heartbeat:Connect(function()
     LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
     if Library.flags.Fly then
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character[HRP].Velocity = Vector3.zero
+        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
     end
     if Library.flags.Player then
         if Library.flags.Teleport or Library.flags.Kill then
             LocalPlayer.Character.Humanoid.Sit = false
-            LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
+            LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
         end
         if Library.flags.Kill and Players[Library.flags.Player].Character.Humanoid.Health ~= 0 and not Players[Library.flags.Player].Character:FindFirstChild("ForceField") then
             ReplicatedStorage.meleeEvent:FireServer(Players[Library.flags.Player])
@@ -172,7 +171,7 @@ RunService.Heartbeat:Connect(function()
         if v ~= LocalPlayer and v.Character.Humanoid.Health ~= 0 and not v.Character:FindFirstChild("ForceField") then
             if Library.flags.All then
                 LocalPlayer.Character.Humanoid.Sit = false
-                LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
+                LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
             end
             if Library.flags.Aura and LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 15 or Library.flags.All then
                 ReplicatedStorage.meleeEvent:FireServer(v)
@@ -180,13 +179,13 @@ RunService.Heartbeat:Connect(function()
         end
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
-            BG = Instance.new("BillboardGui", v.Character)
-            TL = Instance.new("TextLabel", BG)
-            BG.AlwaysOnTop = true
-            BG.Size = UDim2.new(0, 100, 0, 50)
-            BG.StudsOffset = Vector3.new(0, 4, 0)
-            TL.BackgroundTransparency = 1
-            TL.Size = UDim2.new(0, 100, 0, 50)
+            BillboardGui = Instance.new("BillboardGui", v.Character)
+            TextLabel = Instance.new("TextLabel", BillboardGui)
+            BillboardGui.AlwaysOnTop = true
+            BillboardGui.Size = UDim2.new(0, 100, 0, 50)
+            BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
+            TextLabel.BackgroundTransparency = 1
+            TextLabel.Size = UDim2.new(0, 100, 0, 50)
         end
         v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
