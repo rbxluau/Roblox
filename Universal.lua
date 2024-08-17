@@ -138,8 +138,8 @@ RunService.Heartbeat:Connect(function()
     for i, v in pairs(Players:GetPlayers()) do
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
-            BillboardGui = Instance.new("BillboardGui", v.Character)
-            TextLabel = Instance.new("TextLabel", BillboardGui)
+            local BillboardGui = Instance.new("BillboardGui", v.Character)
+            local TextLabel = Instance.new("TextLabel", BillboardGui)
             BillboardGui.AlwaysOnTop = true
             BillboardGui.Size = UDim2.new(0, 100, 0, 50)
             BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
