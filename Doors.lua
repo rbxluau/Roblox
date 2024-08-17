@@ -1,32 +1,44 @@
-ProximityPromptService = game:GetService("ProximityPromptService")
-ReplicatedStorage = game:GetService("ReplicatedStorage")
-VirtualUser = game:GetService("VirtualUser")
-RunService = game:GetService("RunService")
-Lighting = game:GetService("Lighting")
-Players = game:GetService("Players")
-LocalPlayer = Players.LocalPlayer
-HRP = "HumanoidRootPart"
-Prompt = {
+local ProximityPromptService = game:GetService("ProximityPromptService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VirtualUser = game:GetService("VirtualUser")
+local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
+local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Prompt = {
     "ActivateEventPrompt",
     "AwesomePrompt",
     "ModulePrompt",
     "UnlockPrompt",
     "LootPrompt"
 }
-List = {}
+local List = {}
 
-function Warn(v)
-    game:GetService("StarterGui"):SetCore("SendNotification", {
+local function Warn(v)
+    StarterGui:SetCore("SendNotification", {
     Title = "Warning",
     Text = v
     })
 end
 
-Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
+local function ESP(i, v)
+    Instance.new("Highlight", i)
+    local BillboardGui = Instance.new("BillboardGui", i)
+    local TextLabel = Instance.new("TextLabel", BillboardGui)
+    BillboardGui.AlwaysOnTop = true
+    BillboardGui.Size = UDim2.new(0, 100, 0, 50)
+    BillboardGui.StudsOffset = Vector3.new(0, (v or 0), 0)
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Size = UDim2.new(0, 100, 0, 50)
+    TextLabel.Text = i.Name
+end
 
-Window = Library:Window("Doors")
+local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Section = Window:Tab(Locale.Player):Section("Main", true)
+local Window = Library:Window("Doors")
+
+local Section = Window:Tab(Locale.Player):Section("Main", true)
 
 Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(Value)
     workspace.Gravity = Value
@@ -71,8 +83,8 @@ Section:Toggle("Seek", "Seek")
 Section = Window:Tab(Locale.Other):Section("Main", true)
 
 Section:Button(Locale.Unlock, function()
-    Hint = {"x", "x", "x", "x", "x"}
-    Paper = LocalPlayer.Backpack:FindFirstChild("LibraryHintPaper") or LocalPlayer.Character:FindFirstChild("LibraryHintPaper")
+    local Hint = {"x", "x", "x", "x", "x"}
+    local Paper = LocalPlayer.Backpack:FindFirstChild("LibraryHintPaper") or LocalPlayer.Character:FindFirstChild("LibraryHintPaper")
     if Paper then
         for h = 1, 5 do
             for i, v in pairs(LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
@@ -90,8 +102,8 @@ end)
 
 Section:Button(Locale.BTool, function()
     for i = 3, 4 do
-        HB = Instance.new("HopperBin", LocalPlayer.Backpack)
-        HB.BinType = i
+        local HopperBin = Instance.new("HopperBin", LocalPlayer.Backpack)
+        HopperBin.BinType = i
     end
 end)
 
@@ -117,18 +129,6 @@ Section:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
 
-function esp(i, v)
-    Instance.new("Highlight", i)
-    BG = Instance.new("BillboardGui", i)
-    TL = Instance.new("TextLabel", BG)
-    BG.AlwaysOnTop = true
-    BG.Size = UDim2.new(0, 100, 0, 50)
-    BG.StudsOffset = Vector3.new(0, (v or 0), 0)
-    TL.BackgroundTransparency = 1
-    TL.Size = UDim2.new(0, 100, 0, 50)
-    TL.Text = i.Name
-end
-
 RunService.Stepped:Connect(function()
     if Library.flags.Noclip then
         for i, v in pairs(LocalPlayer.Character:GetChildren()) do
@@ -152,11 +152,11 @@ RunService.Heartbeat:Connect(function()
     LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
     if Library.flags.Fly then
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character[HRP].Velocity = Vector3.zero
+        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
     end
     for i, v in pairs(Players:GetPlayers()) do
         if not v.Character:FindFirstChild("Highlight") then
-            esp(v.Character, 4)
+            ESP(v.Character, 4)
         end
         v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
@@ -168,27 +168,27 @@ end)
 
 workspace.ChildAdded:Connect(function(v)
     if Library.flags.Monster and v:IsA("Model") and task.wait() and LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 1000 then
+        ESP(v)
         Warn(v.Name)
-        esp(v)
     end
 end)
 
 ReplicatedStorage.GameData.LatestRoom.Changed:Connect(function(r)
-    Room = workspace.CurrentRooms[r]
-    TEC = Room:FindFirstChild("TriggerEventCollision")
+    local Room = workspace.CurrentRooms[r]
+    local TriggerEventCollision = Room:FindFirstChild("TriggerEventCollision")
     if Library.flags.Door then
-        esp(Room.Door)
+        ESP(Room.Door)
     end
     for i, v in pairs(Room.Assets:GetDescendants()) do
         if Library.flags.Other and v:IsA("ProximityPrompt") then
-            esp(v.Parent)
+            ESP(v.Parent)
         end
         if Library.flags.Seek and table.find({"Seek_Arm", "ChandelierObstruction"}, v.Name) then
             v:Destroy()
         end
     end
-    if Library.flags.Seek and TEC then
-        TEC:Destroy()
+    if Library.flags.Seek and TriggerEventCollision then
+        TriggerEventCollision:Destroy()
     end
 end)
 
