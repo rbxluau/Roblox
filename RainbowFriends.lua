@@ -1,16 +1,16 @@
-ReplicatedStorage = game:GetService("ReplicatedStorage")
-VirtualUser = game:GetService("VirtualUser")
-RunService = game:GetService("RunService")
-Lighting = game:GetService("Lighting")
-Players = game:GetService("Players")
-LocalPlayer = Players.LocalPlayer
-HRP = "HumanoidRootPart"
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VirtualUser = game:GetService("VirtualUser")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local BoxUpdated = ReplicatedStorage.communication.boxes.cl.BoxUpdated
 
-Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
+local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window(Locale.RainbowFriends)
+local Window = Library:Window(Locale.RainbowFriends)
 
-Section = Window:Tab(Locale.Player):Section("Main", true)
+local Section = Window:Tab(Locale.Player):Section("Main", true)
 
 Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
 
@@ -28,7 +28,7 @@ end)
 
 Section:Toggle(Locale.Invisible, "Invisible", false, function(Value)
     if not Value then
-        ReplicatedStorage.communication.boxes.cl.BoxUpdated:FireServer("Unequip")
+        BoxUpdated:FireServer("Unequip")
     end
 end)
 
@@ -40,7 +40,7 @@ Section:Toggle(Locale.Put, "Put")
 
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
-Player = Section:Dropdown(Locale.Player, "Player", (function()
+local Player = Section:Dropdown(Locale.Player, "Player", (function()
     local Players = Players:GetPlayers()
     for i, v in pairs(Players) do
         Players[i] = v.Name
@@ -60,16 +60,16 @@ Section = Window:Tab(Locale.Other):Section("Main", true)
 
 Section:Button(Locale.BTool, function()
     for i = 3, 4 do
-        HB = Instance.new("HopperBin", LocalPlayer.Backpack)
-        HB.BinType = i
+        local HopperBin = Instance.new("HopperBin", LocalPlayer.Backpack)
+        HopperBin.BinType = i
     end
 end)
 
 Section:Button(Locale.ClickTP, function()
-    Tool = Instance.new("Tool", LocalPlayer.Backpack)
+    local Tool = Instance.new("Tool", LocalPlayer.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LocalPlayer.Character[HRP].CFrame = LocalPlayer:GetMouse().Hit+Vector3.new(0, 2.5, 0)
+        LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer:GetMouse().Hit+Vector3.new(0, 2.5, 0)
     end)
 end)
 
@@ -104,7 +104,7 @@ RunService.Stepped:Connect(function()
         end
     end
     if Library.flags.Invisible then
-        ReplicatedStorage.communication.boxes.cl.BoxUpdated:FireServer("Equip")
+        BoxUpdated:FireServer("Equip")
     end
 end)
 
@@ -166,34 +166,34 @@ RunService.Heartbeat:Connect(function()
                 "LightBulb",
                 "GasCanister"
             }, v.Name) then
-                v.TouchTrigger.CFrame = LocalPlayer.Character[HRP].CFrame
+                v.TouchTrigger.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
             end
         end
     end
     if Library.flags.Put then
         for i, v in pairs(workspace.GroupBuildStructures:GetChildren()) do
-            v.Trigger.CFrame = LocalPlayer.Character[HRP].CFrame
+            v.Trigger.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
         end
     end
     LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
     if Library.flags.Fly then
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character[HRP].Velocity = Vector3.zero
+        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
     end
     if Library.flags.Player and Library.flags.Teleport then
         LocalPlayer.Character.Humanoid.Sit = false
-        LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
+        LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
     end
     for i, v in pairs(Players:GetPlayers()) do
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
-            BG = Instance.new("BillboardGui", v.Character)
-            TL = Instance.new("TextLabel", BG)
-            BG.AlwaysOnTop = true
-            BG.Size = UDim2.new(0, 100, 0, 50)
-            BG.StudsOffset = Vector3.new(0, 4, 0)
-            TL.BackgroundTransparency = 1
-            TL.Size = UDim2.new(0, 100, 0, 50)
+            local BillboardGui = Instance.new("BillboardGui", v.Character)
+            local TextLabel = Instance.new("TextLabel", BillboardGui)
+            BillboardGui.AlwaysOnTop = true
+            BillboardGui.Size = UDim2.new(0, 100, 0, 50)
+            BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
+            TextLabel.BackgroundTransparency = 1
+            TextLabel.Size = UDim2.new(0, 100, 0, 50)
         end
         v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
