@@ -7,10 +7,10 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/S
 * SupportedGames
     > Arsenal  
     Doors  
-    RaceClicker  
     Ohio  
-    RainbowFriends  
-    PrisonLife
+    PrisonLife  
+    RaceClicker  
+    RainbowFriends
 # Library
 ```lua
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
