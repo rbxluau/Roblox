@@ -1,18 +1,22 @@
-ProximityPromptService = game:GetService("ProximityPromptService")
-ReplicatedStorage = game:GetService("ReplicatedStorage")
-UserInputService = game:GetService("UserInputService")
-VirtualUser = game:GetService("VirtualUser")
-RunService = game:GetService("RunService")
-Lighting = game:GetService("Lighting")
-Players = game:GetService("Players")
-LocalPlayer = Players.LocalPlayer
-HRP = "HumanoidRootPart"
+local ProximityPromptService = game:GetService("ProximityPromptService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+local VirtualUser = game:GetService("VirtualUser")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Game = workspace.Game
+local Rubbish = Game.Local.Rubbish
+local ItemPickup = Game.Entities.ItemPickup
+local Hit
+local Kill
 
-Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
+local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window(Locale.Ohio)
+local Window = Library:Window(Locale.Ohio)
 
-Section = Window:Tab(Locale.Player):Section("Main", true)
+local Section = Window:Tab(Locale.Player):Section("Main", true)
 
 Section:Slider(Locale.Jump, "Jump", math.round(LocalPlayer.Character.Humanoid.JumpPower), 0, 200, false, function(Value)
     LocalPlayer.Character.Humanoid.JumpPower = Value
@@ -53,13 +57,12 @@ Section:Dropdown(Locale.Item, "Item", (function()
 end)())
 
 Section:Toggle(Locale.Teleport, "ItemTP", false, function(Value)
-    for i, v in pairs(workspace.Game.Entities.ItemPickup:GetChildren()) do
-        if Value then
+    if Value then
+        for i, v in pairs(ItemPickup:GetChildren()) do
             if v.PrimaryPart:FindFirstChildOfClass("ProximityPrompt").ObjectText == Library.flags.Item then
-                LocalPlayer.Character[HRP].CFrame = v.PrimaryPart.CFrame
+                LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+                break
             end
-        else
-            break
         end
     end
 end)
@@ -80,7 +83,7 @@ Section:Toggle(Locale.All, "KillAll")
 
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
-Player = Section:Dropdown(Locale.Player, "Player", (function()
+local Player = Section:Dropdown(Locale.Player, "Player", (function()
     local Players = Players:GetPlayers()
     for i, v in pairs(Players) do
         Players[i] = v.Name
@@ -97,11 +100,9 @@ Section:Toggle(Locale.Kill, "Kill")
 Section = Window:Tab(Locale.Auto):Section("Main", true)
 
 Section:Toggle(Locale.Clean, "Clean", false, function(Value)
-    for i, v in pairs(workspace.Game.Local.Rubbish:GetChildren()) do
-        if Value then
+    if Value then
+        for i, v in pairs(Rubbish:GetChildren()) do
             fireclickdetector(v.PrimaryPart.ClickDetector)
-        else
-            break
         end
     end
 end)
@@ -179,13 +180,13 @@ Players.PlayerRemoving:Connect(function(v)
     Player:RemoveOption(v.Name)
 end)
 
-workspace.Game.Entities.ItemPickup.ChildAdded:Connect(function(v)
+ItemPickup.ChildAdded:Connect(function(v)
     if Library.flags.ItemTP and task.wait() and v.PrimaryPart:FindFirstChildOfClass("ProximityPrompt").ObjectText == Library.flags.Item then
-        LocalPlayer.Character[HRP].CFrame = v.PrimaryPart.CFrame
+        LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
     end
 end)
 
-workspace.Game.Local.Rubbish.ChildAdded:Connect(function(v)
+Rubbish.ChildAdded:Connect(function(v)
     if Library.flags.Clean then
         task.wait()
         fireclickdetector(v.PrimaryPart.ClickDetector)
@@ -196,12 +197,12 @@ RunService.Heartbeat:Connect(function()
     LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
     if Library.flags.Fly then
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character[HRP].Velocity = Vector3.zero
+        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
     end
     if Library.flags.Player then
         if Library.flags.Teleport or Library.flags.Hit or Library.flags.Kill then
             LocalPlayer.Character.Humanoid.Sit = false
-            LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
+            LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
         end
         if not Players[Library.flags.Player].Character:FindFirstChild("ForceField") then
             if Hit and Library.flags.Hit and Players[Library.flags.Player].Character.Humanoid.Health > 1 then
@@ -219,7 +220,7 @@ RunService.Heartbeat:Connect(function()
         if v ~= LocalPlayer and not v.Character:FindFirstChild("ForceField") then
             if Library.flags.All or Library.flags.KillAll then
                 LocalPlayer.Character.Humanoid.Sit = false
-                LocalPlayer.Character[HRP].CFrame = v.Character[HRP].CFrame
+                LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
             end
             if LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 35 then
                 if Hit and (Library.flags.Aura or Library.flags.All) and v.Character.Humanoid.Health > 1 then
@@ -235,13 +236,13 @@ RunService.Heartbeat:Connect(function()
         end
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
-            BG = Instance.new("BillboardGui", v.Character)
-            TL = Instance.new("TextLabel", BG)
-            BG.AlwaysOnTop = true
-            BG.Size = UDim2.new(0, 100, 0, 50)
-            BG.StudsOffset = Vector3.new(0, 4, 0)
-            TL.BackgroundTransparency = 1
-            TL.Size = UDim2.new(0, 100, 0, 50)
+            local BillboardGui = Instance.new("BillboardGui", v.Character)
+            local TextLabel = Instance.new("TextLabel", BillboardGui)
+            BillboardGui.AlwaysOnTop = true
+            BillboardGui.Size = UDim2.new(0, 100, 0, 50)
+            BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
+            TextLabel.BackgroundTransparency = 1
+            TextLabel.Size = UDim2.new(0, 100, 0, 50)
         end
         v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
