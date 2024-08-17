@@ -18,10 +18,6 @@ local Window = Library:Window(Locale.Ohio)
 
 local Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Section:Slider(Locale.Jump, "Jump", math.round(LocalPlayer.Character.Humanoid.JumpPower), 0, 200, false, function(Value)
-    LocalPlayer.Character.Humanoid.JumpPower = Value
-end)
-
 Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(Value)
     workspace.Gravity = Value
 end)
