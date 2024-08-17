@@ -1,16 +1,15 @@
-RunService = game:GetService("RunService")
-Players = game:GetService("Players")
-LocalPlayer = Players.LocalPlayer
-HRP = "HumanoidRootPart"
-Camera = workspace.CurrentCamera
-Sort = {}
-Head = {}
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+local Sort = {}
+local Head = {}
 
-Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
+local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window(Locale.Arsenal)
+local Window = Library:Window(Locale.Arsenal)
 
-Section = Window:Tab(Locale.Player):Section("Main", true)
+local Section = Window:Tab(Locale.Player):Section("Main", true)
 
 Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
 
@@ -34,7 +33,7 @@ Section:Toggle(Locale.Toggle, "Aimbot")
 
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
-Player = Section:Dropdown(Locale.Player, "Player", (function()
+local Player = Section:Dropdown(Locale.Player, "Player", (function()
     local Players = Players:GetPlayers()
     for i, v in pairs(Players) do
         Players[i] = v.Name
@@ -78,27 +77,27 @@ RunService.Heartbeat:Connect(function()
     LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
     if Library.flags.Fly then
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character[HRP].Velocity = Vector3.zero
+        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
     end
     if Library.flags.Player and Library.flags.Teleport then
         LocalPlayer.Character.Humanoid.Sit = false
-        LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
+        LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
     end
     for i, v in pairs(Players:GetPlayers()) do
         if (Library.flags.Team or v.Team ~= LocalPlayer.Team) and v.CanLoadCharacterAppearance and #Camera:GetPartsObscuringTarget({v.Character.Head.Position}, {LocalPlayer.Character, v.Character}) == 0 then
-            Distance = math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
+            local Distance = math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
             table.insert(Sort, Distance)
             Head[Distance] = v.Character.Head
         end
         if not v.Character:FindFirstChild("Highlight") then
             Instance.new("Highlight", v.Character)
-            BG = Instance.new("BillboardGui", v.Character)
-            TL = Instance.new("TextLabel", BG)
-            BG.AlwaysOnTop = true
-            BG.Size = UDim2.new(0, 100, 0, 50)
-            BG.StudsOffset = Vector3.new(0, 4, 0)
-            TL.BackgroundTransparency = 1
-            TL.Size = UDim2.new(0, 100, 0, 50)
+            local BillboardGui = Instance.new("BillboardGui", v.Character)
+            local TextLabel = Instance.new("TextLabel", BillboardGui)
+            BillboardGui.AlwaysOnTop = true
+            BillboardGui.Size = UDim2.new(0, 100, 0, 50)
+            BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
+            TextLabel.BackgroundTransparency = 1
+            TextLabel.Size = UDim2.new(0, 100, 0, 50)
         end
         v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
         v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
