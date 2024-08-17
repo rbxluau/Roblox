@@ -1,27 +1,27 @@
-ReplicatedStorage = game:GetService("ReplicatedStorage")
-UserInputService = game:GetService("UserInputService")
-TweenService = game:GetService("TweenService")
-RunService = game:GetService("RunService")
-Players = game:GetService("Players")
-LocalPlayer = Players.LocalPlayer
-HRP = "HumanoidRootPart"
-Track = workspace.LoadedWorld.Track
-Time = LocalPlayer.PlayerGui.TimerUI.RaceTimer
-Tween = TweenService:Create(LocalPlayer.Character[HRP], TweenInfo.new(), {
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Track = workspace.LoadedWorld.Track
+local Time = LocalPlayer.PlayerGui.TimerUI.RaceTimer
+local Services = ReplicatedStorage.Packages.Knit.Services
+local Tween = TweenService:Create(LocalPlayer.Character.HumanoidRootPart, TweenInfo.new(), {
     CFrame = Track:GetChildren()[#Track:GetChildren()].Sign.CFrame-Vector3.yAxis*20
 })
 
-function Play()
+local function Play()
     if Library.flags.Race and Time.Visible then
         Tween:Play()
     end
 end
 
-Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
+local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
-Window = Library:Window(Locale.RaceClicker)
+local Window = Library:Window(Locale.RaceClicker)
 
-Section = Window:Tab(Locale.Player):Section("Main", true)
+local Section = Window:Tab(Locale.Player):Section("Main", true)
 
 Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(Value)
     workspace.Gravity = Value
@@ -45,7 +45,7 @@ end)
 
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
-Player = Section:Dropdown(Locale.Player, "Player", (function()
+local Player = Section:Dropdown(Locale.Player, "Player", (function()
     local Players = Players:GetPlayers()
     for i, v in pairs(Players) do
         Players[i] = v.Name
@@ -67,16 +67,16 @@ Section = Window:Tab(Locale.Other):Section("Main", true)
 
 Section:Button(Locale.BTool, function()
     for i = 3, 4 do
-        HB = Instance.new("HopperBin", LocalPlayer.Backpack)
-        HB.BinType = i
+        local HopperBin = Instance.new("HopperBin", LocalPlayer.Backpack)
+        HopperBin.BinType = i
     end
 end)
 
 Section:Button(Locale.ClickTP, function()
-    Tool = Instance.new("Tool", LocalPlayer.Backpack)
+    local Tool = Instance.new("Tool", LocalPlayer.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LocalPlayer.Character[HRP].CFrame = LocalPlayer:GetMouse().Hit+Vector3.new(0, 2.5, 0)
+        LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer:GetMouse().Hit+Vector3.new(0, 2.5, 0)
     end)
 end)
 
@@ -110,7 +110,7 @@ end)
 
 LocalPlayer.leaderstats["🏁Wins"].Changed:Connect(function()
     if Library.flags.Rebirth then
-        ReplicatedStorage.Packages.Knit.Services.RebirthService.RF.Rebirth:InvokeServer()
+        Services.RebirthService.RF.Rebirth:InvokeServer()
     end
 end)
 
@@ -126,14 +126,14 @@ RunService.Heartbeat:Connect(function()
     LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
     if Library.flags.Fly then
         LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character[HRP].Velocity = Vector3.zero
+        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
     end
     if Library.flags.Player and Library.flags.Teleport then
         LocalPlayer.Character.Humanoid.Sit = false
-        LocalPlayer.Character[HRP].CFrame = Players[Library.flags.Player].Character[HRP].CFrame
+        LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
     end
     if Library.flags.Click and LocalPlayer.PlayerGui.ClicksUI.ClickHelper.Visible then
-        ReplicatedStorage.Packages.Knit.Services.ClickService.RF.Click:InvokeServer()
+        Services.ClickService.RF.Click:InvokeServer()
     end
 end)
 
