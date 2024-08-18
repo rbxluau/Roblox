@@ -68,7 +68,9 @@ end)
 Section:Toggle(Locale.Get, "Get")
 
 Section:Button(Locale.Buy, function()
-    Buy:InvokeServer(Library.flags.Item)
+    if Buy and Library.flags.Item then
+        Buy:InvokeServer(Library.flags.Item)
+    end
 end)
 
 Section = Window:Tab(Locale.Hit):Section("Main", true)
