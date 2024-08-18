@@ -8,7 +8,9 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Game = workspace.Game
 local Rubbish = Game.Local.Rubbish
+local Items = workspace.ItemSpawns.items
 local ItemPickup = Game.Entities.ItemPickup
+local Buy
 local Hit
 local Kill
 
@@ -42,10 +44,10 @@ Section = Window:Tab(Locale.Interact):Section("Main", true)
 
 Section:Toggle(Locale.Fast, "Fast")
 
-Section = Window:Tab(Locale.Pickup):Section("Main", true)
+Section = Window:Tab(Locale.Item):Section("Main", true)
 
 Section:Dropdown(Locale.Item, "Item", (function()
-    local Items = workspace.ItemSpawns.items:GetChildren()
+    local Items = Items:GetChildren()
     for i, v in pairs(Items) do
         Items[i] = v.Name
     end
@@ -64,6 +66,10 @@ Section:Toggle(Locale.Teleport, "ItemTP", false, function(Value)
 end)
 
 Section:Toggle(Locale.Get, "Get")
+
+Section:Button(Locale.Buy, function()
+    Buy:InvokeServer(Library.flags.Item)
+end)
 
 Section = Window:Tab(Locale.Hit):Section("Main", true)
 
@@ -130,6 +136,9 @@ end)
 Call = hookmetamethod(game, "__namecall", function(self, ...)
     local args = {...}
     if self.Parent == ReplicatedStorage.devv.remoteStorage and #args ~= 0 then
+        if args[2] ~= "Items" and type(args[1]) == "string" and Items:FindFirstChild(args[1]) then
+            Buy = self
+        end
         if table.find({"prop", "player"}, args[1]) then
             Hit = self
         end
