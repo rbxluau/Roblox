@@ -138,7 +138,7 @@ end)
 Call = hookmetamethod(game, "__namecall", function(self, ...)
     local args = {...}
     if self.Parent == ReplicatedStorage.devv.remoteStorage and #args ~= 0 then
-        if args[2] ~= "Items" and type(args[1]) == "string" and Items:FindFirstChild(args[1]) then
+        if args[2] ~= "Items" and type(args[1]) == "string" and Items.FindFirstChild(args[1]) then
             Buy = self
         end
         if table.find({"prop", "player"}, args[1]) then
