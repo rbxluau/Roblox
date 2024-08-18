@@ -8,5 +8,5 @@ if gethwid then
         [73885730] = "PrisonLife"
     })[game.GameId] or "Universal")..".lua"))()
 else
-    Instance.new("Message", workspace).Text = "⛔You have been blocked⛔\n🚫Executor not supported🚫"
+    Instance.new("Message", workspace).Text = "⛔You have been blocked⛔\nExecutor not supported"
 end
