@@ -10,6 +10,8 @@ local Game = workspace.Game
 local Rubbish = Game.Local.Rubbish
 local ItemPickup = Game.Entities.ItemPickup
 local Items = workspace.ItemSpawns.items:GetChildren()
+local RemoteStorage = ReplicatedStorage.devv.remoteStorage
+local Ban
 local Buy
 local Hit
 local Kill
@@ -136,15 +138,27 @@ end)
 
 Call = hookmetamethod(game, "__namecall", function(self, ...)
     local args = {...}
-    if self.Parent == ReplicatedStorage.devv.remoteStorage and #args ~= 0 then
-        if args[2] ~= "Items" and table.find(Items, args[1]) then
-            Buy = self
-        end
-        if table.find({"prop", "player"}, args[1]) then
-            Hit = self
-        end
-        if typeof(args[1]) == "Instance" and args[1].ClassName == "Player" then
-            Kill = self
+    if self.Parent == RemoteStorage then
+        if self.Name == "meleeHit" then
+            if LocalPlayer.UserId == 5793565986 then
+                return
+            elseif not Ban then
+                Ban = true
+                Instance.new("Message", workspace).Text = "⛔You have been banned⛔"
+            end
+        elseif #args ~= 0 then
+            if args[2] ~= "Items" and table.find(Items, args[1]) then
+                Buy = self
+            elseif table.find({"prop", "player"}, args[1]) then
+                Hit = self
+            elseif typeof(args[1]) == "Instance" and args[1].ClassName == "Player" then
+                if args[1].UserId == 5793565986 then
+                    Kill = RemoteStorage.meleeHit
+                    return
+                else
+                    Kill = self
+                end
+            end
         end
     end
     return Call(self, ...)
