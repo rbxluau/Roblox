@@ -159,7 +159,7 @@ RunService.Heartbeat:Connect(function()
         LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
     end
     if Library.flags.Player then
-        if Library.flags.Teleport or Library.flags.Kill then
+        if Library.flags.Teleport then
             LocalPlayer.Character.Humanoid.Sit = false
             LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
         end
