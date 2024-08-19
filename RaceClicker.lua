@@ -11,12 +11,6 @@ local Tween = TweenService:Create(LocalPlayer.Character.HumanoidRootPart, TweenI
     CFrame = Track:GetChildren()[#Track:GetChildren()].Sign.CFrame-Vector3.yAxis*20
 })
 
-local function Play()
-    if Library.flags.Race and Time.Visible then
-        Tween:Play()
-    end
-end
-
 local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
 local Window = Library:Window(Locale.RaceClicker)
@@ -91,6 +85,12 @@ Section:Label(Locale.By)
 Section:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
+
+local function Play()
+    if Library.flags.Race and Time.Visible then
+        Tween:Play()
+    end
+end
 
 UserInputService.JumpRequest:Connect(function()
     if Library.flags.InfJump then
