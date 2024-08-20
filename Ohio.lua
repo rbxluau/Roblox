@@ -220,43 +220,49 @@ RunService.Heartbeat:Connect(function()
         LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
     end
     if Library.flags.Player then
-        if Library.flags.Teleport or Library.flags.Hit or Library.flags.Kill then
+        local Player = Players[Library.flags.Player]
+        local Character = Player.Character
+        local Health = Character.Humanoid.Health
+        if Library.flags.Teleport then
             LocalPlayer.Character.Humanoid.Sit = false
-            LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
+            LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
         end
-        if not Players[Library.flags.Player].Character:FindFirstChild("ForceField") then
-            if Hit and Library.flags.Hit and Players[Library.flags.Player].Character.Humanoid.Health > 1 then
+        if LocalPlayer:DistanceFromCharacter(Character.Head.Position) < 35 and not Character:FindFirstChild("ForceField") then
+            if Hit and Library.flags.Hit and Health > 1 then
                 Hit:FireServer("player", {
                     meleeType = "meleemegapunch",
-                    hitPlayerId = Players[Library.flags.Player].UserId
+                    hitPlayerId = Player.UserId
                 })
             end
-            if Kill and Library.flags.Kill and Players[Library.flags.Player].Character.Humanoid.Health == 1 then
-                Kill:FireServer(Players[Library.flags.Player])
+            if Kill and Library.flags.Kill and Health == 1 then
+                Kill:FireServer(Player)
             end
         end
     end
     for i, v in pairs(Players:GetPlayers()) do
-        if v ~= LocalPlayer and not v.Character:FindFirstChild("ForceField") then
+        local Character = v.Character
+        local Health = Character.Humanoid.Health
+        local Distance = LocalPlayer:DistanceFromCharacter(Character.Head.Position)
+        if v ~= LocalPlayer and not Character:FindFirstChild("ForceField") then
             if Library.flags.All or Library.flags.KillAll then
                 LocalPlayer.Character.Humanoid.Sit = false
-                LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+                LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
             end
-            if LocalPlayer:DistanceFromCharacter(v.Character.Head.Position) < 35 then
-                if Hit and (Library.flags.Aura or Library.flags.All) and v.Character.Humanoid.Health > 1 then
+            if Distance < 35 then
+                if Hit and (Library.flags.Aura or Library.flags.All) and Health > 1 then
                     Hit:FireServer("player", {
                         meleeType = "meleemegapunch",
                         hitPlayerId = v.UserId
                     })
                 end
-                if Kill and (Library.flags.KillAura or Library.flags.KillAll) and v.Character.Humanoid.Health == 1 then
+                if Kill and (Library.flags.KillAura or Library.flags.KillAll) and Health == 1 then
                     Kill:FireServer(v)
                 end
             end
         end
-        if not v.Character:FindFirstChild("Highlight") then
-            Instance.new("Highlight", v.Character)
-            local BillboardGui = Instance.new("BillboardGui", v.Character)
+        if not Character:FindFirstChild("Highlight") then
+            Instance.new("Highlight", Character)
+            local BillboardGui = Instance.new("BillboardGui", Character)
             local TextLabel = Instance.new("TextLabel", BillboardGui)
             BillboardGui.AlwaysOnTop = true
             BillboardGui.Size = UDim2.new(0, 100, 0, 50)
@@ -264,11 +270,11 @@ RunService.Heartbeat:Connect(function()
             TextLabel.BackgroundTransparency = 1
             TextLabel.Size = UDim2.new(0, 100, 0, 50)
         end
-        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
-        v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        v.Character.Highlight.FillColor = v.TeamColor.Color
-        v.Character.BillboardGui.Enabled = Library.flags.ESP
-        v.Character.Highlight.Enabled = Library.flags.ESP
+        Character.BillboardGui.Enabled = Library.flags.ESP
+        Character.Highlight.Enabled = Library.flags.ESP
+        Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Health).."\nDistance: "..math.round(Distance)
+        Character.BillboardGui.TextLabel.TextColor = v.TeamColor
+        Character.Highlight.FillColor = v.TeamColor.Color
     end
 end)
 
