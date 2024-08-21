@@ -1,3 +1,5 @@
+# Star History
+[![Stargazers over time](https://starchart.cc/rbxluau/Roblox.svg?variant=adaptive)](https://starchart.cc/rbxluau/Roblox)
 # Contributor
 [@Verycuteabbey](https://github.com/Verycuteabbey)
 # Example
