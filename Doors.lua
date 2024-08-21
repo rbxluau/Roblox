@@ -155,14 +155,15 @@ RunService.Heartbeat:Connect(function()
         LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
     end
     for i, v in pairs(Players:GetPlayers()) do
-        if not v.Character:FindFirstChild("Highlight") then
-            ESP(v.Character, 4)
+        local Character = v.Character
+        if not Character:FindFirstChild("Highlight") then
+            ESP(Character, 4)
         end
-        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
-        v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        v.Character.Highlight.FillColor = v.TeamColor.Color
-        v.Character.BillboardGui.Enabled = Library.flags.ESP
-        v.Character.Highlight.Enabled = Library.flags.ESP
+        Character.BillboardGui.Enabled = Library.flags.ESP
+        Character.Highlight.Enabled = Library.flags.ESP
+        Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
+        Character.BillboardGui.TextLabel.TextColor = v.TeamColor
+        Character.Highlight.FillColor = v.TeamColor.Color
     end
 end)
 
