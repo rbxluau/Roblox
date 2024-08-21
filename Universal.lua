@@ -136,9 +136,10 @@ RunService.Heartbeat:Connect(function()
         LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
     end
     for i, v in pairs(Players:GetPlayers()) do
-        if not v.Character:FindFirstChild("Highlight") then
-            Instance.new("Highlight", v.Character)
-            local BillboardGui = Instance.new("BillboardGui", v.Character)
+        local Character = v.Character
+        if not Character:FindFirstChild("Highlight") then
+            Instance.new("Highlight", Character)
+            local BillboardGui = Instance.new("BillboardGui", Character)
             local TextLabel = Instance.new("TextLabel", BillboardGui)
             BillboardGui.AlwaysOnTop = true
             BillboardGui.Size = UDim2.new(0, 100, 0, 50)
@@ -146,11 +147,11 @@ RunService.Heartbeat:Connect(function()
             TextLabel.BackgroundTransparency = 1
             TextLabel.Size = UDim2.new(0, 100, 0, 50)
         end
-        v.Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(v.Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(v.Character.Head.Position))
-        v.Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        v.Character.Highlight.FillColor = v.TeamColor.Color
-        v.Character.BillboardGui.Enabled = Library.flags.ESP
-        v.Character.Highlight.Enabled = Library.flags.ESP
+        Character.BillboardGui.Enabled = Library.flags.ESP
+        Character.Highlight.Enabled = Library.flags.ESP
+        Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
+        Character.BillboardGui.TextLabel.TextColor = v.TeamColor
+        Character.Highlight.FillColor = v.TeamColor.Color
     end
 end)
 
