@@ -92,7 +92,7 @@ Dropdown:SetOptions(<list<str>> Options)
 ### How flags work?
 The flags feature in the ui may be confusing for some people. It serves the purpose of being the ID of an element in the config file, and makes accessing the value of an element anywhere in the code possible. Below in an example of using flags.
 ```lua
-Library.flags["name"]
+Library.flags["key"]
 ```
 ## Tip
 Use the <kbd>LeftControl</kbd> or <img src=https://raw.githubusercontent.com/frappedevs/lucideblox/master/icons/expand.png width=20 /> to toggle UI.
