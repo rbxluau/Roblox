@@ -64,11 +64,11 @@ Section:Toggle(Locale.Interact, "Interact")
 
 Section = Window:Tab(Locale.ESP):Section("Main", true)
 
+Section:Toggle(Locale.Door, "Door")
+
 Section:Toggle(Locale.Player, "ESP")
 
 Section:Toggle(Locale.Monster, "Monster")
-
-Section:Toggle(Locale.Door, "Door")
 
 Section:Toggle(Locale.Other, "Other")
 
@@ -168,7 +168,7 @@ RunService.Heartbeat:Connect(function()
 end)
 
 workspace.ChildAdded:Connect(function(v)
-    if Library.flags.Monster and v:IsA("Model") and task.wait() and LocalPlayer:DistanceFromCharacter(v:GetPivot().Position) < 1000 then
+    if Library.flags.Monster and v:IsA("Model") then
         ESP(v)
         Warn(v.Name)
     end
