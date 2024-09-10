@@ -74,42 +74,44 @@ Players.PlayerRemoving:Connect(function(v)
 end)
 
 RunService.Heartbeat:Connect(function()
-    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
-    if Library.flags.Fly then
-        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
-    end
-    if Library.flags.Player and Library.flags.Teleport then
-        LocalPlayer.Character.Humanoid.Sit = false
-        LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
-    end
-    for i, v in pairs(Players:GetPlayers()) do
-        local Character = v.Character
-        local Distance = math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
-        if (Library.flags.Team or v.Team ~= LocalPlayer.Team) and #Camera:GetPartsObscuringTarget({Character.Head.Position}, {LocalPlayer.Character, Character}) == 0 then
-            table.insert(Sort, Distance)
-            Head[Distance] = Character.Head
+    pcall(function()
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+        if Library.flags.Fly then
+            LocalPlayer.Character.Humanoid:ChangeState("Swimming")
+            LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
         end
-        if not Character:FindFirstChild("Highlight") then
-            Instance.new("Highlight", Character)
-            local BillboardGui = Instance.new("BillboardGui", Character)
-            local TextLabel = Instance.new("TextLabel", BillboardGui)
-            BillboardGui.AlwaysOnTop = true
-            BillboardGui.Size = UDim2.new(0, 100, 0, 50)
-            BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
-            TextLabel.BackgroundTransparency = 1
-            TextLabel.Size = UDim2.new(0, 100, 0, 50)
+        if Library.flags.Player and Library.flags.Teleport then
+            LocalPlayer.Character.Humanoid.Sit = false
+            LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
         end
-        Character.BillboardGui.Enabled = Library.flags.ESP
-        Character.Highlight.Enabled = Library.flags.ESP
-        Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..Distance
-        Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        Character.Highlight.FillColor = v.TeamColor.Color
-    end
-    if Library.flags.Aimbot and Sort[1] then
-        table.sort(Sort)
-        Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head[Sort[1]].Position)
-        Sort = {}
-        Head = {}
-    end
+        for i, v in pairs(Players:GetPlayers()) do
+            local Character = v.Character
+            local Distance = math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
+            if (Library.flags.Team or v.Team ~= LocalPlayer.Team) and #Camera:GetPartsObscuringTarget({Character.Head.Position}, {LocalPlayer.Character, Character}) == 0 then
+                table.insert(Sort, Distance)
+                Head[Distance] = Character.Head
+            end
+            if not Character:FindFirstChild("Highlight") then
+                Instance.new("Highlight", Character)
+                local BillboardGui = Instance.new("BillboardGui", Character)
+                local TextLabel = Instance.new("TextLabel", BillboardGui)
+                BillboardGui.AlwaysOnTop = true
+                BillboardGui.Size = UDim2.new(0, 100, 0, 50)
+                BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.Size = UDim2.new(0, 100, 0, 50)
+            end
+            Character.BillboardGui.Enabled = Library.flags.ESP
+            Character.Highlight.Enabled = Library.flags.ESP
+            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..Distance
+            Character.BillboardGui.TextLabel.TextColor = v.TeamColor
+            Character.Highlight.FillColor = v.TeamColor.Color
+        end
+        if Library.flags.Aimbot and Sort[1] then
+            table.sort(Sort)
+            Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head[Sort[1]].Position)
+            Sort = {}
+            Head = {}
+        end
+    end)
 end)
