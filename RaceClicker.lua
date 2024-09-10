@@ -123,18 +123,20 @@ Players.PlayerRemoving:Connect(function(v)
 end)
 
 RunService.Heartbeat:Connect(function()
-    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
-    if Library.flags.Fly then
-        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
-    end
-    if Library.flags.Player and Library.flags.Teleport then
-        LocalPlayer.Character.Humanoid.Sit = false
-        LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
-    end
-    if Library.flags.Click and LocalPlayer.PlayerGui.ClicksUI.ClickHelper.Visible then
-        Services.ClickService.RF.Click:InvokeServer()
-    end
+    pcall(function()
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+        if Library.flags.Fly then
+            LocalPlayer.Character.Humanoid:ChangeState("Swimming")
+            LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
+        end
+        if Library.flags.Player and Library.flags.Teleport then
+            LocalPlayer.Character.Humanoid.Sit = false
+            LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
+        end
+        if Library.flags.Click and LocalPlayer.PlayerGui.ClicksUI.ClickHelper.Visible then
+            Services.ClickService.RF.Click:InvokeServer()
+        end
+    end)
 end)
 
 Tween.Completed:Connect(Play)
