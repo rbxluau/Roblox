@@ -114,99 +114,61 @@ Players.PlayerRemoving:Connect(function(v)
 end)
 
 RunService.Heartbeat:Connect(function()
-    for i, v in pairs(workspace.ignore:GetChildren()) do
-        if v.Name == "Looky" then
-            v.Highlight.Enabled = Library.flags.Other
-        end
-    end
-    if Library.flags.Invisible then
-        BoxUpdated:FireServer("Equip")
-    end
-    if Library.flags.Get then
-        for i, v in pairs(workspace:GetChildren()) do
-            if table.find({
-                "Fuse1",
-                "Fuse2",
-                "Fuse3",
-                "Fuse4",
-                "Fuse5",
-                "Fuse6",
-                "Fuse7",
-                "Fuse8",
-                "Fuse9",
-                "Fuse10",
-                "Fuse11",
-                "Fuse12",
-                "Fuse13",
-                "Fuse14",
-                "Block1",
-                "Block2",
-                "Block3",
-                "Block4",
-                "Block5",
-                "Block6",
-                "Block7",
-                "Block8",
-                "Block9",
-                "Block10",
-                "Block11",
-                "Block12",
-                "Block13",
-                "Block14",
-                "Block15",
-                "Block16",
-                "Block17",
-                "Block18",
-                "Block19",
-                "Block20",
-                "Block21",
-                "Block22",
-                "Block23",
-                "Block24",
-                "Battery",
-                "FoodPink",
-                "FoodGreen",
-                "FoodOrange",
-                "CakeMix",
-                "LightBulb",
-                "GasCanister"
-            }, v.Name) then
-                v.TouchTrigger.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
+    pcall(function()
+        for i, v in pairs(workspace.ignore:GetChildren()) do
+            if v.Name == "Looky" then
+                v.Highlight.Enabled = Library.flags.Other
             end
         end
-    end
-    if Library.flags.Put then
-        for i, v in pairs(workspace.GroupBuildStructures:GetChildren()) do
-            v.Trigger.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
+        if Library.flags.Invisible then
+            BoxUpdated:FireServer("Equip")
         end
-    end
-    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
-    if Library.flags.Fly then
-        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
-    end
-    if Library.flags.Player and Library.flags.Teleport then
-        LocalPlayer.Character.Humanoid.Sit = false
-        LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
-    end
-    for i, v in pairs(Players:GetPlayers()) do
-        local Character = v.Character
-        if not Character:FindFirstChild("Highlight") then
-            Instance.new("Highlight", Character)
-            local BillboardGui = Instance.new("BillboardGui", Character)
-            local TextLabel = Instance.new("TextLabel", BillboardGui)
-            BillboardGui.AlwaysOnTop = true
-            BillboardGui.Size = UDim2.new(0, 100, 0, 50)
-            BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
-            TextLabel.BackgroundTransparency = 1
-            TextLabel.Size = UDim2.new(0, 100, 0, 50)
+        if Library.flags.Get then
+            for i, v in pairs(workspace:GetChildren()) do
+                if table.find({
+                    "Fuse1", "Fuse2", "Fuse3", "Fuse4", "Fuse5", "Fuse6", "Fuse7", "Fuse8", "Fuse9", "Fuse10",
+                    "Fuse11", "Fuse12", "Fuse13", "Fuse14", "Block1", "Block2", "Block3", "Block4", "Block5", "Block6",
+                    "Block7", "Block8", "Block9", "Block10", "Block11", "Block12", "Block13", "Block14", "Block15", "Block16",
+                    "Block17", "Block18", "Block19", "Block20", "Block21", "Block22", "Block23", "Block24", "Battery", "FoodPink",
+                    "FoodGreen", "FoodOrange", "CakeMix", "LightBulb", "GasCanister"
+                }, v.Name) then
+                    v.TouchTrigger.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
+                end
+            end
         end
-        Character.BillboardGui.Enabled = Library.flags.ESP
-        Character.Highlight.Enabled = Library.flags.ESP
-        Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
-        Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        Character.Highlight.FillColor = v.TeamColor.Color
-    end
+        if Library.flags.Put then
+            for i, v in pairs(workspace.GroupBuildStructures:GetChildren()) do
+                v.Trigger.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
+            end
+        end
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+        if Library.flags.Fly then
+            LocalPlayer.Character.Humanoid:ChangeState("Swimming")
+            LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
+        end
+        if Library.flags.Player and Library.flags.Teleport then
+            LocalPlayer.Character.Humanoid.Sit = false
+            LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
+        end
+        for i, v in pairs(Players:GetPlayers()) do
+            local Character = v.Character
+            if not Character:FindFirstChild("Highlight") then
+                Instance.new("Highlight", Character)
+                local BillboardGui = Instance.new("BillboardGui", Character)
+                local TextLabel = Instance.new("TextLabel", BillboardGui)
+                BillboardGui.AlwaysOnTop = true
+                BillboardGui.Size = UDim2.new(0, 100, 0, 50)
+                BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.Size = UDim2.new(0, 100, 0, 50)
+            end
+            Character.BillboardGui.Enabled = Library.flags.ESP
+            Character.Highlight.Enabled = Library.flags.ESP
+            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
+            Character.BillboardGui.TextLabel.TextColor = v.TeamColor
+            Character.Highlight.FillColor = v.TeamColor.Color
+        end
+    end)
 end)
 
 Lighting.LightingChanged:Connect(function()
