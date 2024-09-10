@@ -126,33 +126,35 @@ Players.PlayerRemoving:Connect(function(v)
 end)
 
 RunService.Heartbeat:Connect(function()
-    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
-    if Library.flags.Fly then
-        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
-    end
-    if Library.flags.Player and Library.flags.Teleport then
-        LocalPlayer.Character.Humanoid.Sit = false
-        LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
-    end
-    for i, v in pairs(Players:GetPlayers()) do
-        local Character = v.Character
-        if not Character:FindFirstChild("Highlight") then
-            Instance.new("Highlight", Character)
-            local BillboardGui = Instance.new("BillboardGui", Character)
-            local TextLabel = Instance.new("TextLabel", BillboardGui)
-            BillboardGui.AlwaysOnTop = true
-            BillboardGui.Size = UDim2.new(0, 100, 0, 50)
-            BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
-            TextLabel.BackgroundTransparency = 1
-            TextLabel.Size = UDim2.new(0, 100, 0, 50)
+    pcall(function()
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+        if Library.flags.Fly then
+            LocalPlayer.Character.Humanoid:ChangeState("Swimming")
+            LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
         end
-        Character.BillboardGui.Enabled = Library.flags.ESP
-        Character.Highlight.Enabled = Library.flags.ESP
-        Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
-        Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        Character.Highlight.FillColor = v.TeamColor.Color
-    end
+        if Library.flags.Player and Library.flags.Teleport then
+            LocalPlayer.Character.Humanoid.Sit = false
+            LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
+        end
+        for i, v in pairs(Players:GetPlayers()) do
+            local Character = v.Character
+            if not Character:FindFirstChild("Highlight") then
+                Instance.new("Highlight", Character)
+                local BillboardGui = Instance.new("BillboardGui", Character)
+                local TextLabel = Instance.new("TextLabel", BillboardGui)
+                BillboardGui.AlwaysOnTop = true
+                BillboardGui.Size = UDim2.new(0, 100, 0, 50)
+                BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.Size = UDim2.new(0, 100, 0, 50)
+            end
+            Character.BillboardGui.Enabled = Library.flags.ESP
+            Character.Highlight.Enabled = Library.flags.ESP
+            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
+            Character.BillboardGui.TextLabel.TextColor = v.TeamColor
+            Character.Highlight.FillColor = v.TeamColor.Color
+        end
+    end)
 end)
 
 Lighting.LightingChanged:Connect(function()
