@@ -153,51 +153,53 @@ Players.PlayerRemoving:Connect(function(v)
 end)
 
 RunService.Heartbeat:Connect(function()
-    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
-    if Library.flags.Fly then
-        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
-    end
-    if Library.flags.Player then
-        local Player = Players[Library.flags.Player]
-        local Character = Player.Character
-        if Library.flags.Teleport then
-            LocalPlayer.Character.Humanoid.Sit = false
-            LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
+    pcall(function()
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+        if Library.flags.Fly then
+            LocalPlayer.Character.Humanoid:ChangeState("Swimming")
+            LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
         end
-        if Library.flags.Kill and LocalPlayer:DistanceFromCharacter(Character.Head.Position) < 15 and Character.Humanoid.Health ~= 0 and not Character:FindFirstChild("ForceField") then
-            ReplicatedStorage.meleeEvent:FireServer(Player)
-        end
-    end
-    for i, v in pairs(Players:GetPlayers()) do
-        local Character = v.Character
-        local Health = Character.Humanoid.Health
-        local Distance = LocalPlayer:DistanceFromCharacter(Character.Head.Position)
-        if v ~= LocalPlayer and Health ~= 0 and not Character:FindFirstChild("ForceField") then
-            if Library.flags.All then
+        if Library.flags.Player then
+            local Player = Players[Library.flags.Player]
+            local Character = Player.Character
+            if Library.flags.Teleport then
                 LocalPlayer.Character.Humanoid.Sit = false
                 LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
             end
-            if Library.flags.All or Library.flags.Aura and Distance < 15 then
-                ReplicatedStorage.meleeEvent:FireServer(v)
+            if Library.flags.Kill and LocalPlayer:DistanceFromCharacter(Character.Head.Position) < 15 and Character.Humanoid.Health ~= 0 and not Character:FindFirstChild("ForceField") then
+                ReplicatedStorage.meleeEvent:FireServer(Player)
             end
         end
-        if not Character:FindFirstChild("Highlight") then
-            Instance.new("Highlight", Character)
-            local BillboardGui = Instance.new("BillboardGui", Character)
-            local TextLabel = Instance.new("TextLabel", BillboardGui)
-            BillboardGui.AlwaysOnTop = true
-            BillboardGui.Size = UDim2.new(0, 100, 0, 50)
-            BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
-            TextLabel.BackgroundTransparency = 1
-            TextLabel.Size = UDim2.new(0, 100, 0, 50)
+        for i, v in pairs(Players:GetPlayers()) do
+            local Character = v.Character
+            local Health = Character.Humanoid.Health
+            local Distance = LocalPlayer:DistanceFromCharacter(Character.Head.Position)
+            if v ~= LocalPlayer and Health ~= 0 and not Character:FindFirstChild("ForceField") then
+                if Library.flags.All then
+                    LocalPlayer.Character.Humanoid.Sit = false
+                    LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
+                end
+                if Library.flags.All or Library.flags.Aura and Distance < 15 then
+                    ReplicatedStorage.meleeEvent:FireServer(v)
+                end
+            end
+            if not Character:FindFirstChild("Highlight") then
+                Instance.new("Highlight", Character)
+                local BillboardGui = Instance.new("BillboardGui", Character)
+                local TextLabel = Instance.new("TextLabel", BillboardGui)
+                BillboardGui.AlwaysOnTop = true
+                BillboardGui.Size = UDim2.new(0, 100, 0, 50)
+                BillboardGui.StudsOffset = Vector3.new(0, 4, 0)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.Size = UDim2.new(0, 100, 0, 50)
+            end
+            Character.BillboardGui.Enabled = Library.flags.ESP
+            Character.Highlight.Enabled = Library.flags.ESP
+            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Health).."\nDistance: "..math.round(Distance)
+            Character.BillboardGui.TextLabel.TextColor = v.TeamColor
+            Character.Highlight.FillColor = v.TeamColor.Color
         end
-        Character.BillboardGui.Enabled = Library.flags.ESP
-        Character.Highlight.Enabled = Library.flags.ESP
-        Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Health).."\nDistance: "..math.round(Distance)
-        Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        Character.Highlight.FillColor = v.TeamColor.Color
-    end
+    end)
 end)
 
 Lighting.LightingChanged:Connect(function()
