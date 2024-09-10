@@ -149,22 +149,24 @@ ProximityPromptService.PromptShown:Connect(function(v)
 end)
 
 RunService.Heartbeat:Connect(function()
-    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
-    if Library.flags.Fly then
-        LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-        LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
-    end
-    for i, v in pairs(Players:GetPlayers()) do
-        local Character = v.Character
-        if not Character:FindFirstChild("Highlight") then
-            ESP(Character, 4)
+    pcall(function()
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+        if Library.flags.Fly then
+            LocalPlayer.Character.Humanoid:ChangeState("Swimming")
+            LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
         end
-        Character.BillboardGui.Enabled = Library.flags.ESP
-        Character.Highlight.Enabled = Library.flags.ESP
-        Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
-        Character.BillboardGui.TextLabel.TextColor = v.TeamColor
-        Character.Highlight.FillColor = v.TeamColor.Color
-    end
+        for i, v in pairs(Players:GetPlayers()) do
+            local Character = v.Character
+            if not Character:FindFirstChild("Highlight") then
+                ESP(Character, 4)
+            end
+            Character.BillboardGui.Enabled = Library.flags.ESP
+            Character.Highlight.Enabled = Library.flags.ESP
+            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
+            Character.BillboardGui.TextLabel.TextColor = v.TeamColor
+            Character.Highlight.FillColor = v.TeamColor.Color
+        end
+    end)
 end)
 
 workspace.ChildAdded:Connect(function(v)
