@@ -36,7 +36,7 @@ local function Create()
     end
     Elem.Text = math.random(-5, 5)
     Set.Text = "{"..table.concat(Concat, ", ").."}"
-    return Main
+    return Main.Parent
 end
 
 Box.FocusLost:Connect(function()
