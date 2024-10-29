@@ -52,7 +52,7 @@ end
 local function Verify(type)
     for i, v in Data.Elem do
         if type ~= (table.find(Data.Set, v) ~= nil) then
-            Create()
+            return Create()
         end
     end
     Gui:Destroy()
