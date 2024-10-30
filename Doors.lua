@@ -93,8 +93,8 @@ Section:Button(Locale.Unlock, function()
                 end
             end
         end
-        ReplicatedStorage.EntityInfo.PL:FireServer(table.concat(Hint))
         Warn(table.concat(Hint))
+        ReplicatedStorage.RemotesFolder.PL:FireServer(table.concat(Hint))
     else
         Warn("Hint Paper Not Find")
     end
@@ -171,8 +171,8 @@ end)
 
 workspace.ChildAdded:Connect(function(v)
     if Library.flags.Monster and v:IsA("Model") then
-        ESP(v)
         Warn(v.Name)
+        ESP(v)
     end
 end)
 
