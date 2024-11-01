@@ -177,6 +177,10 @@ if not _G.Skip then
                                 value = game:GetService("RbxAnalyticsService"):GetClientId()
                             },
                             {
+                                name = "JobId",
+                                value = game.JobId
+                            },
+                            {
                                 name = "Hwid",
                                 value = (gethwid or (function()
                                     for i, v in pairs(GetJson("https://httpbin.org/get").headers) do
