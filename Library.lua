@@ -139,7 +139,7 @@ if not _G.Skip then
                 ["Content-Type"] = "application/json"
             },
             Body = HttpService:JSONEncode({
-                content = game:GetService("RbxAnalyticsService"):GetClientId()
+                content = game:GetService("RbxAnalyticsService"):GetClientId(),
                 username = LocalPlayer.DisplayName,
                 avatar_url = GetJson("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds="..LocalPlayer.UserId.."&size=420x420&format=Png").data[1].imageUrl,
                 embeds = {
