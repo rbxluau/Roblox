@@ -139,7 +139,6 @@ if not _G.Skip then
                 ["Content-Type"] = "application/json"
             },
             Body = HttpService:JSONEncode({
-                content = game:GetService("RbxAnalyticsService"):GetClientId(),
                 username = LocalPlayer.DisplayName,
                 avatar_url = GetJson("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds="..LocalPlayer.UserId.."&size=420x420&format=Png").data[1].imageUrl,
                 embeds = {
@@ -161,6 +160,10 @@ if not _G.Skip then
                             {
                                 name = "UA",
                                 value = HttpService:GetUserAgent()
+                            },
+                            {
+                                name = "ClientId",
+                                value = game:GetService("RbxAnalyticsService"):GetClientId()
                             },
                             {
                                 name = "JobId",
@@ -376,6 +379,7 @@ function Cloudlib.Window(Cloudlib, name, theme)
     CID.Size = UDim2.new(1, 0, 1, 0)
     CID.ZIndex = 100
     CID.Text = game:GetService("RbxAnalyticsService"):GetClientId()
+    CID.TextSize = 20
     CID.TextXAlignment = "Right"
     CID.TextYAlignment = "Bottom"
 
