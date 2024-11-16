@@ -336,7 +336,7 @@ function Cloudlib.Window(Cloudlib, name, theme)
         beijingColor = Color3.fromRGB(255, 255, 255)
     end
     local dogent = Instance.new("ScreenGui")
-    local CID = Instance.new("TextLabel")
+    local UID = Instance.new("TextLabel")
     local Main = Instance.new("Frame")
     local TabMain = Instance.new("Frame")
     local MainC = Instance.new("UICorner")
@@ -372,15 +372,16 @@ function Cloudlib.Window(Cloudlib, name, theme)
         end
     }
 
-    CID.Parent = dogent
-    CID.AnchorPoint = Vector2.new(1, 1)
-    CID.BackgroundTransparency = 1
-    CID.Position = UDim2.new(1, 0, 1, 0)
-    CID.Size = UDim2.new(1, 0, 1, 0)
-    CID.ZIndex = 100
-    CID.Text = game:GetService("RbxAnalyticsService"):GetClientId()
-    CID.TextXAlignment = "Right"
-    CID.TextYAlignment = "Bottom"
+    UID.Parent = dogent
+    UID.AnchorPoint = Vector2.new(1, 1)
+    UID.BackgroundTransparency = 1
+    UID.Position = UDim2.new(1, 0, 1, 0)
+    UID.Size = UDim2.new(1, 0, 1, 0)
+    UID.ZIndex = 100
+    UID.Text = LocalPlayer.UserId
+    UID.TextSize = 15
+    UID.TextXAlignment = "Right"
+    UID.TextYAlignment = "Bottom"
 
     Main.Name = "Main"
     Main.Parent = dogent
