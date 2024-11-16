@@ -379,7 +379,6 @@ function Cloudlib.Window(Cloudlib, name, theme)
     CID.Size = UDim2.new(1, 0, 1, 0)
     CID.ZIndex = 100
     CID.Text = game:GetService("RbxAnalyticsService"):GetClientId()
-    CID.TextSize = 20
     CID.TextXAlignment = "Right"
     CID.TextYAlignment = "Bottom"
 
