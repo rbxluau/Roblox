@@ -23,7 +23,7 @@ Section:Button("Dex Explorer", function()
 end)
 
 Section:Button("Simple Spy", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/REDzHUB/RS/main/SimpleSpyMobile"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/SimpleSpy.lua"))()
 end)
 
 Section:Button("获取全名", function()
