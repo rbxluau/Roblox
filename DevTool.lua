@@ -13,7 +13,7 @@ local Window = Library:Window("开发工具")
 local Section = Window:Tab(Locale.Player):Section("Main", true)
 
 Section:Button("复制位置", function()
-    setclipboard("LP.Character:MoveTo(Vector3.new("..tostring(LP.Character.HumanoidRootPart.Position).."))")
+    setclipboard("LocalPlayer.Character:MoveTo(Vector3.new("..tostring(LocalPlayer.Character.HumanoidRootPart.Position).."))")
 end)
 
 Section = Window:Tab(Locale.Other):Section("Main", true)
@@ -27,10 +27,10 @@ Section:Button("Simple Spy", function()
 end)
 
 Section:Button("获取全名", function()
-    local Tool = Instance.new("Tool", LP.Backpack)
+    local Tool = Instance.new("Tool", LocalPlayer.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        setclipboard(LP:GetMouse().Target:GetFullName())
+        setclipboard(LocalPlayer:GetMouse().Target:GetFullName())
     end)
 end)
 
@@ -42,7 +42,7 @@ Section:Dropdown("查看", "Type", {"Workspace", "Gui"})
 
 game.UserInputService.TouchTap:Connect(function()
     if Library.flags.Type == "Workspace" then
-        TextLabel.Text = LP:GetMouse().Target:GetFullName()
+        TextLabel.Text = LocalPlayer:GetMouse().Target:GetFullName()
     end
 end)
 
