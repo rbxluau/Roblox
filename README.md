@@ -1,3 +1,5 @@
+# Script Hub
+[![license](https://img.shields.io/github/license/rbxluau/Roblox)](https://github.com/rbxluau/Roblox/blob/main/LICENSE)
 # Star History
 [![Stargazers over time](https://starchart.cc/rbxluau/Roblox.svg?variant=adaptive)](https://starchart.cc/rbxluau/Roblox)
 # Contributor
