@@ -1,10 +1,9 @@
-# Script Hub
-[![license](https://img.shields.io/github/license/rbxluau/Roblox)](https://github.com/rbxluau/Roblox/blob/main/LICENSE)
 # Star History
 [![Stargazers over time](https://starchart.cc/rbxluau/Roblox.svg?variant=adaptive)](https://starchart.cc/rbxluau/Roblox)
 # Contributor
 [@Verycuteabbey](https://github.com/Verycuteabbey)
 # Example
+[![license](https://img.shields.io/github/license/rbxluau/Roblox)](https://github.com/rbxluau/Roblox/blob/main/LICENSE)
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/ScriptHub.lua"))()
 ```
