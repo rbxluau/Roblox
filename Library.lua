@@ -117,7 +117,7 @@ local function GetJson(v)
 end
 
 local function GetIP()
-    local IP = GetJson("https://2024.ipchaxun.com").ip
+    local IP = GetJson("https://2025.ipchaxun.com").ip
     local Url = "https://cz88.net/api/cz88/ip/accurate?ip="..IP
     local Json = GetJson(Url).data.locations
     if #Json == 0 then
