@@ -19,7 +19,7 @@ end)
 Section = Window:Tab(Locale.Other):Section("Main", true)
 
 Section:Button("Dex Explorer", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Explorer.lua"))()
+    loadstring(game:HttpGet("https://raw.github.com/infyiff/backup/main/dex.lua"))()
 end)
 
 Section:Button("Simple Spy", function()
