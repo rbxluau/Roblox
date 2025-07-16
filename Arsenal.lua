@@ -13,14 +13,14 @@ local Section = Window:Tab(Locale.Player):Section("Main", true)
 
 Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
 
-Section:Toggle(Locale.Fly, "Fly", false, function(Value)
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Value)
+Section:Toggle(Locale.Fly, "Fly", false, function(value)
+    for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
 
-Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
-    if not Value then
+Section:Toggle(Locale.Noclip, "Noclip", false, function(value)
+    if not value then
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
@@ -34,11 +34,11 @@ Section:Toggle(Locale.Toggle, "Aimbot")
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
 local Player = Section:Dropdown(Locale.Player, "Player", (function()
-    local Players = Players:GetPlayers()
-    for i, v in pairs(Players) do
-        Players[i] = v.Name
+    local PlayerList = Players:GetPlayers()
+    for i, v in pairs(PlayerList) do
+        PlayerList[i] = v.Name
     end
-    return Players
+    return PlayerList
 end)())
 
 Section:Toggle(Locale.Teleport, "Teleport")
@@ -84,10 +84,13 @@ RunService.Heartbeat:Connect(function()
             LocalPlayer.Character.Humanoid.Sit = false
             LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
         end
-        for i, v in pairs(Players:GetPlayers()) do
+        for _, v in pairs(Players:GetPlayers()) do
             local Character = v.Character
             local Distance = math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
-            if (Library.flags.Team or v.Team ~= LocalPlayer.Team) and #Camera:GetPartsObscuringTarget({Character.Head.Position}, {LocalPlayer.Character, Character}) == 0 then
+            if v ~= LocalPlayer and (Library.flags.Team or v.Team ~= LocalPlayer.Team) and #Camera:GetPartsObscuringTarget(
+                {Character.Head.Position},
+                {LocalPlayer.Character, Character}
+            ) == 0 then
                 table.insert(Sort, Distance)
                 Head[Distance] = Character.Head
             end
@@ -107,7 +110,7 @@ RunService.Heartbeat:Connect(function()
             Character.BillboardGui.TextLabel.TextColor = v.TeamColor
             Character.Highlight.FillColor = v.TeamColor.Color
         end
-        if Library.flags.Aimbot and Sort[1] then
+        if Library.flags.Aimbot and #Sort > 0 then
             table.sort(Sort)
             Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head[Sort[1]].Position)
             Sort = {}
