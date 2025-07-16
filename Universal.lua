@@ -167,7 +167,7 @@ RunService.Heartbeat:Connect(function()
             end
             Character.BillboardGui.Enabled = Library.flags.ESP
             Character.Highlight.Enabled = Library.flags.ESP
-            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
+            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..Distance
             Character.BillboardGui.TextLabel.TextColor = v.TeamColor
             Character.Highlight.FillColor = v.TeamColor.Color
         end
