@@ -6,6 +6,9 @@ local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+local Sort = {}
+local Head = {}
 local Game = workspace.Game
 local Rubbish = Game.Local.Rubbish
 local ItemPickup = Game.Entities.ItemPickup
@@ -22,22 +25,22 @@ local Window = Library:Window(Locale.Ohio)
 
 local Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(Value)
-    workspace.Gravity = Value
+Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(value)
+    workspace.Gravity = value
 end)
 
 Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
 
-Section:Toggle(Locale.Fly, "Fly", false, function(Value)
+Section:Toggle(Locale.Fly, "Fly", false, function(value)
     for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Value)
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
 
 Section:Toggle(Locale.InfJump, "InfJump")
 
-Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
-    if not Value then
+Section:Toggle(Locale.Noclip, "Noclip", false, function(value)
+    if not value then
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
@@ -55,8 +58,8 @@ Section:Dropdown(Locale.Item, "Item", (function()
     return Items
 end)())
 
-Section:Toggle(Locale.Teleport, "ItemTP", false, function(Value)
-    if Value then
+Section:Toggle(Locale.Teleport, "ItemTP", false, function(value)
+    if value then
         for i, v in pairs(ItemPickup:GetChildren()) do
             if v.PrimaryPart:FindFirstChildOfClass("ProximityPrompt").ObjectText == Library.flags.Item then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
@@ -89,11 +92,11 @@ Section:Toggle(Locale.All, "KillAll")
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
 local Player = Section:Dropdown(Locale.Player, "Player", (function()
-    local Players = Players:GetPlayers()
-    for i, v in pairs(Players) do
-        Players[i] = v.Name
+    local PlayerList = Players:GetPlayers()
+    for i, v in pairs(PlayerList) do
+        PlayerList[i] = v.Name
     end
-    return Players
+    return PlayerList
 end)())
 
 Section:Toggle(Locale.Teleport, "Teleport")
@@ -104,9 +107,9 @@ Section:Toggle(Locale.Kill, "Kill")
 
 Section = Window:Tab(Locale.Auto):Section("Main", true)
 
-Section:Toggle(Locale.Clean, "Clean", false, function(Value)
-    if Value then
-        for i, v in pairs(Rubbish:GetChildren()) do
+Section:Toggle(Locale.Clean, "Clean", false, function(value)
+    if value then
+        for _, v in pairs(Rubbish:GetChildren()) do
             fireclickdetector(v.PrimaryPart.ClickDetector)
         end
     end
@@ -118,8 +121,8 @@ Section:Toggle(Locale.Player, "ESP")
 
 Section = Window:Tab(Locale.Other):Section("Main", true)
 
-Section:Toggle(Locale.FullBright, "Light", false, function(Value)
-    if Value then
+Section:Toggle(Locale.FullBright, "Light", false, function(value)
+    if value then
         Lighting.Ambient = Color3.new(1, 1, 1)
     else
         Lighting.Ambient = Color3.new(0, 0, 0)
@@ -172,7 +175,7 @@ end)
 
 RunService.Stepped:Connect(function()
     if Library.flags.Noclip then
-        for i, v in pairs(LocalPlayer.Character:GetChildren()) do
+        for _, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -240,10 +243,17 @@ RunService.Heartbeat:Connect(function()
                 end
             end
         end
-        for i, v in pairs(Players:GetPlayers()) do
+        for _, v in pairs(Players:GetPlayers()) do
             local Character = v.Character
             local Health = Character.Humanoid.Health
-            local Distance = LocalPlayer:DistanceFromCharacter(Character.Head.Position)
+            local Distance = math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
+            if v ~= LocalPlayer and #Camera:GetPartsObscuringTarget(
+                {Character.Head.Position},
+                {LocalPlayer.Character, Character}
+            ) == 0 then
+                table.insert(Sort, Distance)
+                Head[Distance] = Character.Head
+            end
             if v ~= LocalPlayer and not Character:FindFirstChild("ForceField") then
                 if Library.flags.All or Library.flags.KillAll then
                     LocalPlayer.Character.Humanoid.Sit = false
@@ -273,9 +283,15 @@ RunService.Heartbeat:Connect(function()
             end
             Character.BillboardGui.Enabled = Library.flags.ESP
             Character.Highlight.Enabled = Library.flags.ESP
-            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Health).."\nDistance: "..math.round(Distance)
+            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Health).."\nDistance: "..Distance
             Character.BillboardGui.TextLabel.TextColor = v.TeamColor
             Character.Highlight.FillColor = v.TeamColor.Color
+        end
+        if Library.flags.Aimbot and #Sort > 0 then
+            table.sort(Sort)
+            Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head[Sort[1]].Position)
+            Sort = {}
+            Head = {}
         end
     end)
 end)
