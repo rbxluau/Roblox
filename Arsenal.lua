@@ -57,7 +57,7 @@ end)
 
 RunService.Stepped:Connect(function()
     if Library.flags.Noclip then
-        for i, v in pairs(LocalPlayer.Character:GetChildren()) do
+        for _, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
