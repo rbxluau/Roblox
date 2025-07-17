@@ -32,7 +32,7 @@ end)
 Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
 
 Section:Toggle(Locale.Fly, "Fly", false, function(value)
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+    for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
         LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
@@ -44,6 +44,12 @@ Section:Toggle(Locale.Noclip, "Noclip", false, function(value)
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
+
+Section = Window:Tab(Locale.Aimbot):Section("Main", true)
+
+Section:Toggle(Locale.Team, "Team")
+
+Section:Toggle(Locale.Toggle, "Aimbot")
 
 Section = Window:Tab(Locale.Interact):Section("Main", true)
 
@@ -60,7 +66,7 @@ end)())
 
 Section:Toggle(Locale.Teleport, "ItemTP", false, function(value)
     if value then
-        for i, v in pairs(ItemPickup:GetChildren()) do
+        for _, v in pairs(ItemPickup:GetChildren()) do
             if v.PrimaryPart:FindFirstChildOfClass("ProximityPrompt").ObjectText == Library.flags.Item then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
                 break
@@ -224,8 +230,8 @@ RunService.Heartbeat:Connect(function()
             LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
         end
         if Library.flags.Player then
-            local Player = Players[Library.flags.Player]
-            local Character = Player.Character
+            local SelectPlayer = Players[Library.flags.Player]
+            local Character = SelectPlayer.Character
             local Health = Character.Humanoid.Health
             if Library.flags.Teleport then
                 LocalPlayer.Character.Humanoid.Sit = false
@@ -235,11 +241,11 @@ RunService.Heartbeat:Connect(function()
                 if Hit and Library.flags.Hit and Health > 1 then
                     Hit:FireServer("player", {
                         meleeType = "meleemegapunch",
-                        hitPlayerId = Player.UserId
+                        hitPlayerId = SelectPlayer.UserId
                     })
                 end
                 if Kill and Library.flags.Kill and Health == 1 then
-                    Kill:FireServer(Player)
+                    Kill:FireServer(SelectPlayer)
                 end
             end
         end
