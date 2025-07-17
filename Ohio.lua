@@ -6,9 +6,6 @@ local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local Camera = workspace.CurrentCamera
-local Sort = {}
-local Head = {}
 local Game = workspace.Game
 local Rubbish = Game.Local.Rubbish
 local ItemPickup = Game.Entities.ItemPickup
@@ -44,12 +41,6 @@ Section:Toggle(Locale.Noclip, "Noclip", false, function(value)
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
-
-Section = Window:Tab(Locale.Aimbot):Section("Main", true)
-
-Section:Toggle(Locale.Team, "Team")
-
-Section:Toggle(Locale.Toggle, "Aimbot")
 
 Section = Window:Tab(Locale.Interact):Section("Main", true)
 
@@ -252,14 +243,7 @@ RunService.Heartbeat:Connect(function()
         for _, v in pairs(Players:GetPlayers()) do
             local Character = v.Character
             local Health = Character.Humanoid.Health
-            local Distance = math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
-            if v ~= LocalPlayer and #Camera:GetPartsObscuringTarget(
-                {Character.Head.Position},
-                {LocalPlayer.Character, Character}
-            ) == 0 then
-                table.insert(Sort, Distance)
-                Head[Distance] = Character.Head
-            end
+            local Distance = LocalPlayer:DistanceFromCharacter(Character.Head.Position)
             if v ~= LocalPlayer and not Character:FindFirstChild("ForceField") then
                 if Library.flags.All or Library.flags.KillAll then
                     LocalPlayer.Character.Humanoid.Sit = false
@@ -289,15 +273,9 @@ RunService.Heartbeat:Connect(function()
             end
             Character.BillboardGui.Enabled = Library.flags.ESP
             Character.Highlight.Enabled = Library.flags.ESP
-            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Health).."\nDistance: "..Distance
+            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Health).."\nDistance: "..math.round(Distance)
             Character.BillboardGui.TextLabel.TextColor = v.TeamColor
             Character.Highlight.FillColor = v.TeamColor.Color
-        end
-        if Library.flags.Aimbot and #Sort > 0 then
-            table.sort(Sort)
-            Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head[Sort[1]].Position)
-            Sort = {}
-            Head = {}
         end
     end)
 end)
