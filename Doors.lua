@@ -13,25 +13,25 @@ local Prompt = {
     "UnlockPrompt",
     "LootPrompt"
 }
-local List = {}
+local Opened = {}
 
-local function Warn(v)
+local function Warn(msg)
     StarterGui:SetCore("SendNotification", {
     Title = "Warning",
-    Text = v
+    Text = msg
     })
 end
 
-local function ESP(i, v)
-    Instance.new("Highlight", i)
-    local BillboardGui = Instance.new("BillboardGui", i)
+local function ESP(part, offset)
+    Instance.new("Highlight", part)
+    local BillboardGui = Instance.new("BillboardGui", part)
     local TextLabel = Instance.new("TextLabel", BillboardGui)
     BillboardGui.AlwaysOnTop = true
     BillboardGui.Size = UDim2.new(0, 100, 0, 50)
-    BillboardGui.StudsOffset = Vector3.new(0, (v or 0), 0)
+    BillboardGui.StudsOffset = Vector3.new(0, (offset or 0), 0)
     TextLabel.BackgroundTransparency = 1
     TextLabel.Size = UDim2.new(0, 100, 0, 50)
-    TextLabel.Text = i.Name
+    TextLabel.Text = part.Name
 end
 
 local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
@@ -40,20 +40,20 @@ local Window = Library:Window("Doors")
 
 local Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(Value)
-    workspace.Gravity = Value
+Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(value)
+    workspace.Gravity = value
 end)
 
 Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
 
-Section:Toggle(Locale.Fly, "Fly", false, function(Value)
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Value)
+Section:Toggle(Locale.Fly, "Fly", false, function(value)
+    for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
 
-Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
-    if not Value then
+Section:Toggle(Locale.Noclip, "Noclip", false, function(value)
+    if not value then
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
@@ -87,7 +87,7 @@ Section:Button(Locale.Unlock, function()
     local Paper = LocalPlayer.Backpack:FindFirstChild("LibraryHintPaper") or LocalPlayer.Character:FindFirstChild("LibraryHintPaper")
     if Paper then
         for h = 1, 5 do
-            for i, v in pairs(LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+            for _, v in pairs(LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
                 if v:IsA("ImageLabel") and v.ImageRectOffset == Paper.UI[h].ImageRectOffset then
                     Hint[h] = v.TextLabel.Text
                 end
@@ -107,12 +107,12 @@ Section:Button(Locale.BTool, function()
     end
 end)
 
-Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, function(Value)
-    LocalPlayer.CameraMode = Value
+Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, function(value)
+    LocalPlayer.CameraMode = value
 end)
 
-Section:Toggle(Locale.FullBright, "Light", false, function(Value)
-    if Value then
+Section:Toggle(Locale.FullBright, "Light", false, function(value)
+    if value then
         Lighting.Ambient = Color3.new(1, 1, 1)
     else
         Lighting.Ambient = Color3.new(0, 0, 0)
@@ -131,7 +131,7 @@ end)
 
 RunService.Stepped:Connect(function()
     if Library.flags.Noclip then
-        for i, v in pairs(LocalPlayer.Character:GetChildren()) do
+        for _, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -140,10 +140,10 @@ RunService.Stepped:Connect(function()
 end)
 
 ProximityPromptService.PromptShown:Connect(function(v)
-    if Library.flags.Interact and table.find(Prompt, v.Name) and not table.find(List, v) then
+    if Library.flags.Interact and table.find(Prompt, v.Name) and not table.find(Opened, v) then
         fireproximityprompt(v)
         if v.Name == Prompt[1] then
-            table.insert(List, v)
+            table.insert(Opened, v)
         end
     end
 end)
@@ -155,7 +155,7 @@ RunService.Heartbeat:Connect(function()
             LocalPlayer.Character.Humanoid:ChangeState("Swimming")
             LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
         end
-        for i, v in pairs(Players:GetPlayers()) do
+        for _, v in pairs(Players:GetPlayers()) do
             local Character = v.Character
             if not Character:FindFirstChild("Highlight") then
                 ESP(Character, 4)
@@ -182,7 +182,7 @@ ReplicatedStorage.GameData.LatestRoom.Changed:Connect(function(r)
     if Library.flags.Door then
         ESP(Room.Door)
     end
-    for i, v in pairs(Room.Assets:GetDescendants()) do
+    for _, v in pairs(Room.Assets:GetDescendants()) do
         if Library.flags.Other and v:IsA("ProximityPrompt") then
             ESP(v.Parent)
         end
