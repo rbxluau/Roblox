@@ -208,7 +208,7 @@ local function Tween(obj, t, data)
 end
 
 local function Ripple(obj)
-    spawn(function()
+    task.spawn(function()
         if obj.ClipsDescendants ~= true then
             obj.ClipsDescendants = true
         end
@@ -224,9 +224,9 @@ local function Ripple(obj)
         Ripple.ImageColor3 = Color3.fromRGB(255, 255, 255)
         Ripple.Position = UDim2.new((mouse.X - Ripple.AbsolutePosition.X) / obj.AbsoluteSize.X, 0, (mouse.Y - Ripple.AbsolutePosition.Y) / obj.AbsoluteSize.Y, 0)
         Tween(Ripple, {.3, "Linear", "InOut"}, {Position = UDim2.new(-5.5, 0, -5.5, 0), Size = UDim2.new(12, 0, 12, 0)})
-        wait(0.15)
+        task.wait(0.15)
         Tween(Ripple, {.3, "Linear", "InOut"}, {ImageTransparency = 1})
-        wait(.3)
+        task.wait(.3)
         Ripple:Destroy()
     end)
 end
