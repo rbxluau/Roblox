@@ -31,7 +31,11 @@ Section:Toggle(Locale.Team, "Team")
 
 Section:Toggle(Locale.Toggle, "Aimbot")
 
-Section:Toggle(Locale.Shoot, "Shoot")
+local Shoot = Section:Toggle(Locale.Shoot, "Shoot")
+
+Section:Keybind(Locale.Shoot, "Backquote", function()
+    Shoot:SetState()
+end)
 
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
