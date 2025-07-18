@@ -13,33 +13,33 @@ local Window = Library:Window(Locale.PrisonLife)
 
 local Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Section:Slider(Locale.Jump, "Jump", math.round(LocalPlayer.Character.Humanoid.JumpPower), 0, 200, false, function(Value)
-    LocalPlayer.Character.Humanoid.JumpPower = Value
+Section:Slider(Locale.Jump, "Jump", math.round(LocalPlayer.Character.Humanoid.JumpPower), 0, 200, false, function(value)
+    LocalPlayer.Character.Humanoid.JumpPower = value
 end)
 
-Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(Value)
-    workspace.Gravity = Value
+Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(value)
+    workspace.Gravity = value
 end)
 
 Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
 
-Section:Toggle(Locale.Fly, "Fly", false, function(Value)
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Value)
+Section:Toggle(Locale.Fly, "Fly", false, function(value)
+    for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
 
 Section:Toggle(Locale.InfJump, "InfJump")
 
-Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
-    if not Value then
+Section:Toggle(Locale.Noclip, "Noclip", false, function(value)
+    if not value then
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
 
 Section = Window:Tab(Locale.Team):Section("Main", true)
 
-for i, v in pairs(Teams:GetTeams()) do
+for _, v in pairs(Teams:GetTeams()) do
     if v ~= Teams.Criminals then
         Section:Button(v.Name, function()
             workspace.Remote.TeamEvent:FireServer(v.TeamColor.Name)
@@ -56,11 +56,11 @@ Section:Toggle(Locale.All, "All")
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
 local Player = Section:Dropdown(Locale.Player, "Player", (function()
-    local Players = Players:GetPlayers()
-    for i, v in pairs(Players) do
-        Players[i] = v.Name
+    local PlayerList = Players:GetPlayers()
+    for i, v in pairs(PlayerList) do
+        PlayerList[i] = v.Name
     end
-    return Players
+    return PlayerList
 end)())
 
 Section:Toggle(Locale.Teleport, "Teleport")
@@ -92,12 +92,12 @@ Section:Button(Locale.ClickTP, function()
     end)
 end)
 
-Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, function(Value)
-    LocalPlayer.CameraMode = Value
+Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, function(value)
+    LocalPlayer.CameraMode = value
 end)
 
-Section:Toggle(Locale.FullBright, "Light", false, function(Value)
-    if Value then
+Section:Toggle(Locale.FullBright, "Light", false, function(value)
+    if value then
         Lighting.Ambient = Color3.new(1, 1, 1)
     else
         Lighting.Ambient = Color3.new(0, 0, 0)
@@ -122,7 +122,7 @@ end)
 
 RunService.Stepped:Connect(function()
     if Library.flags.Noclip then
-        for i, v in pairs(LocalPlayer.Character:GetChildren()) do
+        for _, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -160,17 +160,17 @@ RunService.Heartbeat:Connect(function()
             LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
         end
         if Library.flags.Player then
-            local Player = Players[Library.flags.Player]
-            local Character = Player.Character
+            local SelectPlayer = Players[Library.flags.Player]
+            local Character = SelectPlayer.Character
             if Library.flags.Teleport then
                 LocalPlayer.Character.Humanoid.Sit = false
                 LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
             end
             if Library.flags.Kill and LocalPlayer:DistanceFromCharacter(Character.Head.Position) < 15 and Character.Humanoid.Health ~= 0 and not Character:FindFirstChild("ForceField") then
-                ReplicatedStorage.meleeEvent:FireServer(Player)
+                ReplicatedStorage.meleeEvent:FireServer(SelectPlayer)
             end
         end
-        for i, v in pairs(Players:GetPlayers()) do
+        for _, v in pairs(Players:GetPlayers()) do
             local Character = v.Character
             local Health = Character.Humanoid.Health
             local Distance = LocalPlayer:DistanceFromCharacter(Character.Head.Position)
