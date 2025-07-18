@@ -31,6 +31,8 @@ Section:Toggle(Locale.Team, "Team")
 
 Section:Toggle(Locale.Toggle, "Aimbot")
 
+Section:Toggle(Locale.Shoot, "Shoot")
+
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
 local Player = Section:Dropdown(Locale.Player, "Player", (function()
@@ -110,11 +112,18 @@ RunService.Heartbeat:Connect(function()
             Character.BillboardGui.TextLabel.TextColor = v.TeamColor
             Character.Highlight.FillColor = v.TeamColor.Color
         end
-        if Library.flags.Aimbot and #Sort > 0 then
-            table.sort(Sort)
-            Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head[Sort[1]].Position)
-            Sort = {}
-            Head = {}
+        if Library.flags.Aimbot then
+            if #Sort > 0 then
+                table.sort(Sort)
+                Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head[Sort[1]].Position)
+                if Library.flags.Shoot then
+                    mouse1press()
+                end
+                Sort = {}
+                Head = {}
+            elseif Library.flags.Shoot then
+                mouse1release()
+            end
         end
     end)
 end)
