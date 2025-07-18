@@ -14,20 +14,20 @@ local Section = Window:Tab(Locale.Player):Section("Main", true)
 
 Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
 
-Section:Toggle(Locale.Fly, "Fly", false, function(Value)
-    for i, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
-        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not Value)
+Section:Toggle(Locale.Fly, "Fly", false, function(value)
+    for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
 
-Section:Toggle(Locale.Noclip, "Noclip", false, function(Value)
-    if not Value then
+Section:Toggle(Locale.Noclip, "Noclip", false, function(value)
+    if not value then
         LocalPlayer.Character.Humanoid:ChangeState("Flying")
     end
 end)
 
-Section:Toggle(Locale.Invisible, "Invisible", false, function(Value)
-    if not Value then
+Section:Toggle(Locale.Invisible, "Invisible", false, function(value)
+    if not value then
         BoxUpdated:FireServer("Unequip")
     end
 end)
@@ -41,11 +41,11 @@ Section:Toggle(Locale.Put, "Put")
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
 local Player = Section:Dropdown(Locale.Player, "Player", (function()
-    local Players = Players:GetPlayers()
-    for i, v in pairs(Players) do
-        Players[i] = v.Name
+    local PlayerList = Players:GetPlayers()
+    for i, v in pairs(PlayerList) do
+        PlayerList[i] = v.Name
     end
-    return Players
+    return PlayerList
 end)())
 
 Section:Toggle(Locale.Teleport, "Teleport")
@@ -73,12 +73,12 @@ Section:Button(Locale.ClickTP, function()
     end)
 end)
 
-Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, function(Value)
-    LocalPlayer.CameraMode = Value
+Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, function(value)
+    LocalPlayer.CameraMode = value
 end)
 
-Section:Toggle(Locale.FullBright, "Light", false, function(Value)
-    if Value then
+Section:Toggle(Locale.FullBright, "Light", false, function(value)
+    if value then
         Lighting.Ambient = Color3.new(1, 1, 1)
     else
         Lighting.Ambient = Color3.new(0, 0, 0)
@@ -97,7 +97,7 @@ end)
 
 RunService.Stepped:Connect(function()
     if Library.flags.Noclip then
-        for i, v in pairs(LocalPlayer.Character:GetChildren()) do
+        for _, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -115,7 +115,7 @@ end)
 
 RunService.Heartbeat:Connect(function()
     pcall(function()
-        for i, v in pairs(workspace.ignore:GetChildren()) do
+        for _, v in pairs(workspace.ignore:GetChildren()) do
             if v.Name == "Looky" then
                 v.Highlight.Enabled = Library.flags.Other
             end
@@ -124,7 +124,7 @@ RunService.Heartbeat:Connect(function()
             BoxUpdated:FireServer("Equip")
         end
         if Library.flags.Get then
-            for i, v in pairs(workspace:GetChildren()) do
+            for _, v in pairs(workspace:GetChildren()) do
                 if table.find({
                     "Fuse1", "Fuse2", "Fuse3", "Fuse4", "Fuse5", "Fuse6", "Fuse7", "Fuse8", "Fuse9", "Fuse10",
                     "Fuse11", "Fuse12", "Fuse13", "Fuse14", "Block1", "Block2", "Block3", "Block4", "Block5", "Block6",
@@ -137,7 +137,7 @@ RunService.Heartbeat:Connect(function()
             end
         end
         if Library.flags.Put then
-            for i, v in pairs(workspace.GroupBuildStructures:GetChildren()) do
+            for _, v in pairs(workspace.GroupBuildStructures:GetChildren()) do
                 v.Trigger.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
             end
         end
@@ -150,7 +150,7 @@ RunService.Heartbeat:Connect(function()
             LocalPlayer.Character.Humanoid.Sit = false
             LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
         end
-        for i, v in pairs(Players:GetPlayers()) do
+        for _, v in pairs(Players:GetPlayers()) do
             local Character = v.Character
             if not Character:FindFirstChild("Highlight") then
                 Instance.new("Highlight", Character)
