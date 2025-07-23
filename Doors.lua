@@ -107,10 +107,6 @@ Section:Button(Locale.BTool, function()
     end
 end)
 
-Section:Dropdown(Locale.Camera, "Camera", {"Classic", "LockFirstPerson"}, function(value)
-    LocalPlayer.CameraMode = value
-end)
-
 Section:Toggle(Locale.FullBright, "Light", false, function(value)
     if value then
         Lighting.Ambient = Color3.new(1, 1, 1)
