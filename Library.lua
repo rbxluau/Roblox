@@ -396,7 +396,7 @@ function Cloudlib.Window(Cloudlib, name, theme)
     Main.Active = true
     Main.Draggable = true
     services.UserInputService.InputEnded:Connect(function(input)
-        if input.KeyCode == Enum.KeyCode.LeftControl then
+        if input.KeyCode == Enum.KeyCode.LeftAlt then
             funcs:Toggle()
         end
     end)
