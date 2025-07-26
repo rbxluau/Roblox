@@ -9,6 +9,12 @@ local Source = game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/ma
     [73885730] = "PrisonLife"
 })[game.GameId] or "Universal")..".lua")
 
+BindableFunction.OnInvoke = function(press)
+    if press == "Yes" then
+        queueonteleport(Source)
+    end
+end
+
 StarterGui:SetCore("SendNotification", {
     Title = "Loading...",
     Text = "Do you want to enable queue_on_teleport?",
@@ -16,11 +22,5 @@ StarterGui:SetCore("SendNotification", {
     Button1 = "Yes",
     Button2 = "No"
 })
-
-BindableFunction.OnInvoke = function(press)
-    if press == "Yes" then
-        queueonteleport(Source)
-    end
-end
 
 loadstring(Source)()
