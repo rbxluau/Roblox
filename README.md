@@ -96,4 +96,4 @@ The flags feature in the ui may be confusing for some people. It serves the purp
 Library.flags["key"]
 ```
 ## Tip
-Use the <kbd>LeftControl</kbd> or <img src=https://raw.githubusercontent.com/frappedevs/lucideblox/master/icons/expand.png width=20 /> to toggle UI.
+Use the <kbd>LeftAlt</kbd> or <img src=https://raw.githubusercontent.com/frappedevs/lucideblox/master/icons/expand.png width=20 /> to toggle UI.
