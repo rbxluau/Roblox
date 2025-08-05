@@ -2,8 +2,8 @@ local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
-local Sort = {}
-local Head = {}
+local Sorts = {}
+local Heads = {}
 
 local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
@@ -97,8 +97,8 @@ RunService.Heartbeat:Connect(function()
                 {Character.Head.Position},
                 {LocalPlayer.Character, Character}
             ) == 0 then
-                table.insert(Sort, Distance)
-                Head[Distance] = Character.Head
+                table.insert(Sorts, Distance)
+                Heads[Distance] = Character.Head
             end
             if not Character:FindFirstChild("Highlight") then
                 Instance.new("Highlight", Character)
@@ -117,14 +117,14 @@ RunService.Heartbeat:Connect(function()
             Character.Highlight.FillColor = v.TeamColor.Color
         end
         if Library.flags.Aimbot then
-            if #Sort > 0 then
-                table.sort(Sort)
-                Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head[Sort[1]].Position)
+            if #Sorts > 0 then
+                table.sort(Sorts)
+                Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Heads[Sorts[1]].Position)
                 if Library.flags.Shoot then
                     mouse1press()
                 end
-                Sort = {}
-                Head = {}
+                Sorts = {}
+                Heads = {}
             elseif Library.flags.Shoot then
                 mouse1release()
             end
