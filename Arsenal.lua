@@ -2,8 +2,7 @@ local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
-local Sorts = {}
-local Heads = {}
+local Head
 
 local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
@@ -92,13 +91,12 @@ RunService.Heartbeat:Connect(function()
         end
         for _, v in pairs(Players:GetPlayers()) do
             local Character = v.Character
-            local Distance = math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
+            local Distance = LocalPlayer:DistanceFromCharacter(Character.Head.Position)
             if v ~= LocalPlayer and (Library.flags.Team or v.Team ~= LocalPlayer.Team) and #Camera:GetPartsObscuringTarget(
                 {Character.Head.Position},
                 {LocalPlayer.Character, Character}
-            ) == 0 then
-                table.insert(Sorts, Distance)
-                Heads[Distance] = Character.Head
+            ) == 0 and (not Head or Distance < LocalPlayer:DistanceFromCharacter(Head.Position)) then
+                Head = Character.Head
             end
             if not Character:FindFirstChild("Highlight") then
                 Instance.new("Highlight", Character)
@@ -112,19 +110,17 @@ RunService.Heartbeat:Connect(function()
             end
             Character.BillboardGui.Enabled = Library.flags.ESP
             Character.Highlight.Enabled = Library.flags.ESP
-            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..Distance
+            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(Distance)
             Character.BillboardGui.TextLabel.TextColor = v.TeamColor
             Character.Highlight.FillColor = v.TeamColor.Color
         end
         if Library.flags.Aimbot then
-            if #Sorts > 0 then
-                table.sort(Sorts)
-                Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Heads[Sorts[1]].Position)
+            if Head then
+                Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head.Position)
                 if Library.flags.Shoot then
                     mouse1press()
                 end
-                Sorts = {}
-                Heads = {}
+                Head = nil
             elseif Library.flags.Shoot then
                 mouse1release()
             end
