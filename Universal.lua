@@ -6,8 +6,7 @@ local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
-local Sort = {}
-local Head = {}
+local Head
 
 local Library, Locale = loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/Library.lua"))()
 
@@ -147,13 +146,12 @@ RunService.Heartbeat:Connect(function()
         end
         for _, v in pairs(Players:GetPlayers()) do
             local Character = v.Character
-            local Distance = math.round(LocalPlayer:DistanceFromCharacter(Character.Head.Position))
+            local Distance = LocalPlayer:DistanceFromCharacter(Character.Head.Position)
             if v ~= LocalPlayer and (Library.flags.Team or v.Team ~= LocalPlayer.Team) and #Camera:GetPartsObscuringTarget(
                 {Character.Head.Position},
                 {LocalPlayer.Character, Character}
-            ) == 0 then
-                table.insert(Sort, Distance)
-                Head[Distance] = Character.Head
+            ) == 0 and (not Head or Distance < LocalPlayer:DistanceFromCharacter(Head.Position)) then
+                Head = Character.Head
             end
             if not Character:FindFirstChild("Highlight") then
                 Instance.new("Highlight", Character)
@@ -167,15 +165,13 @@ RunService.Heartbeat:Connect(function()
             end
             Character.BillboardGui.Enabled = Library.flags.ESP
             Character.Highlight.Enabled = Library.flags.ESP
-            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..Distance
+            Character.BillboardGui.TextLabel.Text = v.Name.."\nHealth: "..math.round(Character.Humanoid.Health).."\nDistance: "..math.round(Distance)
             Character.BillboardGui.TextLabel.TextColor = v.TeamColor
             Character.Highlight.FillColor = v.TeamColor.Color
         end
-        if Library.flags.Aimbot and #Sort > 0 then
-            table.sort(Sort)
-            Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head[Sort[1]].Position)
-            Sort = {}
-            Head = {}
+        if Library.flags.Aimbot and Head then
+            Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Head.Position)
+            Head = nil
         end
     end)
 end)
