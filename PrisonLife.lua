@@ -120,7 +120,7 @@ UserInputService.JumpRequest:Connect(function()
     end
 end)
 
-RunService.Stepped:Connect(function()
+RunService.PreSimulation:Connect(function()
     if Library.flags.Noclip then
         for _, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
