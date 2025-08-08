@@ -125,7 +125,7 @@ Section:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
 
-RunService.Stepped:Connect(function()
+RunService.PreSimulation:Connect(function()
     if Library.flags.Noclip then
         for _, v in pairs(LocalPlayer.Character:GetChildren()) do
             if v:IsA("BasePart") then
