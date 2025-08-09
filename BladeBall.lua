@@ -122,7 +122,7 @@ local function NewForceField(v)
     ForceField = Instance.new("Part", v)
     ForceField.Shape = Enum.PartType.Ball
     ForceField.CanCollide = false
-    ForceField.Color = Color3.new(0, 1, 0)
+    ForceField.Color = Color3.new(0, 0, 1)
     ForceField.Material = Enum.Material.ForceField
     ForceField.Size = Vector3.one * Library.flags.Area
     ForceField.Transparency = Library.flags.AreaVisible and 0 or 1
@@ -222,10 +222,8 @@ RunService.Heartbeat:Connect(function()
                 if Library.flags.Combo then
                     Parry = time() - PreParry
                     PreParry = time()
-                    print("Parry:", Parry)
                     if Parry < Library.flags.Sensitivity then
                         local From = Ball:GetAttribute("from")
-                        print("Combo:", From)
                         Combo(LocalPlayer:DistanceFromCharacter(workspace.Alive[From].Head.Position) + 10, From)
                     end
                 end
