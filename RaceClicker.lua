@@ -27,7 +27,7 @@ Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200,
     workspace.Gravity = value
 end)
 
-Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
+Section:Slider(Locale.Boost, "Boost", 0, 0, 20, true)
 
 Section:Toggle(Locale.Fly, "Fly", false, function(value)
     for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
