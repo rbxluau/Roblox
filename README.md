@@ -9,6 +9,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/rbxluau/Roblox/main/S
 ```
 * SupportedGames
     > Arsenal  
+    BladeBall  
     Doors  
     Ohio  
     PrisonLife  
