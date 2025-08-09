@@ -12,7 +12,7 @@ local Window = Library:Window(Locale.RainbowFriends)
 
 local Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Section:Slider(Locale.Boost, "Boost", 0, 0, 200)
+Section:Slider(Locale.Boost, "Boost", 0, 0, 20, true)
 
 Section:Toggle(Locale.Fly, "Fly", false, function(value)
     for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
