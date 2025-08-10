@@ -136,7 +136,7 @@ Section:Button(Locale.Copy, function()
     setclipboard(Locale.Link)
 end)
 
-Call = hookmetamethod(game, "__namecall", function(self, ...)
+Call = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
     local args = {...}
     if self.Parent == RemoteStorage then
         if self.Name == "meleeHit" then
@@ -162,7 +162,7 @@ Call = hookmetamethod(game, "__namecall", function(self, ...)
         end
     end
     return Call(self, ...)
-end)
+end))
 
 UserInputService.JumpRequest:Connect(function()
     if Library.flags.InfJump then
