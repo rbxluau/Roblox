@@ -146,7 +146,7 @@ end)
 
 RunService.Heartbeat:Connect(function()
     pcall(function()
-        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection * Library.flags.Boost)
         if Library.flags.Fly then
             LocalPlayer.Character.Humanoid:ChangeState("Swimming")
             LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero

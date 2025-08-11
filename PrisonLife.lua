@@ -84,11 +84,11 @@ Section:Button(Locale.BTool, function()
     end
 end)
 
-Section:Button(Locale.ClickTP, function()
+Section:Button(Locale.Click.." "..Locale.Teleport, function()
     local Tool = Instance.new("Tool", LocalPlayer.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer:GetMouse().Hit+Vector3.new(0, 2.5, 0)
+        LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer:GetMouse().Hit + Vector3.new(0, 2.5, 0)
     end)
 end)
 
@@ -154,7 +154,7 @@ end)
 
 RunService.Heartbeat:Connect(function()
     pcall(function()
-        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection * Library.flags.Boost)
         if Library.flags.Fly then
             LocalPlayer.Character.Humanoid:ChangeState("Swimming")
             LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
