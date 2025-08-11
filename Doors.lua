@@ -47,7 +47,7 @@ end)
 Section:Slider(Locale.Boost, "Boost", 0, 0, 20, true)
 
 Section:Toggle(Locale.Fly, "Fly", false, function(value)
-    for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+    for _, v in Enum.HumanoidStateType:GetEnumItems() do
         LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
@@ -87,7 +87,7 @@ Section:Button(Locale.Unlock, function()
     local Paper = LocalPlayer.Backpack:FindFirstChild("LibraryHintPaper") or LocalPlayer.Character:FindFirstChild("LibraryHintPaper")
     if Paper then
         for h = 1, 5 do
-            for _, v in pairs(LocalPlayer.PlayerGui.PermUI.Hints:GetChildren()) do
+            for _, v in LocalPlayer.PlayerGui.PermUI.Hints:GetChildren() do
                 if v:IsA("ImageLabel") and v.ImageRectOffset == Paper.UI[h].ImageRectOffset then
                     Hint[h] = v.TextLabel.Text
                 end
@@ -127,7 +127,7 @@ end)
 
 RunService.PreSimulation:Connect(function()
     if Library.flags.Noclip then
-        for _, v in pairs(LocalPlayer.Character:GetChildren()) do
+        for _, v in LocalPlayer.Character:GetChildren() do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -151,7 +151,7 @@ RunService.Heartbeat:Connect(function()
             LocalPlayer.Character.Humanoid:ChangeState("Swimming")
             LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
         end
-        for _, v in pairs(Players:GetPlayers()) do
+        for _, v in Players:GetPlayers() do
             local Character = v.Character
             if not Character:FindFirstChild("Highlight") then
                 ESP(Character, 4)
@@ -178,7 +178,7 @@ ReplicatedStorage.GameData.LatestRoom.Changed:Connect(function(r)
     if Library.flags.Door then
         ESP(Room.Door)
     end
-    for _, v in pairs(Room.Assets:GetDescendants()) do
+    for _, v in Room.Assets:GetDescendants() do
         if Library.flags.Other and v:IsA("ProximityPrompt") then
             ESP(v.Parent)
         end
