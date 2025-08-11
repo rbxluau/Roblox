@@ -15,7 +15,7 @@ local Section = Window:Tab(Locale.Player):Section("Main", true)
 Section:Slider(Locale.Boost, "Boost", 0, 0, 20, true)
 
 Section:Toggle(Locale.Fly, "Fly", false, function(value)
-    for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+    for _, v in Enum.HumanoidStateType:GetEnumItems() do
         LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
@@ -42,7 +42,7 @@ Section = Window:Tab(Locale.Loop):Section("Main", true)
 
 local Player = Section:Dropdown(Locale.Player, "Player", (function()
     local PlayerList = Players:GetPlayers()
-    for i, v in pairs(PlayerList) do
+    for i, v in PlayerList do
         PlayerList[i] = v.Name
     end
     return PlayerList
@@ -97,7 +97,7 @@ end)
 
 RunService.PreSimulation:Connect(function()
     if Library.flags.Noclip then
-        for _, v in pairs(LocalPlayer.Character:GetChildren()) do
+        for _, v in LocalPlayer.Character:GetChildren() do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -115,7 +115,7 @@ end)
 
 RunService.Heartbeat:Connect(function()
     pcall(function()
-        for _, v in pairs(workspace.ignore:GetChildren()) do
+        for _, v in workspace.ignore:GetChildren() do
             if v.Name == "Looky" then
                 v.Highlight.Enabled = Library.flags.Other
             end
@@ -124,7 +124,7 @@ RunService.Heartbeat:Connect(function()
             BoxUpdated:FireServer("Equip")
         end
         if Library.flags.Get then
-            for _, v in pairs(workspace:GetChildren()) do
+            for _, v in workspace:GetChildren() do
                 if table.find({
                     "Fuse1", "Fuse2", "Fuse3", "Fuse4", "Fuse5", "Fuse6", "Fuse7", "Fuse8", "Fuse9", "Fuse10",
                     "Fuse11", "Fuse12", "Fuse13", "Fuse14", "Block1", "Block2", "Block3", "Block4", "Block5", "Block6",
@@ -137,7 +137,7 @@ RunService.Heartbeat:Connect(function()
             end
         end
         if Library.flags.Put then
-            for _, v in pairs(workspace.GroupBuildStructures:GetChildren()) do
+            for _, v in workspace.GroupBuildStructures:GetChildren() do
                 v.Trigger.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
             end
         end
@@ -150,7 +150,7 @@ RunService.Heartbeat:Connect(function()
             LocalPlayer.Character.Humanoid.Sit = false
             LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
         end
-        for _, v in pairs(Players:GetPlayers()) do
+        for _, v in Players:GetPlayers() do
             local Character = v.Character
             if not Character:FindFirstChild("Highlight") then
                 Instance.new("Highlight", Character)
