@@ -30,7 +30,7 @@ end)
 Section:Slider(Locale.Boost, "Boost", 0, 0, 20, true)
 
 Section:Toggle(Locale.Fly, "Fly", false, function(value)
-    for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+    for _, v in Enum.HumanoidStateType:GetEnumItems() do
         LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
@@ -47,7 +47,7 @@ Section = Window:Tab(Locale.Loop):Section("Main", true)
 
 local Player = Section:Dropdown(Locale.Player, "Player", (function()
     local PlayerList = Players:GetPlayers()
-    for i, v in pairs(PlayerList) do
+    for i, v in PlayerList do
         PlayerList[i] = v.Name
     end
     return PlayerList
@@ -100,7 +100,7 @@ end)
 
 RunService.PreSimulation:Connect(function()
     if Library.flags.Noclip then
-        for _, v in pairs(LocalPlayer.Character:GetChildren()) do
+        for _, v in LocalPlayer.Character:GetChildren() do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
