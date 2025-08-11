@@ -29,7 +29,7 @@ end)
 Section:Slider(Locale.Boost, "Boost", 0, 0, 20, true)
 
 Section:Toggle(Locale.Fly, "Fly", false, function(value)
-    for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+    for _, v in Enum.HumanoidStateType:GetEnumItems() do
         LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
@@ -49,7 +49,7 @@ Section:Toggle(Locale.Fast, "Fast")
 Section = Window:Tab(Locale.Item):Section("Main", true)
 
 Section:Dropdown(Locale.Item, "Item", (function()
-    for i, v in pairs(Items) do
+    for i, v in Items do
         Items[i] = v.Name
     end
     return Items
@@ -57,7 +57,7 @@ end)())
 
 Section:Toggle(Locale.Teleport, "ItemTP", false, function(value)
     if value then
-        for _, v in pairs(ItemPickup:GetChildren()) do
+        for _, v in ItemPickup:GetChildren() do
             if v.PrimaryPart:FindFirstChildOfClass("ProximityPrompt").ObjectText == Library.flags.Item then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
                 break
@@ -90,7 +90,7 @@ Section = Window:Tab(Locale.Loop):Section("Main", true)
 
 local Player = Section:Dropdown(Locale.Player, "Player", (function()
     local PlayerList = Players:GetPlayers()
-    for i, v in pairs(PlayerList) do
+    for i, v in PlayerList do
         PlayerList[i] = v.Name
     end
     return PlayerList
@@ -106,7 +106,7 @@ Section = Window:Tab(Locale.Auto):Section("Main", true)
 
 Section:Toggle(Locale.Clean, "Clean", false, function(value)
     if value then
-        for _, v in pairs(Rubbish:GetChildren()) do
+        for _, v in Rubbish:GetChildren() do
             fireclickdetector(v.PrimaryPart.ClickDetector)
         end
     end
@@ -172,7 +172,7 @@ end)
 
 RunService.PreSimulation:Connect(function()
     if Library.flags.Noclip then
-        for _, v in pairs(LocalPlayer.Character:GetChildren()) do
+        for _, v in LocalPlayer.Character:GetChildren() do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -240,7 +240,7 @@ RunService.Heartbeat:Connect(function()
                 end
             end
         end
-        for _, v in pairs(Players:GetPlayers()) do
+        for _, v in Players:GetPlayers() do
             local Character = v.Character
             local Health = Character.Humanoid.Health
             local Distance = LocalPlayer:DistanceFromCharacter(Character.Head.Position)
