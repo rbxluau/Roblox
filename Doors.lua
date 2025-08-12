@@ -40,16 +40,8 @@ local Window = Library:Window("Doors")
 
 local Section = Window:Tab(Locale.Player):Section("Main", true)
 
-Section:Slider(Locale.Gravity, "Gravity", math.round(workspace.Gravity), 0, 200, false, function(value)
-    workspace.Gravity = value
-end)
-
-Section:Slider(Locale.Boost, "Boost", 0, 0, 20, true)
-
-Section:Toggle(Locale.Fly, "Fly", false, function(value)
-    for _, v in Enum.HumanoidStateType:GetEnumItems() do
-        LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
-    end
+Section:Slider(Locale.Boost, "Boost", 0, 0, 8, true, function(value)
+    LocalPlayer.Character:SetAttribute("SpeedBoost", value)
 end)
 
 Section:Toggle(Locale.Noclip, "Noclip", false, function(value)
@@ -146,11 +138,6 @@ end)
 
 RunService.Heartbeat:Connect(function()
     pcall(function()
-        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection * Library.flags.Boost)
-        if Library.flags.Fly then
-            LocalPlayer.Character.Humanoid:ChangeState("Swimming")
-            LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
-        end
         for _, v in Players:GetPlayers() do
             local Character = v.Character
             if not Character:FindFirstChild("Highlight") then
