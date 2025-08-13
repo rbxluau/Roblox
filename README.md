@@ -1,7 +1,7 @@
 # Star History
 [![Stargazers over time](https://starchart.cc/rbxluau/Roblox.svg?variant=adaptive)](https://starchart.cc/rbxluau/Roblox)
 # Contributors
-[@Verycuteabbey](https://github.com/Verycuteabbey)
+[@Verycuteabbey](https://github.com/Verycuteabbey)  
 [@f20i30s40h](https://github.com/f20i30s40h)
 # Example
 [![license](https://img.shields.io/github/license/rbxluau/Roblox)](https://github.com/rbxluau/Roblox/blob/main/LICENSE)
