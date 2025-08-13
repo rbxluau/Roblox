@@ -1,12 +1,22 @@
 local ProximityPromptService = game:GetService("ProximityPromptService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local VirtualUser = game:GetService("VirtualUser")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local PreParry = time()
-local Parry = 1
+local Camera = workspace.CurrentCamera
+local Crates = workspace.Spawn.Crates
+local Signal = getconnections(LocalPlayer.PlayerGui.Hotbar.Block.Activated)[2].Function
 local Lock = true
+local Parry = {
+    Pre = time(),
+    Now = 1
+}
+local Spam = {
+    From = "",
+    Distance = 0
+}
 local ForceField
 local Part
 local Ball
@@ -24,7 +34,7 @@ end)
 Section:Slider(Locale.Boost, "Boost", 0, 0, 20, true)
 
 Section:Toggle(Locale.Fly, "Fly", false, function(value)
-    for _, v in pairs(Enum.HumanoidStateType:GetEnumItems()) do
+    for _, v in Enum.HumanoidStateType:GetEnumItems() do
         LocalPlayer.Character.Humanoid:SetStateEnabled(v, not value)
     end
 end)
@@ -63,23 +73,47 @@ end)
 
 Section:Toggle(Locale.Toggle, "Parry")
 
-Section = Tab:Section("Combo", true)
+Section = Tab:Section("Spam", true)
 
 Section:Slider(Locale.Sensitivity, "Sensitivity", 1, 0.5, 1.5, true, function(value)
-    Parry = value
+    Parry.Now = value
 end)
 
-Section:Toggle(Locale.Toggle, "Combo")
+Section:Toggle(Locale.Toggle, "Spam")
+
+Section = Window:Tab(Locale.Ball):Section("Main", true)
+
+Section:Toggle(Locale.Aimbot, "Aimbot")
+
+Section:Toggle(Locale.Teleport, "Follow")
 
 Section = Window:Tab(Locale.Interact):Section("Main", true)
 
 Section:Toggle(Locale.Fast, "Fast")
 
+Section = Window:Tab(Locale.Item):Section("Main", true)
+
+Section:Dropdown(Locale.Toggle, "Toggle", {"PromptPurchaseCrate", "SpinWheel"})
+
+Section:Dropdown(Locale.Item, "Item", (function()
+    local CratesList = {}
+    for _, v in Crates:GetChildren() do
+        if v:IsA("Model") then
+            table.insert(CratesList, v.Name)
+        end
+    end
+    return CratesList
+end)())
+
+Section:Button(Locale.Buy, function()
+    ReplicatedStorage.Remote.RemoteFunction:InvokeServer(Library.flags.Toggle, Crates[Library.flags.Item])
+end)
+
 Section = Window:Tab(Locale.Loop):Section("Main", true)
 
 local Player = Section:Dropdown(Locale.Player, "Player", (function()
     local PlayerList = Players:GetPlayers()
-    for i, v in pairs(PlayerList) do
+    for i, v in PlayerList do
         PlayerList[i] = v.Name
     end
     return PlayerList
@@ -96,11 +130,11 @@ Section:Button(Locale.BTool, function()
     end
 end)
 
-Section:Button(Locale.ClickTP, function()
+Section:Button(Locale.Click.." "..Locale.Teleport, function()
     local Tool = Instance.new("Tool", LocalPlayer.Backpack)
     Tool.RequiresHandle = false
     Tool.Activated:Connect(function()
-        LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer:GetMouse().Hit+Vector3.new(0, 2.5, 0)
+        LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer:GetMouse().Hit + Vector3.new(0, 2.5, 0)
     end)
 end)
 
@@ -137,22 +171,6 @@ local function NewPart(v)
     Part.Transparency = Library.flags.TimeVisible and 0 or 1
 end
 
-local function Combo(distance, from)
-    while task.wait() do
-        local _, result = pcall(function()
-            if not table.find({from, LocalPlayer.Name}, Ball:GetAttribute("from")) or LocalPlayer:DistanceFromCharacter(workspace.Alive[from].Head.Position) > distance then
-                return true
-            end
-            keypress(0x46)
-            keyrelease(0x46)
-        end)
-        if result then
-            Parry = Library.flags.Sensitivity
-            break
-        end
-    end
-end
-
 NewForceField(LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait())
 
 workspace.Balls.ChildAdded:Connect(function(v)
@@ -174,7 +192,7 @@ end)
 
 RunService.PreSimulation:Connect(function()
     if Library.flags.Noclip then
-        for _, v in pairs(LocalPlayer.Character:GetChildren()) do
+        for _, v in LocalPlayer.Character:GetChildren() do
             if v:IsA("BasePart") then
                 v.CanCollide = false
             end
@@ -198,11 +216,12 @@ end)
 
 RunService.Heartbeat:Connect(function()
     pcall(function()
-        local Position = Ball.Position + Ball.AssemblyLinearVelocity * (Library.flags.Time + LocalPlayer:GetNetworkPing())
+        local PrePosition = Ball.AssemblyLinearVelocity * (Library.flags.Time + LocalPlayer:GetNetworkPing())
+        local Position = Ball.Position + PrePosition
         Part.Position = Position
         ForceField.Material = Enum.Material.ForceField
         ForceField.Position = LocalPlayer.Character.HumanoidRootPart.Position
-        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection*Library.flags.Boost)
+        LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection * Library.flags.Boost)
         if Library.flags.Fly then
             LocalPlayer.Character.Humanoid:ChangeState("Swimming")
             LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.zero
@@ -211,21 +230,29 @@ RunService.Heartbeat:Connect(function()
             LocalPlayer.Character.Humanoid.Sit = false
             LocalPlayer.Character.HumanoidRootPart.CFrame = Players[Library.flags.Player].Character.HumanoidRootPart.CFrame
         end
-        if Library.flags.Parry and Lock and Parry >= Library.flags.Sensitivity and Ball:GetAttribute("target") == LocalPlayer.Name then
-            if LocalPlayer:DistanceFromCharacter(Position) < Library.flags.Area then
-                keypress(0x46)
-                keyrelease(0x46)
-                Lock = false
-                Ball:GetAttributeChangedSignal("target"):Once(function()
-                    Lock = true
-                end)
-                if Library.flags.Combo then
-                    Parry = time() - PreParry
-                    PreParry = time()
-                    if Parry < Library.flags.Sensitivity then
-                        local From = Ball:GetAttribute("from")
-                        Combo(LocalPlayer:DistanceFromCharacter(workspace.Alive[From].Head.Position) + 10, From)
-                    end
+        if Library.flags.Aimbot then
+            Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position, Ball.Position)
+        end
+        if Library.flags.Follow then
+            LocalPlayer.Character.HumanoidRootPart.CFrame = Ball.CFrame - PrePosition
+        end
+        if Parry.Now < Library.flags.Sensitivity and table.find({Spam.From, LocalPlayer.Name}, Ball:GetAttribute("from")) and LocalPlayer:DistanceFromCharacter(workspace.Alive[Spam.From].Head.Position) <= Spam.Distance then
+            Signal()
+        else
+            Parry.Now = Library.flags.Sensitivity
+        end
+        if Library.flags.Parry and Lock and Parry.Now >= Library.flags.Sensitivity and Ball:GetAttribute("target") == LocalPlayer.Name and LocalPlayer:DistanceFromCharacter(Position) < Library.flags.Area then
+            Signal()
+            Lock = false
+            Ball:GetAttributeChangedSignal("target"):Once(function()
+                Lock = true
+            end)
+            if Library.flags.Spam then
+                Parry.Now = time() - Parry.Pre
+                Parry.Pre = time()
+                if Parry.Now < Library.flags.Sensitivity then
+                    Spam.From = Ball:GetAttribute("from")
+                    Spam.Distance = LocalPlayer:DistanceFromCharacter(workspace.Alive[Spam.From].Head.Position) + 10
                 end
             end
         end
